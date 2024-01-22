@@ -38,6 +38,7 @@ module.exports = {
       },
       colors: {
         red: "#FF4D4F",
+        blue : "#ffffff"
       }
     },
   },
