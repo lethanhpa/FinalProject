@@ -1,7 +1,10 @@
 import React, {memo} from "react";
+import HomePage from "./home/index";
 function Home() {
   return (
-   <div className="container">Home</div>
+   <div className="container">
+   <HomePage />
+   </div>
   );
 };
 

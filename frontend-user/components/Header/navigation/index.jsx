@@ -9,7 +9,7 @@ import {
 function Navigation() {
     const router = useRouter();
     return (<div className="flex container justify-between mt-[0.625rem] pb-[0.625rem]">
-        <ul className="sm:flex xl:gap-[80px] lg:gap-[40px] gap-[50px] hidden">
+        <ul className="sm:flex xl:gap-[60px] md:gap-[20px] gap-[40px] hidden">
             <li
                 className={classNames(
                     "text-base font-normal font-roboto leading-7 hover:text-primary",
@@ -85,11 +85,26 @@ function Navigation() {
                     Khuyến mãi
                 </Link>
             </li>
+            <li
+                className={classNames(
+                    "text-base font-normal font-roboto leading-7 hover:text-primary",
+                )}
+            >
+                <Link
+                    href="/contact"
+                    className={`flex items-center ${router.pathname === "/contact"
+                        ? "border-b-2 border-primry"
+                        : ""
+                        }`}
+                >
+                    Liên hệ
+                </Link>
+            </li>
         </ul>
         <div className="relative md:flex sm:justify-center border-red hidden  ">
             <input
                 id="search"
-                className="block p-2 text-sm border-2 border-primry rounded-full lg:w-[24rem] md:w-[18rem]"
+                className="block p-2 text-sm border-2 border-primry rounded-full lg:w-[24rem] md:w-[14rem]"
                 placeholder="Tìm kiếm nhanh...."
                 required
                 type="text"
@@ -98,7 +113,7 @@ function Navigation() {
                 type="submit"
                 id="search"
                 aria-label="search"
-                className="text-black absolute right-2.5 lg:bottom-2.5 bottom-0.5 rounded-lg sm:absolute:none truncate"
+                className="text-black absolute right-2.5 lg:bottom-2.5 bottom-0.5 rounded-lg absolute:none truncate"
             >
                 <Search className="text-primry" />
             </button>
