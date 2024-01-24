@@ -26,11 +26,11 @@ function TopHeader() {
         <div className="flex justify-between container pt-[0.625rem]">
             <div className="sm:flex hidden justify-center items-center gap-[0.25rem] text-center ">
                 <Phone className="text-primry"/>
-                <Link href="tel:+88015-88888-9999" aria-label="phone" className="text-xl font-roboto font-medium leading-7 text-primry">
+                <Link href="tel:+190028979" aria-label="phone" className="text-xl font-roboto font-medium leading-7 text-primry">
                     190028979
                 </Link>
             </div>
-            <Link href="/home" className="flex justify-end">
+            <Link href="/" className="flex justify-end">
                 <img
                     src="/img/logo.png"
                     alt="user"

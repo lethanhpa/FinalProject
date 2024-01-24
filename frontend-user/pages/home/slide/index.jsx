@@ -12,19 +12,27 @@ function Slide(){
     const listSlider = [
         {
             id: "1",
-            src: "./img/anh-slide-1.jpg",
+            src: "./img/anh-silde-10.jpg",
         },
         {
             id: "2",
-            src: "./img/anh-slide-2.jpg",
+            src: "./img/anh-slide-1.jpg",
         },
         {
             id: "3",
-            src: "./img/anh-slide-1.jpg",
+            src: "./img/anh-slide-5.jpg",
         },
         {
             id: "4",
             src: "./img/anh-slide-4.jpg",
+        },
+        {
+            id: "5",
+            src: "./img/anh-slide-8.jpg",
+        },
+        {
+            id: "6",
+            src: "./img/anh-slide-2.jpg",
         },
     ];
     return(<div className="pt-[20px]"> <Swiper
