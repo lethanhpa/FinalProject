@@ -93,9 +93,27 @@ body {
 
 .swiper_banner .swiper-pagination-bullet-active {
   box-sizing: border-box !important;
-  background: #FF0000 !important;
+  background: #FF782C !important;
   border: solid #ffffff 0.125rem !important;
   width: 0.875rem !important;
   height: 0.875rem !important;
   opacity: 1 !important;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  padding: 8px 16px;
+  color: #ff8533 !important;
+}
+
+.swiper-button-next:after,
+.swiper-button-prev::after{
+  font-size: 20px !important;
+}
+
+@media (min-width: 480px){
+  .swiper-button-next::after,
+  .swiper-button-prev::after{
+    font-size: 30px !important;
+  }
 }

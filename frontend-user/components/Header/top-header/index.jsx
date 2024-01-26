@@ -191,6 +191,21 @@ function TopHeader() {
                                         Khuyến mãi
                                     </Link>
                                 </li>
+                                <li
+                                    className={classNames(
+                                        "text-base font-normal font-roboto leading-7",
+                                    )}
+                                >
+                                    <Link
+                                        href="/contact"
+                                        className={`flex items-center ${router.pathname === "/contact"
+                                            ? "text-primry"
+                                            : ""
+                                            }`}
+                                    >
+                                        Liên hệ
+                                    </Link>
+                                </li>
                             </ul>
                             <div className="relative sm:justify-center border-red md:hidden sm:pt-2 pt-[0.5rem]">
                                 <input

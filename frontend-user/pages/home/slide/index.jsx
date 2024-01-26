@@ -46,7 +46,7 @@ function Slide(){
         {listSlider.map((item) => {
             return (
                 <SwiperSlide key={item.id}>
-                    <img src={item.src} alt={`slide-${item.id}`} className="w-full sm:h-[30rem] h-[12.5rem] object-cover" />
+                    <img src={item.src} alt={`slide-${item.id}`} className="w-full sm:h-[30rem] h-[15rem] object-cover" />
                 </SwiperSlide>
             );
         })}
