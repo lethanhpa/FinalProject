@@ -3,8 +3,9 @@ import {
     Star
 } from "lucide-react";
 import Link from "next/link";
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Autoplay, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { ChevronsRight } from 'lucide-react';
 
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -109,7 +110,11 @@ function SellingProduct() {
     const swiperRef = useRef();
     return (
         <div className="pt-[2.5rem]">
-            <span className="font-roboto font-medium text-primry text-xl">SẢN PHẨM BÁN CHẠY</span>
+            <div className="flex justify-between">
+                <span className="font-roboto font-medium text-primry text-xl">SẢN PHẨM BÁN CHẠY</span>
+                <Link href="/" className="flex font-roboto text-primry underline">Xem thêm <ChevronsRight /></Link>
+            </div>
+
             <div className="flex pb-[4.3125rem] border-b border-primry pt-[1.25rem]">
                 <Swiper
                     modules={[Autoplay, Navigation]}

@@ -5,8 +5,7 @@ import Link from "next/link";
 import { listAccount } from "@/constants/data-account.js"
 import Navigation from "../navigation";
 import { useRouter } from "next/router";
-"../navigation/index"
-
+"../navigation/index";
 
 function TopHeader() {
     const router = useRouter();
@@ -229,7 +228,6 @@ function TopHeader() {
                 </div>
             </div>
         </div>
-
     )
 }
 export default memo(TopHeader);

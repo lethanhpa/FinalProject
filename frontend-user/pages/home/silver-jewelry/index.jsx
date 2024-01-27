@@ -3,9 +3,9 @@ import {
     Star
 } from "lucide-react";
 import Link from "next/link";
-import { Autoplay, Navigation } from "swiper/modules";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { ChevronsRight } from 'lucide-react';
+import { useRouter } from "next/router";
 
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -13,7 +13,13 @@ import "swiper/css/scrollbar";
 
 import "swiper/css";
 
-function NewProduct() {
+function SliverJewelry() {
+
+    const router = useRouter();
+
+    const handleLink = () => {
+        router.push("/");
+    }
     const listCategory = [
         {
             id: "1",
@@ -109,12 +115,12 @@ function NewProduct() {
 
     const swiperRef = useRef();
     return (
-        <div className="pt-[2.5rem]">
-            <div className="flex justify-between">
-                <span className="font-roboto font-medium text-primry text-xl">SẢN PHẨM MỚI</span>
-                <Link href="/" className="flex font-roboto text-primry underline">Xem thêm <ChevronsRight /></Link>
+        <div>
+            <div className="mt-[3.125rem] flex justify-center w-full">
+                <img src="./img/trang-suc-bac.jpg" alt="trang-suc-bac" className="lg:w-[1200px]" />
             </div>
-            <div className="flex pb-[4.3125rem] border-b border-primry pt-[1.25rem]">
+            <p className="font-roboto font-medium text-primry text-xl mt-[50px] flex justify-center">TRANG SỨC BẠC</p>
+            <div className="flex pb-[2.5rem] pt-[1.25rem]">
                 <Swiper
                     modules={[Autoplay, Navigation]}
                     spaceBetween={30}
@@ -182,8 +188,13 @@ function NewProduct() {
                         })}
                 </Swiper>
             </div>
-        </div>
-    );
+            <div className="flex justify-center items-center text-center pb-[3.125rem] ">
+                <button type="button" onClick={handleLink} className="rounded-md px-4 py-1 font-roboto border border-primry text-primry hover:text-white hover:bg-primry">
+                    Xem thêm
+                </button>
+            </div>
+
+        </div>)
 }
 
-export default memo(NewProduct);
+export default memo(SliverJewelry);

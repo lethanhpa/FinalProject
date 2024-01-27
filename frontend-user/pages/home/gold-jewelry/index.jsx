@@ -5,6 +5,7 @@ import {
 import Link from "next/link";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useRouter } from "next/router";
 
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -13,6 +14,12 @@ import "swiper/css/scrollbar";
 import "swiper/css";
 
 function GoldJewelry() {
+    const router = useRouter();
+
+    const handleLink = () => {
+        router.push("/");
+    }
+
     const listCategory = [
         {
             id: "1",
@@ -107,80 +114,86 @@ function GoldJewelry() {
     ];
 
     const swiperRef = useRef();
-    return (<div>
-        <div className="mt-[3.125rem] flex justify-center w-full">
-            <img src="./img/banner-vang.PNG" alt="trang-suc-vang" />
-        </div>
-        <p className="font-roboto font-medium text-primry text-xl mt-[50px] flex justify-center">TRANG SỨC VÀNG</p>
-        <div className="flex pb-[4.3125rem] border-b border-primry pt-[1.25rem]">
-            <Swiper
-                modules={[Autoplay, Navigation]}
-                spaceBetween={30}
-                navigation
-                slidesPerView="auto"
-                autoplay={{
-                    delay: 800,
-                }}
-                ref={swiperRef}
-                breakpoints={{
-                    320: {
-                        slidesPerView: 1,
-                        spaceBetween: 30,
-                    },
-                    360: {
-                        slidesPerView: 1.5,
-                        spaceBetween: 30,
-                    },
-                    480: {
-                        slidesPerView: 2,
-                        spaceBetween: 30,
-                    },
-                    600: {
-                        slidesPerView: 2.5,
-                        spaceBetween: 30,
-                    },
-                    800: {
-                        slidesPerView: 3.5,
-                        spaceBetween: 30,
-                    },
-                    1280: {
-                        slidesPerView: 4,
-                        spaceBetween: 30,
-                    },
-                    1440: {
-                        slidesPerView: 5,
-                        spaceBetween: 30,
-                    },
-                }}
-            >
-                {listCategory &&
-                    listCategory.map((item) => {
-                        return (
-                            <SwiperSlide key={item.id}>
-                                <Link
-                                    href="./id"
-                                    className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[100px] min-h-[100px] shadow-md rounded hover:bg-second-3 flex justify-center items-center "
-                                >
-                                    <div className="flex flex-col gap-[6px]">
-                                        <img src={item.src} alt={`slide-${item.id}`} className="sm:w-full sm:block flex items-center w-[120px] object-cover" />
-                                        <p className="font-roboto text-sm font-normal flex justify-center truncate">{item.name}</p>
-                                        <span className="font-roboto text-sm font-normal flex justify-center">{item.code}</span>
-                                        <span className="font-roboto text-sm flex justify-center text-primry font-semibold">{item.price}đ</span>
-                                        <div className="flex justify-between px-[0.5rem]">
-                                            <div className="font-roboto text-sm opacity-50 font-normal flex gap-[4px]">
-                                                <p>{item.rating.rate}</p>
-                                                <p>({item.rating.count})</p>
+    return (
+        <div className="border-b border-primry">
+            <div className="mt-[3.125rem] flex justify-center w-full">
+                <img src="./img/banner-vang.PNG" alt="trang-suc-vang" className="xl:w-[1200px]" />
+            </div>
+            <p className="font-roboto font-medium text-primry text-xl mt-[50px] flex justify-center">TRANG SỨC VÀNG</p>
+            <div className="flex pb-[2.5rem] pt-[1.25rem]">
+                <Swiper
+                    modules={[Autoplay, Navigation]}
+                    spaceBetween={30}
+                    navigation
+                    slidesPerView="auto"
+                    autoplay={{
+                        delay: 800,
+                    }}
+                    ref={swiperRef}
+                    breakpoints={{
+                        320: {
+                            slidesPerView: 1,
+                            spaceBetween: 30,
+                        },
+                        360: {
+                            slidesPerView: 1.5,
+                            spaceBetween: 30,
+                        },
+                        480: {
+                            slidesPerView: 2,
+                            spaceBetween: 30,
+                        },
+                        600: {
+                            slidesPerView: 2.5,
+                            spaceBetween: 30,
+                        },
+                        800: {
+                            slidesPerView: 3.5,
+                            spaceBetween: 30,
+                        },
+                        1280: {
+                            slidesPerView: 4,
+                            spaceBetween: 30,
+                        },
+                        1440: {
+                            slidesPerView: 5,
+                            spaceBetween: 30,
+                        },
+                    }}
+                >
+                    {listCategory &&
+                        listCategory.map((item) => {
+                            return (
+                                <SwiperSlide key={item.id}>
+                                    <Link
+                                        href="./id"
+                                        className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[100px] min-h-[100px] shadow-md rounded hover:bg-second-3 flex justify-center items-center "
+                                    >
+                                        <div className="flex flex-col gap-[6px]">
+                                            <img src={item.src} alt={`slide-${item.id}`} className="sm:w-full sm:block flex items-center w-[120px] object-cover" />
+                                            <p className="font-roboto text-sm font-normal flex justify-center truncate">{item.name}</p>
+                                            <span className="font-roboto text-sm font-normal flex justify-center">{item.code}</span>
+                                            <span className="font-roboto text-sm flex justify-center text-primry font-semibold">{item.price}đ</span>
+                                            <div className="flex justify-between px-[0.5rem]">
+                                                <div className="font-roboto text-sm opacity-50 font-normal flex gap-[4px]">
+                                                    <p>{item.rating.rate}</p>
+                                                    <p>({item.rating.count})</p>
+                                                </div>
+                                                <p className="font-roboto text-sm opacity-50 font-normal">{item.sell} <span>đã bán</span></p>
                                             </div>
-                                            <p className="font-roboto text-sm opacity-50 font-normal">{item.sell} <span>đã bán</span></p>
                                         </div>
-                                    </div>
-                                </Link>
-                            </SwiperSlide>
-                        );
-                    })}
-            </Swiper>
-        </div>
-    </div>)
+                                    </Link>
+                                </SwiperSlide>
+                            );
+                        })}
+                </Swiper>
+            </div>
+            <div className="flex justify-center items-center text-center pb-[3.125rem] ">
+                <button type="button" onClick={handleLink} className="rounded-md px-4 py-1 font-roboto border border-primry text-primry hover:text-white hover:bg-primry">
+                    Xem thêm
+                </button>
+            </div>
+        </div>)
 }
 
 export default memo(GoldJewelry);
