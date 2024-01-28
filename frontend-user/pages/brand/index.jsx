@@ -1,7 +1,12 @@
-import React,{memo} from "react";
+import React, { memo } from "react";
+import SignIn from "../sign-in";
 
-function Brand(){
-    return(<div className="container">Brand</div>)
+function Brand() {
+  return (
+    <div className="container">
+      <SignIn />
+    </div>
+  );
 }
 
 export default memo(Brand);
