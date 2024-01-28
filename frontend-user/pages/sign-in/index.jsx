@@ -29,7 +29,7 @@ function SignIn() {
 
         <Form.Item
           name="email"
-          className="text-center pt-2"
+          className="mx-12 pt-2"
           rules={[
             {
               required: true,
@@ -42,7 +42,7 @@ function SignIn() {
           ]}
         >
           <Input
-            className="w-5/6 h-12"
+            className="h-12"
             prefix={<MailOutlined className="mr-2 text-lg text-primry " />}
             placeholder="Email"
           />
@@ -50,7 +50,7 @@ function SignIn() {
 
         <Form.Item
           name="password"
-          className="text-center"
+          className="mx-12"
           rules={[
             {
               required: true,
@@ -63,7 +63,7 @@ function SignIn() {
           ]}
         >
           <Input.Password
-            className="w-5/6 h-12"
+            className="h-12"
             prefix={<LockOutlined className="mr-2 text-lg text-primry" />}
             placeholder="Mật khẩu"
             iconRender={(visible) =>
@@ -72,11 +72,11 @@ function SignIn() {
           />
         </Form.Item>
 
-        <Form.Item className="text-center">
+        <Form.Item className="text-center mx-12">
           <Button
             type="primry"
             htmlType="submit"
-            className="w-5/6 bg-primry text-white p-2 h-12 "
+            className="w-full bg-primry text-white p-2 h-12 "
           >
             Đăng nhập
           </Button>

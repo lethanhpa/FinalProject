@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { Form, Input, Button, Radio, DatePicker } from "antd";
+import { Form, Input, Button, Radio, DatePicker, Space } from "antd";
 import {
   UserOutlined,
   MailOutlined,
@@ -127,15 +127,16 @@ const SignUp = () => {
 
         <Form.Item
           name="gender"
-          className="mx-12"
-          rules={[{ required: true, message: "Vui lòng chọn giới tính" }]}
+          className="mx-12 border border-gray rounded-lg h-10 flex items-center"
         >
-          <TeamOutlined className="ml-3 mr-6 text-lg text-primry" />
-          <Radio.Group>
-            <Radio value="male">Nam</Radio>
-            <Radio value="female">Nữ</Radio>
-            <Radio value="lgbt">Khác</Radio>
-          </Radio.Group>
+          <Space>
+            <TeamOutlined className="ml-3 mr-3 text-lg text-primry" />
+            <Radio.Group>
+              <Radio value="male">Nam</Radio>
+              <Radio value="female">Nữ</Radio>
+              <Radio value="lgbt">Khác</Radio>
+            </Radio.Group>
+          </Space>
         </Form.Item>
 
         <Form.Item
@@ -150,7 +151,7 @@ const SignUp = () => {
           />
         </Form.Item>
 
-        <Form.Item className="mx-12">
+        <Form.Item name="submit" className="mx-12">
           <Button
             type="primry"
             htmlType="submit"
