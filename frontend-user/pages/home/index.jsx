@@ -6,11 +6,11 @@ import Diamond from "./diamond-jewelry";
 import GoldJewelry from "./gold-jewelry";
 import SliverJewelry from "./silver-jewelry";
 
-function HomePage() {
+function HomePage({products}) {
     return (
         <>
             <Slide />
-            <SellingProducts/>
+            <SellingProducts products={products}/>
             <NewProduct/>
             <Diamond/>
             <GoldJewelry/>
