@@ -82,7 +82,7 @@ function SignIn() {
           </Button>
         </Form.Item>
 
-        <div className="flex mx-6">
+        <div className="flex mx-6 text-sm">
           <Link href="/forgot-password" className="login-form-forgot">
             Quên mật khẩu?
           </Link>

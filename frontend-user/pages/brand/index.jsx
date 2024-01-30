@@ -4,7 +4,7 @@ import SignIn from "../sign-in";
 function Brand() {
   return (
     <div className="container">
-      <SignIn />
+      brand
     </div>
   );
 }
