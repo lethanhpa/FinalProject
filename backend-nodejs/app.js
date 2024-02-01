@@ -12,7 +12,8 @@ const { default: mongoose } = require('mongoose');
 const { CONNECTION_STRING } = require('./constants/dbSettings');
 
 const categoriesRouter = require('./routes/categories');
-
+const customersRouter = require('./routes/customers');
+const employeesRouter = require('./routes/employees');
 const app = express();
 
 // view engine setup
@@ -44,6 +45,8 @@ mongoose.connection.on('error', (err) => {
 });
 
 app.use('/categories', categoriesRouter);
+app.use('/customers', customersRouter);
+app.use('/employees', employeesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
