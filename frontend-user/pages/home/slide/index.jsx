@@ -12,7 +12,7 @@ function Slide(){
     const listSlider = [
         {
             id: "1",
-            src: "./img/anh-silde-10.jpg",
+            src: "./img/anh-slide-10.jpg",
         },
         {
             id: "2",

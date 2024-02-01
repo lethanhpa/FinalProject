@@ -10,7 +10,7 @@ const listAccount = [
       id: "2",
       icon: <ShoppingBag size={24} />,
       name: "My Order",
-      link: "./",
+      link: "./purchase-history",
     },
     {
       id: "3",
