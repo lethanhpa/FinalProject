@@ -3,7 +3,7 @@ const yup = require('yup');
 const ObjectId = require("mongodb").ObjectId;
 const { CONNECTION_STRING } = require('../constants/dbSettings');
 const { default: mongoose } = require('mongoose');
-const { Category } = require('../models');
+const { Reviews } = require('../models');
 
 // MONGOOSE
 mongoose.set('strictQuery', false);
@@ -14,7 +14,7 @@ const router = express.Router();
 //GEt ALL
 router.get('/', function (req, res, next) {
   try {
-    Category.find()
+    Reviews.find()
       .then((result) => {
         res.send(result);
       })
@@ -42,7 +42,7 @@ router.get('/:id', async function (req, res, next) {
     .then(async () => {
       const id = req.params.id;
 
-      let found = await Category.findById(id);
+      let found = await Reviews.findById(id);
 
       if (found) {
         return res.send({ ok: true, result: found });
@@ -60,7 +60,15 @@ router.post('/', async function (req, res, next) {
   // Validate
   const validationSchema = yup.object({
     body: yup.object({
-      name: yup.string().required(),
+        customerId: yup
+        .string()
+        .required()
+        .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
+          return ObjectId.isValid(value);
+        }),
+        ratingRate: yup.number().min(0).max(5).required(),
+        comment: yup.string().required(),
+        reviewDate: yup.date(),
     }),
   });
 
@@ -69,7 +77,7 @@ router.post('/', async function (req, res, next) {
     .then(async () => {
       try {
         const data = req.body;
-        const newItem = new Category(data);
+        const newItem = new Reviews(data);
         let result = await newItem.save();
 
         return res.send({ ok: true, message: 'Created', result });
@@ -98,7 +106,7 @@ router.delete('/:id', function (req, res, next) {
       try {
         const id = req.params.id;
 
-        let found = await Category.findByIdAndDelete(id);
+        let found = await Reviews.findByIdAndDelete(id);
 
         if (found) {
           return res.send({ ok: true, result: found });
@@ -118,7 +126,7 @@ router.patch("/:id", async function (req, res) {
   try {
     const id = req.params.id;
     const data = req.body;
-    await Category.findByIdAndUpdate(id, data);
+    await Reviews.findByIdAndUpdate(id, data);
     res.send({ ok: true, message: "Updated" });
   } catch (error) {
     res.status(500).send({ ok: false, error });
