@@ -112,7 +112,7 @@ function NewProduct() {
         <div className="pt-[2.5rem]">
             <div className="flex justify-between">
                 <span className="font-roboto font-medium text-primry text-xl">SẢN PHẨM MỚI</span>
-                <Link href="/" className="flex font-roboto text-primry underline">Xem thêm <ChevronsRight /></Link>
+                <Link href="/products-new" className="flex font-roboto text-primry underline">Xem thêm <ChevronsRight /></Link>
             </div>
             <div className="flex pb-[4.3125rem] border-b border-primry pt-[1.25rem]">
                 <Swiper

@@ -17,7 +17,7 @@ function Diamond() {
     const router = useRouter();
 
     const handleLink = () => {
-        router.push("/");
+        router.push("/product-diamond");
     }
 
     const listCategory = [

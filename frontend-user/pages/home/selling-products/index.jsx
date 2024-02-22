@@ -18,8 +18,8 @@ function SellingProduct({ products }) {
     const listCategory = [
         {
             id: "1",
-            name: "Nhẫn kim cương vàng trắng 14k",
-            src: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
+            productName: "Nhẫn kim cương vàng trắng 14k",
+            image1: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
             code: "PNDIHFA000",
             price: 6151000,
             discount: 10,
@@ -29,8 +29,8 @@ function SellingProduct({ products }) {
         },
         {
             id: "2",
-            name: "Nhẫn kim cương vàng trắng 14k",
-            src: "https://vangbac24h.vn/wp-content/uploads/2020/10/kim-c%C6%B0%C6%A1ng.png",
+            productName: "Nhẫn kim cương vàng trắng 14k",
+            image1: "https://vangbac24h.vn/wp-content/uploads/2020/10/kim-c%C6%B0%C6%A1ng.png",
             code: "PNDIHFA000",
             price: 6151000,
             sell: "10",
@@ -39,8 +39,8 @@ function SellingProduct({ products }) {
         },
         {
             id: "3",
-            name: "Nhẫn kim cương vàng trắng 14k",
-            src: "https://cdn.pnj.io/images/detailed/35/gndrwa73675.5a0-nhan-kim-cuong-pnj-vang-trang.png",
+            productName: "Nhẫn kim cương vàng trắng 14k",
+            image1: "https://cdn.pnj.io/images/detailed/35/gndrwa73675.5a0-nhan-kim-cuong-pnj-vang-trang.png",
             code: "PNDIHFA000",
             price: 6151000,
             discount: 10,
@@ -50,8 +50,8 @@ function SellingProduct({ products }) {
         },
         {
             id: "4",
-            name: "Nhẫn kim cương vàng trắng 14k",
-            src: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
+            productName: "Nhẫn kim cương vàng trắng 14k",
+            image1: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
             code: "PNDIHFA000",
             price: 6151000,
             discount: 10,
@@ -61,8 +61,8 @@ function SellingProduct({ products }) {
         },
         {
             id: "5",
-            name: "Nhẫn kim cương vàng trắng 14k",
-            src: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
+            productName: "Nhẫn kim cương vàng trắng 14k",
+            image1: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
             code: "PNDIHFA000",
             price: 6151000,
             sell: "10",
@@ -71,8 +71,8 @@ function SellingProduct({ products }) {
         },
         {
             id: "6",
-            name: "Nhẫn kim cương vàng trắng 14k",
-            src: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
+            productName: "Nhẫn kim cương vàng trắng 14k",
+            image1: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
             code: "PNDIHFA000",
             price: 6151000,
             sell: "10",
@@ -81,8 +81,8 @@ function SellingProduct({ products }) {
         },
         {
             id: "7",
-            name: "Nhẫn kim cương vàng trắng 14k",
-            src: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
+            productName: "Nhẫn kim cương vàng trắng 14k",
+            image1: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
             code: "PNDIHFA000",
             price: 6151000,
             sell: "10",
@@ -91,8 +91,8 @@ function SellingProduct({ products }) {
         },
         {
             id: "8",
-            name: "Nhẫn kim cương vàng trắng 14k",
-            src: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
+            productName: "Nhẫn kim cương vàng trắng 14k",
+            image1: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
             code: "PNDIHFA000",
             price: 6151000,
             discount: 10,
@@ -102,8 +102,8 @@ function SellingProduct({ products }) {
         },
         {
             id: "9",
-            name: "Nhẫn kim cương vàng trắng 14k",
-            src: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
+            productName: "Nhẫn kim cương vàng trắng 14k",
+            image1: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
             code: "PNDIHFA000",
             price: 6151000,
             sell: "10",
@@ -121,7 +121,7 @@ function SellingProduct({ products }) {
         <div className="pt-[2.5rem]">
             <div className="flex justify-between">
                 <span className="font-roboto font-medium text-primry text-xl">SẢN PHẨM BÁN CHẠY</span>
-                <Link href="/" className="flex font-roboto text-primry underline">Xem thêm <ChevronsRight /></Link>
+                <Link href="/selling" className="flex font-roboto text-primry underline">Xem thêm <ChevronsRight /></Link>
             </div>
 
             <div className="flex pb-[4.3125rem] border-b border-primry pt-[1.25rem]">
@@ -174,7 +174,7 @@ function SellingProduct({ products }) {
                                             <Link
                                                 href={`/${item.id}`}
                                             >
-                                                <img src={item.src} alt={`slide-${item.id}`} className="sm:w-full sm:block flex items-center w-[7.5rem] object-contain" />
+                                                <img src={item.image1} alt={`slide-${item.id}`} className="sm:w-full sm:block flex items-center w-[7.5rem] object-contain" />
 
                                             </Link>
                                             <div className="!absolute h-10  text-text-1 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all ">
@@ -187,10 +187,14 @@ function SellingProduct({ products }) {
                                                     Thêm vào giỏ hàng
                                                 </button>
                                             </div>
+                                            {item.discount && (<span className="!absolute top-0 right-0 bg-primry font-poppins text-sm font-normal py-[4px] px-[25px] text-white">
+                                                -{item.discount}%
+                                            </span>)}
+
                                         </div>
 
                                         <div className="flex flex-col gap-[6px]">
-                                            <p className="font-roboto text-sm font-normal flex justify-center truncate">{item.name}</p>
+                                            <p className="font-roboto text-sm font-normal flex justify-center truncate">{item.productName}</p>
                                             <span className="font-roboto text-sm font-normal flex justify-center">{item.code}</span>
                                             <div className="flex justify-around">
                                                 {item.discount ? (
@@ -205,8 +209,6 @@ function SellingProduct({ products }) {
                                                         {numeral(item.price).format("0,0")}đ
                                                     </p>
                                                 )}
-
-
                                             </div>
 
                                             <div className="flex justify-between px-[0.5rem]">

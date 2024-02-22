@@ -18,7 +18,7 @@ function SliverJewelry() {
     const router = useRouter();
 
     const handleLink = () => {
-        router.push("/");
+        router.push("/product-silver");
     }
     const listCategory = [
         {

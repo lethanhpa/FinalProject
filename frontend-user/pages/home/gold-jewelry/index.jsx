@@ -17,7 +17,7 @@ function GoldJewelry() {
     const router = useRouter();
 
     const handleLink = () => {
-        router.push("/");
+        router.push("/product-gold");
     }
 
     const listCategory = [

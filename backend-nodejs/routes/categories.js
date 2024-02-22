@@ -61,7 +61,6 @@ router.post('/', async function (req, res, next) {
   const validationSchema = yup.object({
     body: yup.object({
       name: yup.string().required(),
-      description: yup.string(),
     }),
   });
 
