@@ -10,7 +10,6 @@ const categorySchema = new Schema(
   {
     versionKey: false,
     timestamps: true
-
   },
 );
 categorySchema.pre("create", function (next) {

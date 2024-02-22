@@ -12,6 +12,7 @@ const { default: mongoose } = require('mongoose');
 const { CONNECTION_STRING } = require('./constants/dbSettings');
 
 const categoriesRouter = require('./routes/categories');
+const shippingAddressRouter = require('./routes/shippingAddress');
 
 const app = express();
 
@@ -44,6 +45,7 @@ mongoose.connection.on('error', (err) => {
 });
 
 app.use('/categories', categoriesRouter);
+app.use('/shippingAddress', shippingAddressRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
