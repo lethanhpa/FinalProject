@@ -22,13 +22,8 @@
     "react-hook-form": "^7.49.3",
     "react-toastify": "^10.0.4",
     "swiper": "^11.0.5",
-<<<<<<< HEAD
-    "yarn": "^1.22.21",
-    "yup": "^1.3.3"
-=======
     "yup": "^1.3.3",
     "zustand": "^4.5.0"
->>>>>>> d600d1e34bdccec6757197636964b54a3a610399
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",
