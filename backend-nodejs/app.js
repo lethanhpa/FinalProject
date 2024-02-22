@@ -12,7 +12,14 @@ const { default: mongoose } = require('mongoose');
 const { CONNECTION_STRING } = require('./constants/dbSettings');
 
 const categoriesRouter = require('./routes/categories');
+const ordersRouter = require('./routes/orders');
+const productImagesRouter = require('./routes/productImages');
+const reviewsRouter = require('./routes/reviews');
+const sizesRouter = require('./routes/sizes');
+const productsRouter = require('./routes/products');
 const shippingAddressRouter = require('./routes/shippingAddress');
+const customersRouter = require('./routes/customers');
+const employeesRouter = require('./routes/employees');
 
 const app = express();
 
@@ -45,7 +52,14 @@ mongoose.connection.on('error', (err) => {
 });
 
 app.use('/categories', categoriesRouter);
+app.use('/orders', ordersRouter);
 app.use('/shippingAddress', shippingAddressRouter);
+app.use('/productImages', productImagesRouter);
+app.use('/reviews', reviewsRouter);
+app.use('/sizes', sizesRouter);
+app.use('/products', productsRouter);
+app.use('/customers', customersRouter);
+app.use('/employees', employeesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

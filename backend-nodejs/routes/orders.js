@@ -15,7 +15,7 @@ mongoose.connect(CONNECTION_STRING);
 router.get('/count', async (req, res, next) => {
     try {
         const orderCount = await Order.countDocuments();
-        res.status(200).json({ count: orderCount });
+        res.status(200).json({ count: orderCount }); s
     } catch (err) {
         res.status(500).json({ message: 'Internal Server Error' });
     }
@@ -24,7 +24,7 @@ router.get('/count', async (req, res, next) => {
 
 router.get('/', async (req, res, next) => {
     try {
-        let results = await Order.find().populate('customer').populate('employee').lean({ virtuals: true });
+        let results = await Order.find().populate('customer').populate('employee').populate('shippingAddress').lean({ virtuals: true });
 
         res.json(results);
     } catch (error) {
