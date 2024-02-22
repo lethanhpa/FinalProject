@@ -4,16 +4,20 @@ const { Schema, model } = mongoose;
 const categorySchema = new Schema(
   {
     name: { type: String, required: [true, 'Category bắt buộc phải nhập'] },
+<<<<<<< HEAD
+=======
+
+>>>>>>> afdaac66d33a0038597743d08f6566d45fb9dc8c
   },
   {
     versionKey: false,
     timestamps: true
-
   },
 );
-categorySchema.pre("create", function (next) {
-  next();
-});
+categorySchema.set('toObject', { virtuals: true });
+
+categorySchema.set('toJSON', { virtuals: true });
+
 const Category = model('Category', categorySchema);
 
 module.exports = Category;

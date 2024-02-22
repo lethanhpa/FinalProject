@@ -13,6 +13,7 @@ import Link from "next/link";
 
 const SignUp = () => {
   const onFinish = (values) => {
+    // Xử lý logic đăng ký ở đây
     console.log(values);
   };
 
@@ -126,7 +127,7 @@ const SignUp = () => {
 
         <Form.Item
           name="gender"
-          className="mx-12 border border-gray rounded-lg h-10 flex items-center"
+          className="mx-12 border border-gray rounded-lg h-auto py-1 flex items-center"
         >
           <Space>
             <TeamOutlined className="ml-3 mr-3 text-lg text-primry" />
@@ -159,13 +160,6 @@ const SignUp = () => {
             Đăng ký
           </Button>
         </Form.Item>
-
-        <div className="flex mx-6">
-          <h4 className="ml-auto">Bạn đã có tài khoản?</h4>
-          <Link className="text-primry ml-2" href="/sign-in">
-            Đăng nhập
-          </Link>
-        </div>
       </Form>
     </div>
   );
