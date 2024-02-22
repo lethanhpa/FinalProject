@@ -1,6 +1,9 @@
+import React from 'react';
+import { Button } from 'antd';
+
 function Header(){
     return(<div>
-        Header
+        <Button type="primary">Primary</Button>
     </div>)
 }
 

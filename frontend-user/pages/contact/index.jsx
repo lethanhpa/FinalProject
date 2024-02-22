@@ -29,7 +29,7 @@ function Contact() {
     ];
 
     return (<div className="container ">
-        <div className="mt-[20px] h-[6.25rem]">
+        <div className="mt-[20px]">
             <Swiper
                 modules={[Autoplay, Navigation, Pagination]}
                 autoplay={{ delay: 2000 }}
