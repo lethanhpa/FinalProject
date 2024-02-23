@@ -15,11 +15,11 @@ import "swiper/css/scrollbar";
 import "swiper/css";
 
 function Diamond() {
-    const router = useRouter();
+  const router = useRouter();
 
-    const handleLink = () => {
-        router.push("/product-diamond");
-    }
+  const handleLink = () => {
+    router.push("/product-diamond");
+  };
 
     const listCategory = [
         {

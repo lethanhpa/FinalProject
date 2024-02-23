@@ -1,11 +1,9 @@
 import React, { memo, useRef } from "react";
-import {
-    Star
-} from "lucide-react";
+import { Star } from "lucide-react";
 import Link from "next/link";
 import { Autoplay, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { ChevronsRight, ShoppingCart } from 'lucide-react';
+import { ChevronsRight, ShoppingCart } from "lucide-react";
 import numeral from "numeral";
 
 import "swiper/css/navigation";
@@ -15,104 +13,104 @@ import "swiper/css/scrollbar";
 import "swiper/css";
 
 function SellingProduct({ products }) {
-    const listCategory = [
-        {
-            id: "1",
-            productName: "Nhẫn kim cương vàng trắng 14k",
-            image1: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
-            code: "PNDIHFA000",
-            price: 6151000,
-            discount: 10,
-            sell: "10",
-            rating:
-                { rate: <Star />, count: "2" },
-        },
-        {
-            id: "2",
-            productName: "Nhẫn kim cương vàng trắng 14k",
-            image1: "https://vangbac24h.vn/wp-content/uploads/2020/10/kim-c%C6%B0%C6%A1ng.png",
-            code: "PNDIHFA000",
-            price: 6151000,
-            sell: "10",
-            rating:
-                { rate: <Star />, count: "2" },
-        },
-        {
-            id: "3",
-            productName: "Nhẫn kim cương vàng trắng 14k",
-            image1: "https://cdn.pnj.io/images/detailed/35/gndrwa73675.5a0-nhan-kim-cuong-pnj-vang-trang.png",
-            code: "PNDIHFA000",
-            price: 6151000,
-            discount: 10,
-            sell: "10",
-            rating:
-                { rate: <Star />, count: "2" },
-        },
-        {
-            id: "4",
-            productName: "Nhẫn kim cương vàng trắng 14k",
-            image1: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
-            code: "PNDIHFA000",
-            price: 6151000,
-            discount: 10,
-            sell: "10",
-            rating:
-                { rate: <Star />, count: "2" },
-        },
-        {
-            id: "5",
-            productName: "Nhẫn kim cương vàng trắng 14k",
-            image1: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
-            code: "PNDIHFA000",
-            price: 6151000,
-            sell: "10",
-            rating:
-                { rate: <Star />, count: "2" },
-        },
-        {
-            id: "6",
-            productName: "Nhẫn kim cương vàng trắng 14k",
-            image1: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
-            code: "PNDIHFA000",
-            price: 6151000,
-            sell: "10",
-            rating:
-                { rate: <Star />, count: "2" },
-        },
-        {
-            id: "7",
-            productName: "Nhẫn kim cương vàng trắng 14k",
-            image1: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
-            code: "PNDIHFA000",
-            price: 6151000,
-            sell: "10",
-            rating:
-                { rate: <Star />, count: "2" },
-        },
-        {
-            id: "8",
-            productName: "Nhẫn kim cương vàng trắng 14k",
-            image1: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
-            code: "PNDIHFA000",
-            price: 6151000,
-            discount: 10,
-            sell: "10",
-            rating:
-                { rate: <Star />, count: "2" },
-        },
-        {
-            id: "9",
-            productName: "Nhẫn kim cương vàng trắng 14k",
-            image1: "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
-            code: "PNDIHFA000",
-            price: 6151000,
-            sell: "10",
-            rating:
-                { rate: <Star />, count: "2" },
-        },
-    ];
+  const listCategory = [
+    {
+      id: "1",
+      productName: "Nhẫn kim cương vàng trắng 14k",
+      image1:
+        "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
+      code: "PNDIHFA000",
+      price: 6151000,
+      discount: 10,
+      sell: "10",
+      rating: { rate: <Star />, count: "2" },
+    },
+    {
+      id: "2",
+      productName: "Nhẫn kim cương vàng trắng 14k",
+      image1:
+        "https://vangbac24h.vn/wp-content/uploads/2020/10/kim-c%C6%B0%C6%A1ng.png",
+      code: "PNDIHFA000",
+      price: 6151000,
+      sell: "10",
+      rating: { rate: <Star />, count: "2" },
+    },
+    {
+      id: "3",
+      productName: "Nhẫn kim cương vàng trắng 14k",
+      image1:
+        "https://cdn.pnj.io/images/detailed/35/gndrwa73675.5a0-nhan-kim-cuong-pnj-vang-trang.png",
+      code: "PNDIHFA000",
+      price: 6151000,
+      discount: 10,
+      sell: "10",
+      rating: { rate: <Star />, count: "2" },
+    },
+    {
+      id: "4",
+      productName: "Nhẫn kim cương vàng trắng 14k",
+      image1:
+        "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
+      code: "PNDIHFA000",
+      price: 6151000,
+      discount: 10,
+      sell: "10",
+      rating: { rate: <Star />, count: "2" },
+    },
+    {
+      id: "5",
+      productName: "Nhẫn kim cương vàng trắng 14k",
+      image1:
+        "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
+      code: "PNDIHFA000",
+      price: 6151000,
+      sell: "10",
+      rating: { rate: <Star />, count: "2" },
+    },
+    {
+      id: "6",
+      productName: "Nhẫn kim cương vàng trắng 14k",
+      image1:
+        "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
+      code: "PNDIHFA000",
+      price: 6151000,
+      sell: "10",
+      rating: { rate: <Star />, count: "2" },
+    },
+    {
+      id: "7",
+      productName: "Nhẫn kim cương vàng trắng 14k",
+      image1:
+        "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
+      code: "PNDIHFA000",
+      price: 6151000,
+      sell: "10",
+      rating: { rate: <Star />, count: "2" },
+    },
+    {
+      id: "8",
+      productName: "Nhẫn kim cương vàng trắng 14k",
+      image1:
+        "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
+      code: "PNDIHFA000",
+      price: 6151000,
+      discount: 10,
+      sell: "10",
+      rating: { rate: <Star />, count: "2" },
+    },
+    {
+      id: "9",
+      productName: "Nhẫn kim cương vàng trắng 14k",
+      image1:
+        "https://cdn.pnj.io/images/detailed/34/GNDRWA46447.516_pbvw-qz_zsca-i1_6ln9-m1_ifm4-cu_t03d-8v_cnyp-ia_14li-65_o5jd-ok_yfu1-w1_r75b-oc_o56i-mx_i6ak-qs_z8c6-81_odnf-fp_enp5-u7_j33d-cb.jpg",
+      code: "PNDIHFA000",
+      price: 6151000,
+      sell: "10",
+      rating: { rate: <Star />, count: "2" },
+    },
+  ];
 
-    const swiperRef = useRef();
+  const swiperRef = useRef();
 
     const handleAddCart = () => {
         console.log("Add to cart");
