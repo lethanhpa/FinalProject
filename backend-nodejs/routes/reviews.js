@@ -13,7 +13,6 @@ const router = express.Router();
 
 //GEt ALL
 router.get('/', function (req, res, next) {
-<<<<<<< HEAD
   try {
     Reviews.find()
       .then((result) => {
@@ -25,24 +24,10 @@ router.get('/', function (req, res, next) {
   } catch (err) {
     res.sendStatus(500);
   }
-=======
-    try {
-        Reviews.find()
-            .then((result) => {
-                res.send(result);
-            })
-            .catch((err) => {
-                res.status(400).send({ message: err.message });
-            });
-    } catch (err) {
-        res.sendStatus(500);
-    }
->>>>>>> task/create-cart-cartDetail
 });
 
 //GET id
 router.get('/:id', async function (req, res, next) {
-<<<<<<< HEAD
   // Validate
   const validationSchema = yup.object().shape({
     params: yup.object({
@@ -68,38 +53,10 @@ router.get('/:id', async function (req, res, next) {
     .catch((err) => {
       return res.status(400).json({ type: err.name, errors: err.errors, message: err.message, provider: 'yup' });
     });
-=======
-    // Validate
-    const validationSchema = yup.object().shape({
-        params: yup.object({
-            id: yup.string().test('Validate ObjectID', '${path} is not valid ObjectID', (value) => {
-                return ObjectId.isValid(value);
-            }),
-        }),
-    });
-
-    validationSchema
-        .validate({ params: req.params }, { abortEarly: false })
-        .then(async () => {
-            const id = req.params.id;
-
-            let found = await Reviews.findById(id);
-
-            if (found) {
-                return res.send({ ok: true, result: found });
-            }
-
-            return res.send({ ok: false, message: 'Object not found' });
-        })
-        .catch((err) => {
-            return res.status(400).json({ type: err.name, errors: err.errors, message: err.message, provider: 'yup' });
-        });
->>>>>>> task/create-cart-cartDetail
 });
 
 //POST
 router.post('/', async function (req, res, next) {
-<<<<<<< HEAD
   // Validate
   const validationSchema = yup.object({
     body: yup.object({
@@ -131,44 +88,10 @@ router.post('/', async function (req, res, next) {
     .catch((err) => {
       return res.status(400).json({ type: err.name, errors: err.errors, provider: 'yup' });
     });
-=======
-    // Validate
-    const validationSchema = yup.object({
-        body: yup.object({
-            customerId: yup
-                .string()
-                .required()
-                .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
-                    return ObjectId.isValid(value);
-                }),
-            ratingRate: yup.number().min(0).max(5).required(),
-            comment: yup.string().required(),
-            reviewDate: yup.date(),
-        }),
-    });
-
-    validationSchema
-        .validate({ body: req.body }, { abortEarly: false })
-        .then(async () => {
-            try {
-                const data = req.body;
-                const newItem = new Reviews(data);
-                let result = await newItem.save();
-
-                return res.send({ ok: true, message: 'Created', result });
-            } catch (err) {
-                return res.status(500).json({ error: err });
-            }
-        })
-        .catch((err) => {
-            return res.status(400).json({ type: err.name, errors: err.errors, provider: 'yup' });
-        });
->>>>>>> task/create-cart-cartDetail
 });
 
 //DELETE
 router.delete('/:id', function (req, res, next) {
-<<<<<<< HEAD
   const validationSchema = yup.object().shape({
     params: yup.object({
       id: yup.string().test('Validate ObjectID', '${path} is not valid ObjectID', (value) => {
@@ -211,47 +134,3 @@ router.patch("/:id", async function (req, res) {
 });
 
 module.exports = router;
-=======
-    const validationSchema = yup.object().shape({
-        params: yup.object({
-            id: yup.string().test('Validate ObjectID', '${path} is not valid ObjectID', (value) => {
-                return ObjectId.isValid(value);
-            }),
-        }),
-    });
-
-    validationSchema
-        .validate({ params: req.params }, { abortEarly: false })
-        .then(async () => {
-            try {
-                const id = req.params.id;
-
-                let found = await Reviews.findByIdAndDelete(id);
-
-                if (found) {
-                    return res.send({ ok: true, result: found });
-                }
-
-                return res.status(410).send({ ok: false, message: 'Object not found' });
-            } catch (err) {
-                return res.status(500).json({ error: err });
-            }
-        })
-        .catch((err) => {
-            return res.status(400).json({ type: err.name, errors: err.errors, message: err.message, provider: 'yup' });
-        });
-});
-
-router.patch("/:id", async function (req, res) {
-    try {
-        const id = req.params.id;
-        const data = req.body;
-        await Reviews.findByIdAndUpdate(id, data);
-        res.send({ ok: true, message: "Updated" });
-    } catch (error) {
-        res.status(500).send({ ok: false, error });
-    }
-});
-
-module.exports = router;
->>>>>>> task/create-cart-cartDetail

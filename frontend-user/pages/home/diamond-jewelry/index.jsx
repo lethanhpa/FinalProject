@@ -8,6 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useRouter } from "next/router";
 import numeral from "numeral";
 
+
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";

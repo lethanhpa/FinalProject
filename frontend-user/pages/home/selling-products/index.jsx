@@ -5,6 +5,7 @@ import { Autoplay, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ChevronsRight, ShoppingCart } from "lucide-react";
 import numeral from "numeral";
+import {API_URL} from "@/constants"
 
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -163,8 +164,8 @@ function SellingProduct({ products }) {
                         },
                     }}
                 >
-                    {listCategory &&
-                        listCategory.map((item) => {
+                    {products &&
+                        products.map((item) => {
                             return (
                                 <SwiperSlide key={item.id}>
                                     <div className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[100px] min-h-[100px] shadow-md rounded hover:bg-second-3 flex flex-col justify-center items-center">
@@ -172,7 +173,7 @@ function SellingProduct({ products }) {
                                             <Link
                                                 href={`/${item.id}`}
                                             >
-                                                <img src={item.image1} alt={`slide-${item.id}`} className="sm:w-full sm:block flex items-center w-[7.5rem] object-contain" />
+                                                <img src={`${API_URL}/${item.imageUrl}`} alt={`slide-${item.id}`} className="sm:w-full sm:block flex items-center w-[7.5rem] object-contain" />
 
                                             </Link>
                                             <div className="!absolute h-10  text-text-1 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all ">
@@ -191,7 +192,7 @@ function SellingProduct({ products }) {
                                                 -{item.discount}%
                                             </span>)}
                                         <div className="flex flex-col gap-[6px]">
-                                            <p className="font-roboto text-sm font-normal flex justify-center truncate">{item.productName}</p>
+                                            <h3 className="font-roboto text-sm font-normal flex justify-center xxl:truncate">{item.productName}</h3>
                                             <span className="font-roboto text-sm font-normal flex justify-center">{item.code}</span>
                                             <div className="flex justify-around">
                                                 {item.discount ? (
@@ -208,13 +209,13 @@ function SellingProduct({ products }) {
                                                 )}
                                             </div>
 
-                                            <div className="flex justify-between px-[0.5rem]">
+                                            {/* <div className="flex justify-between px-[0.5rem]">
                                                 <div className="font-roboto text-sm opacity-50 font-normal flex gap-[4px]">
                                                     <p>{item.rating.rate}</p>
                                                     <p>({item.rating.count})</p>
                                                 </div>
                                                 <p className="font-roboto text-sm opacity-50 font-normal">{item.sell} <span>đã bán</span></p>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
 
