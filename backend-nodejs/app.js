@@ -17,7 +17,6 @@ const reviewsRouter = require('./routes/reviews');
 const sizesRouter = require('./routes/sizes');
 const productsRouter = require('./routes/products');
 
-
 const app = express();
 
 // view engine setup

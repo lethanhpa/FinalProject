@@ -3,7 +3,7 @@ const yup = require('yup');
 const ObjectId = require("mongodb").ObjectId;
 const { CONNECTION_STRING } = require('../constants/dbSettings');
 const { default: mongoose } = require('mongoose');
-const { Product } = require('../models');
+const { ShippingAddress } = require('../models');
 
 // MONGOOSE
 mongoose.set('strictQuery', false);
@@ -14,7 +14,7 @@ const router = express.Router();
 //GEt ALL
 router.get('/', function (req, res, next) {
     try {
-        Product.find()
+        ShippingAddress.find()
             .then((result) => {
                 res.send(result);
             })
@@ -42,7 +42,7 @@ router.get('/:id', async function (req, res, next) {
         .then(async () => {
             const id = req.params.id;
 
-            let found = await Product.findById(id);
+            let found = await ShippingAddress.findById(id);
 
             if (found) {
                 return res.send({ ok: true, result: found });
@@ -60,35 +60,7 @@ router.post('/', async function (req, res, next) {
     // Validate
     const validationSchema = yup.object({
         body: yup.object({
-            productName: yup.string().required(),
-            code: yup.string().required(),
-            price: yup.number().min(0).required(),
-            discount: yup.number().min(0).max(100).required(),
-            stockQuantity: yup.number().min(0).required(),
-            imageId: yup
-                .string()
-                .required()
-                .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
-                    return ObjectId.isValid(value);
-                }),
-            categoryId: yup
-                .string()
-                .required()
-                .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
-                    return ObjectId.isValid(value);
-                }),
-            reviewId: yup
-                .string()
-                .required()
-                .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
-                    return ObjectId.isValid(value);
-                }),
-            sizeId: yup
-                .string()
-                .required()
-                .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
-                    return ObjectId.isValid(value);
-                }),
+            shippingAddress: yup.string().required(),
         }),
     });
 
@@ -97,7 +69,7 @@ router.post('/', async function (req, res, next) {
         .then(async () => {
             try {
                 const data = req.body;
-                const newItem = new Product(data);
+                const newItem = new ShippingAddress(data);
                 let result = await newItem.save();
 
                 return res.send({ ok: true, message: 'Created', result });
@@ -126,7 +98,7 @@ router.delete('/:id', function (req, res, next) {
             try {
                 const id = req.params.id;
 
-                let found = await Product.findByIdAndDelete(id);
+                let found = await ShippingAddress.findByIdAndDelete(id);
 
                 if (found) {
                     return res.send({ ok: true, result: found });
@@ -146,15 +118,11 @@ router.patch("/:id", async function (req, res) {
     try {
         const id = req.params.id;
         const data = req.body;
-        await Product.findByIdAndUpdate(id, data);
+        await ShippingAddress.findByIdAndUpdate(id, data);
         res.send({ ok: true, message: "Updated" });
     } catch (error) {
         res.status(500).send({ ok: false, error });
     }
 });
 
-<<<<<<< HEAD
 module.exports = router;
-=======
-module.exports = router;
->>>>>>> task/create-cart-cartDetail

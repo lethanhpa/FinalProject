@@ -130,4 +130,8 @@ router.patch("/:id", async function (req, res) {
     }
 });
 
+<<<<<<< HEAD
 module.exports = router;
+=======
+module.exports = router;
+>>>>>>> task/create-cart-cartDetail
