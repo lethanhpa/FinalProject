@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import HomePage from "./home/index";
 import MoveTop from "@/components/App/AppMoveTop";
+import axiosClient from "@/libraries/axiosClient";
 
 function Home({ products }) {
   return (
@@ -16,8 +17,9 @@ function Home({ products }) {
 export default memo(Home);
 
 export async function getServerSideProps() {
-  const responseProduct = await fetch("https://fakestoreapi.com/products");
-  const products = await responseProduct.json();
+  console.log('aaabbbbbbbbcccccc');
+  const responseProduct = await axiosClient.get("/products");
+  const products = responseProduct.data;
   console.log('products',products);
   return {
     props: {

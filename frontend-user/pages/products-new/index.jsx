@@ -1,4 +1,4 @@
-import React,{memo} from "react";
+import React, { memo } from "react";
 import { ShoppingCart } from 'lucide-react';
 import {
     Star
@@ -6,7 +6,7 @@ import {
 import Link from "next/link";
 import numeral from "numeral";
 
-function ProductNew(){
+function ProductNew() {
 
     const handleAddCart = (productId) => {
         addToCart(productId);
@@ -108,60 +108,63 @@ function ProductNew(){
                 { rate: <Star />, count: "2" },
         },
     ];
-    return(  <div className="grid grid-cols-5 gap-2 container">
-    {listCategory && listCategory.map((item) => {
-        return (
-            <div className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[100px] min-h-[100px] shadow-md rounded hover:bg-second-3 flex flex-col justify-center items-center mt-[3.125rem] mb-[3.125rem]">
-                <div className="group relative inline-flex justify-center overflow-hidden items-center">
-                    <Link
-                        href={`/${item.id}`}
-                    >
-                        <img src={item.image1} alt={`slide-${item.id}`} className="sm:w-full sm:block flex items-center w-[7.5rem] object-contain" />
-
-                    </Link>
-                    <div className="!absolute h-10  text-text-1 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all ">
-                        <button
-                            type="button"
-                            className="bg-primry text-white py-1.5 min-w-[270px] font-roboto text-sm flex justify-center gap-[4px] items-center"
-                            onClick={handleAddCart}
+    return (<div className="grid grid-cols-5 gap-2 container">
+        {listCategory && listCategory.map((item) => {
+            return (
+                <div className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[100px] min-h-[100px] shadow-md rounded hover:bg-second-3 flex flex-col justify-center items-center mt-[3.125rem] mb-[3.125rem]">
+                    <div className="group relative inline-flex justify-center overflow-hidden items-center">
+                        <Link
+                            href={`/${item.id}`}
                         >
-                            <ShoppingCart />
-                            Thêm vào giỏ hàng
-                        </button>
-                    </div>
-                </div>
+                            <img src={item.image1} alt={`slide-${item.id}`} className="sm:w-full sm:block flex items-center w-[7.5rem] object-contain" />
 
-                <div className="flex flex-col gap-[6px]">
-                    <p className="font-roboto text-sm font-normal flex justify-center truncate">{item.productName}</p>
-                    <span className="font-roboto text-sm font-normal flex justify-center">{item.code}</span>
-                    <div className="flex justify-around">
-                        {item.discount ? (
-                            <>
-                                <span className="font-roboto text-sm flex justify-center text-primry font-semibold">{numeral(item.price - (item.price * item.discount * 1) / 100).format("0,0")}đ</span>
-                                <span className="font-roboto text-sm flex justify-center text-gray line-through">
-                                    {numeral(item.price).format("0,0")}đ
-                                </span>
-                            </>
-                        ) : (
-                            <p className="font-roboto text-sm flex justify-center text-primry font-semibold">
-                                {numeral(item.price).format("0,0")}đ
-                            </p>
-                        )}
-                    </div>
-
-                    <div className="flex justify-between px-[0.5rem]">
-                        <div className="font-roboto text-sm opacity-50 font-normal flex gap-[4px]">
-                            <p>{item.rating.rate}</p>
-                            <p>({item.rating.count})</p>
+                        </Link>
+                        <div className="!absolute h-10  text-text-1 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all ">
+                            <button
+                                type="button"
+                                className="bg-primry text-white py-1.5 min-w-[270px] font-roboto text-sm flex justify-center gap-[4px] items-center"
+                                onClick={handleAddCart}
+                            >
+                                <ShoppingCart />
+                                Thêm vào giỏ hàng
+                            </button>
                         </div>
-                        <p className="font-roboto text-sm opacity-50 font-normal">{item.sell} <span>đã bán</span></p>
+                        {item.discount && (<span className="!absolute top-0 left-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
+                            -{item.discount}%
+                        </span>)}
+                    </div>
+
+                    <div className="flex flex-col gap-[6px]">
+                        <p className="font-roboto text-sm font-normal flex justify-center truncate">{item.productName}</p>
+                        <span className="font-roboto text-sm font-normal flex justify-center">{item.code}</span>
+                        <div className="flex justify-around">
+                            {item.discount ? (
+                                <>
+                                    <span className="font-roboto text-sm flex justify-center text-primry font-semibold">{numeral(item.price - (item.price * item.discount * 1) / 100).format("0,0")}đ</span>
+                                    <span className="font-roboto text-sm flex justify-center text-gray line-through">
+                                        {numeral(item.price).format("0,0")}đ
+                                    </span>
+                                </>
+                            ) : (
+                                <p className="font-roboto text-sm flex justify-center text-primry font-semibold">
+                                    {numeral(item.price).format("0,0")}đ
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="flex justify-between px-[0.5rem]">
+                            <div className="font-roboto text-sm opacity-50 font-normal flex gap-[4px]">
+                                <p>{item.rating.rate}</p>
+                                <p>({item.rating.count})</p>
+                            </div>
+                            <p className="font-roboto text-sm opacity-50 font-normal">{item.sell} <span>đã bán</span></p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        )
+            )
 
-    })}
-</div>)
+        })}
+    </div>)
 }
 
 export default memo(ProductNew);

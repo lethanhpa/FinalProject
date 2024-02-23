@@ -120,7 +120,7 @@ function SellingProduct({ products }) {
     return (
         <div className="pt-[2.5rem]">
             <div className="flex justify-between">
-                <span className="font-roboto font-medium text-primry text-xl">SẢN PHẨM BÁN CHẠY</span>
+                <span className="font-roboto font-medium text-primry text-2xl">SẢN PHẨM BÁN CHẠY</span>
                 <Link href="/selling" className="flex font-roboto text-primry underline">Xem thêm <ChevronsRight /></Link>
             </div>
 
@@ -131,7 +131,7 @@ function SellingProduct({ products }) {
                     navigation
                     slidesPerView="auto"
                     autoplay={{
-                        delay: 800,
+                        delay: 3000,
                     }}
                     ref={swiperRef}
                     breakpoints={{
@@ -187,12 +187,11 @@ function SellingProduct({ products }) {
                                                     Thêm vào giỏ hàng
                                                 </button>
                                             </div>
-                                            {item.discount && (<span className="!absolute top-0 right-0 bg-primry font-poppins text-sm font-normal py-[4px] px-[25px] text-white">
+                                           
+                                        </div>
+                                        {item.discount && (<span className="!absolute top-0 left-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
                                                 -{item.discount}%
                                             </span>)}
-
-                                        </div>
-
                                         <div className="flex flex-col gap-[6px]">
                                             <p className="font-roboto text-sm font-normal flex justify-center truncate">{item.productName}</p>
                                             <span className="font-roboto text-sm font-normal flex justify-center">{item.code}</span>

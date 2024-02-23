@@ -128,9 +128,9 @@ function Promotion() {
                                 Thêm vào giỏ hàng
                             </button>
                         </div>
-                        <span className="!absolute top-0 right-0 bg-primry font-poppins text-sm font-normal py-[4px] px-[25px] text-white">
+                        {item.discount && (<span className="!absolute top-0 left-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
                             -{item.discount}%
-                        </span>
+                        </span>)}
                     </div>
 
                     <div className="flex flex-col gap-[6px]">
