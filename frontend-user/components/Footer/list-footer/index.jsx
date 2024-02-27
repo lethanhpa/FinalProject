@@ -9,7 +9,7 @@ function ListFooter() {
                 <div className="flex justify-center items-center text-center">
                     <img src="./img/logo.png" alt="logo" className="w-[6.25rem]" />
                 </div>
-                <p className="font-roboto text-xl leading-[28px] font-medium text-primry flex justify-center">Sunlit Diamond</p>
+                <p className="font-roboto text-xl leading-[28px] font-medium text-primry flex justify-center">Jewellery</p>
                 <p className="font-roboto text-sm leading-[28px]  flex justify-center">© 2017 Công Ty Cổ Phần Trang Sức Hải Châu
                     Giấy chứng nhận đăng ký doanh nghiệp do Sở Kế hoạch & Đầu tư Đà Nẵng cấp lần đầu ngày 01/01/2010. Ngành, nghề kinh doanh.</p>
             </div>
@@ -25,8 +25,8 @@ function ListFooter() {
                 </p>
                 <p className="font-roboto text-sm leading-[28px] hover:text-primry">
                     Email :
-                    <Link href="mailto: sunlit@gmail.com" aria-label="email">
-                        sunlit@gmail.com
+                    <Link href="mailto: jewellery@gmail.com" aria-label="email">
+                        jewellery@gmail.com
                     </Link>
                 </p>
                 <p className="font-roboto text-sm leading-[28px] hover:text-primry">

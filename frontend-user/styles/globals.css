@@ -93,7 +93,7 @@ body {
 
 .swiper_banner .swiper-pagination-bullet-active {
   box-sizing: border-box !important;
-  background: #FF782C !important;
+  background: #000000 !important;
   border: solid #ffffff 0.125rem !important;
   width: 0.875rem !important;
   height: 0.875rem !important;
@@ -103,17 +103,83 @@ body {
 .swiper-button-next,
 .swiper-button-prev {
   padding: 8px 16px;
-  color: #ff8533 !important;
+  color: #000000 !important;
 }
 
 .swiper-button-next:after,
-.swiper-button-prev::after{
+.swiper-button-prev::after {
   font-size: 20px !important;
 }
 
-@media (min-width: 480px){
+@media (min-width: 480px) {
+
   .swiper-button-next::after,
-  .swiper-button-prev::after{
+  .swiper-button-prev::after {
     font-size: 30px !important;
   }
+}
+
+@-webkit-keyframes my {
+  0% {
+    color: #000000;
+  }
+
+  50% {
+    color: #fff;
+  }
+
+  100% {
+    color: #000000;
+  }
+}
+
+@-moz-keyframes my {
+  0% {
+    color: #000000;
+  }
+
+  50% {
+    color: #fff;
+  }
+
+  100% {
+    color: #000000;
+  }
+}
+
+@-o-keyframes my {
+  0% {
+    color: #000000;
+  }
+
+  50% {
+    color: #fff;
+  }
+
+  100% {
+    color: #000000;
+  }
+}
+
+@keyframes my {
+  0% {
+    color: #000000;
+  }
+
+  50% {
+    color: #fff;
+  }
+
+  100% {
+    color: #000000;
+  }
+}
+
+.test {
+  font-size: 24px;
+  font-weight: bold;
+  -webkit-animation: my 1000ms infinite;
+  -moz-animation: my 1000ms infinite;
+  -o-animation: my 1000ms infinite;
+  animation: my 700ms infinite;
 }

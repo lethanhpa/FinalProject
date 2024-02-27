@@ -11,10 +11,10 @@ function HomePage({products}) {
         <>
             <Slide />
             <SellingProducts products={products}/>
-            <NewProduct/>
-            <Diamond/>
-            <GoldJewelry/>
-            <SliverJewelry />
+            <NewProduct products={products}/>
+            <Diamond products={products}/>
+            <GoldJewelry products={products}/>
+            <SliverJewelry products={products}/>
         </>
     )
 }

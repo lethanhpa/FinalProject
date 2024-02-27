@@ -26,7 +26,7 @@ function TopHeader() {
   };
   return (
     <div className="flex justify-between container pt-[0.625rem]">
-      <div className="sm:flex hidden justify-center items-center gap-[0.25rem] text-center ">
+      {/* <div className="sm:flex hidden justify-center items-center gap-[0.25rem] text-center ">
         <Phone className="text-primry" />
         <Link
           href="tel:+190028979"
@@ -35,7 +35,7 @@ function TopHeader() {
         >
           190028979
         </Link>
-      </div>
+      </div> */}
       <Link href="/" className="flex justify-end">
         <img
           src="/img/logo.png"
@@ -44,7 +44,7 @@ function TopHeader() {
           className="md:w-[3.375rem] md:h-[3.375rem] w-[2.5rem] h-[2.5rem]"
         />
         <span className="items-center flex text-primry text-xl font-normal leading-7 font-roboto">
-          Sunlit Diamond
+        Jewellery
         </span>
       </Link>
 
