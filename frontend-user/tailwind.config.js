@@ -38,10 +38,11 @@ module.exports = {
       },
       colors: {
         red: "#FF0000",
-        primry:"#FF782C",
+        primry:"#000000",
         black: "#000000",
         gray: "#D1CFCF",
-        white: "#ffffff"
+        white: "#ffffff",
+        pink: "#f4f4f4",
       }
     },
   },
