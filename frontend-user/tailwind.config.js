@@ -35,6 +35,7 @@ module.exports = {
     extend: {
       fontFamily: {
         roboto: ["Roboto", "sans-serif"],
+        elle: ["ElleFutura", "sans-serif"],
       },
       colors: {
         red: "#FF0000",
