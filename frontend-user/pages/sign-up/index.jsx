@@ -29,8 +29,8 @@ const SignUp = () => {
     fetch("https://vapi.vnappmob.com/api/province/")
       .then((response) => response.json())
       .then((data) => {
-        setProvinces(data);
-        console.log("««««« data »»»»»", data);
+        setProvinces(data.results);
+        console.log("««««« data »»»»»", data.results);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API:", error);
@@ -41,7 +41,7 @@ const SignUp = () => {
     fetch(`https://vapi.vnappmob.com/api/province/district/${provinceId}`)
       .then((response) => response.json())
       .then((data) => {
-        setDistricts(data);
+        setDistricts(data.results);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API:", error);
@@ -52,7 +52,7 @@ const SignUp = () => {
     fetch(`https://vapi.vnappmob.com/api/province/ward/${districtId}`)
       .then((response) => response.json())
       .then((data) => {
-        setWards(data);
+        setWards(data.results);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API:", error);
@@ -164,9 +164,10 @@ const SignUp = () => {
           />
         </Form.Item>
 
-        <Space className="mx-12">
+        <div className="mx-12 md:space-x-3 md:flex block">
           <Form.Item
             name="province"
+            style={{ width: 200 }}
             rules={[
               { required: true, message: "Vui lòng chọn Tỉnh/Thành phố" },
             ]}
@@ -190,6 +191,7 @@ const SignUp = () => {
 
           <Form.Item
             name="district"
+            style={{ width: 200 }}
             rules={[{ required: true, message: "Vui lòng chọn Quận/Huyện" }]}
           >
             <Select
@@ -197,35 +199,41 @@ const SignUp = () => {
               onChange={handleDistrictChange}
               size="large"
             >
-              {Array.isArray(districts)
-                ? districts.map((district) => (
-                    <Option
-                      key={district.district_id}
-                      value={district.district_id}
-                    >
-                      {district.district_name}
-                    </Option>
-                  ))
-                : null}
+              {districts.length > 0 &&
+                districts.map((district) => (
+                  <Option
+                    key={district.district_id}
+                    value={district.district_id}
+                  >
+                    {district.district_name}
+                  </Option>
+                ))}
             </Select>
           </Form.Item>
 
           <Form.Item
             name="ward"
+            style={{ width: 200 }}
             rules={[{ required: true, message: "Vui lòng chọn Phường/Xã" }]}
           >
             <Select placeholder="Chọn Phường/Xã" size="large">
-              {Array.isArray(wards)
-                ? wards.map((ward) => (
-                    <Option key={ward.ward_id} value={ward.ward_id}>
-                      {ward.ward_name}
-                    </Option>
-                  ))
-                : null}
+              {wards.length > 0 &&
+                wards.map((ward) => (
+                  <Option key={ward.ward_id} value={ward.ward_id}>
+                    {ward.ward_name}
+                  </Option>
+                ))}
             </Select>
           </Form.Item>
-        </Space>
+        </div>
 
+        <Form.Item
+          name="address"
+          className="mx-12"
+          rules={[{ required: true, message: "Vui lòng nhập địa chỉ cụ thể" }]}
+        >
+          <Input size="large" placeholder="Nhập địa chỉ cụ thể" />
+        </Form.Item>
         <Form.Item
           name="phoneNumber"
           className="mx-12"
