@@ -1,5 +1,5 @@
-import React, { memo } from "react";
-import { Form, Input, Button, Radio, DatePicker, Space } from "antd";
+import React, { memo, useState, useEffect } from "react";
+import { Form, Input, Button, Radio, DatePicker, Space, Select } from "antd";
 import {
   UserOutlined,
   MailOutlined,
@@ -9,12 +9,63 @@ import {
   PhoneOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
-import Link from "next/link";
 
 const SignUp = () => {
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+
   const onFinish = (values) => {
-    // Xử lý logic đăng ký ở đây
     console.log(values);
+  };
+
+  useEffect(() => {
+    fetchProvinces();
+    fetchDistricts();
+    fetchWards();
+  }, []);
+
+  const fetchProvinces = () => {
+    fetch("https://vapi.vnappmob.com/api/province/")
+      .then((response) => response.json())
+      .then((data) => {
+        setProvinces(data);
+        console.log("««««« data »»»»»", data);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi gọi API:", error);
+      });
+  };
+
+  const fetchDistricts = (provinceId) => {
+    fetch(`https://vapi.vnappmob.com/api/province/district/${provinceId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setDistricts(data);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi gọi API:", error);
+      });
+  };
+
+  const fetchWards = (districtId) => {
+    fetch(`https://vapi.vnappmob.com/api/province/ward/${districtId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setWards(data);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi gọi API:", error);
+      });
+  };
+
+  const handleProvinceChange = (value) => {
+    fetchDistricts(value);
+    setWards([]);
+  };
+
+  const handleDistrictChange = (value) => {
+    fetchWards(value);
   };
 
   return (
@@ -112,6 +163,68 @@ const SignUp = () => {
             size="large"
           />
         </Form.Item>
+
+        <Space className="mx-12">
+          <Form.Item
+            name="province"
+            rules={[
+              { required: true, message: "Vui lòng chọn Tỉnh/Thành phố" },
+            ]}
+          >
+            <Select
+              placeholder="Chọn Tỉnh/Thành phố"
+              onChange={handleProvinceChange}
+              size="large"
+            >
+              {provinces.length > 0 &&
+                provinces.map((province) => (
+                  <Option
+                    key={province.province_id}
+                    value={province.province_id}
+                  >
+                    {province.province_name}
+                  </Option>
+                ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="district"
+            rules={[{ required: true, message: "Vui lòng chọn Quận/Huyện" }]}
+          >
+            <Select
+              placeholder="Chọn Quận/Huyện"
+              onChange={handleDistrictChange}
+              size="large"
+            >
+              {Array.isArray(districts)
+                ? districts.map((district) => (
+                    <Option
+                      key={district.district_id}
+                      value={district.district_id}
+                    >
+                      {district.district_name}
+                    </Option>
+                  ))
+                : null}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="ward"
+            rules={[{ required: true, message: "Vui lòng chọn Phường/Xã" }]}
+          >
+            <Select placeholder="Chọn Phường/Xã" size="large">
+              {Array.isArray(wards)
+                ? wards.map((ward) => (
+                    <Option key={ward.ward_id} value={ward.ward_id}>
+                      {ward.ward_name}
+                    </Option>
+                  ))
+                : null}
+            </Select>
+          </Form.Item>
+        </Space>
 
         <Form.Item
           name="phoneNumber"
