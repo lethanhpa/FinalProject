@@ -5,7 +5,7 @@ import { Autoplay, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ChevronsRight, ShoppingCart } from "lucide-react";
 import numeral from "numeral";
-import {API_URL} from "@/constants"
+import { API_URL } from "@/constants";
 
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -113,119 +113,143 @@ function SellingProduct({ products }) {
 
   const swiperRef = useRef();
 
-    const handleAddCart = () => {
-        console.log("Add to cart");
-    }
-    return (
-        <div className="pt-[2.5rem]">
-            <div className="flex justify-between">
-                <span className="font-roboto font-medium text-primry text-2xl">SẢN PHẨM BÁN CHẠY</span>
-                <Link href="/selling" className="flex font-roboto text-primry underline">Xem thêm <ChevronsRight /></Link>
-            </div>
+  const handleAddCart = () => {
+    console.log("Add to cart");
+  };
+  return (
+    <div className="pt-[2.5rem]">
+      <div className="flex justify-between">
+        <span className="font-roboto font-medium text-primry text-2xl">
+          SẢN PHẨM BÁN CHẠY
+        </span>
+        <Link
+          href="/selling"
+          className="flex font-roboto text-primry underline"
+        >
+          Xem thêm <ChevronsRight />
+        </Link>
+      </div>
 
-            <div className="flex pb-[4.3125rem] border-b border-primry pt-[1.25rem]">
-                <Swiper
-                    modules={[Autoplay, Navigation]}
-                    spaceBetween={30}
-                    navigation
-                    slidesPerView="auto"
-                    autoplay={{
-                        delay: 3000,
+      <div className="flex pb-[4.3125rem] border-b border-primry pt-[1.25rem]">
+        <Swiper
+          modules={[Autoplay, Navigation]}
+          spaceBetween={30}
+          navigation
+          slidesPerView="auto"
+          autoplay={{
+            delay: 3000,
+          }}
+          ref={swiperRef}
+          breakpoints={{
+            320: {
+              slidesPerView: 1,
+              spaceBetween: 30,
+            },
+            360: {
+              slidesPerView: 1.5,
+              spaceBetween: 30,
+            },
+            480: {
+              slidesPerView: 2,
+              spaceBetween: 30,
+            },
+            600: {
+              slidesPerView: 2.5,
+              spaceBetween: 30,
+            },
+            800: {
+              slidesPerView: 3.5,
+              spaceBetween: 30,
+            },
+            1280: {
+              slidesPerView: 4,
+              spaceBetween: 30,
+            },
+            1440: {
+              slidesPerView: 5,
+              spaceBetween: 30,
+            },
+          }}
+        >
+          {products &&
+            products.map((item) => {
+              return (
+                <SwiperSlide key={item.id}>
+                  <div
+                    className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[100px] min-h-[100px] shadow-md rounded hover:bg-second-3 flex flex-col justify-center items-center"
+                    style={{
+                      background:
+                        "-webkit-linear-gradient(top,#fff 0%,#f7f7f7 100%)",
                     }}
-                    ref={swiperRef}
-                    breakpoints={{
-                        320: {
-                            slidesPerView: 1,
-                            spaceBetween: 30,
-                        },
-                        360: {
-                            slidesPerView: 1.5,
-                            spaceBetween: 30,
-                        },
-                        480: {
-                            slidesPerView: 2,
-                            spaceBetween: 30,
-                        },
-                        600: {
-                            slidesPerView: 2.5,
-                            spaceBetween: 30,
-                        },
-                        800: {
-                            slidesPerView: 3.5,
-                            spaceBetween: 30,
-                        },
-                        1280: {
-                            slidesPerView: 4,
-                            spaceBetween: 30,
-                        },
-                        1440: {
-                            slidesPerView: 5,
-                            spaceBetween: 30,
-                        },
-                    }}
-                >
-                    {products &&
-                        products.map((item) => {
-                            return (
-                                <SwiperSlide key={item.id}>
-                                    <div className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[100px] min-h-[100px] shadow-md rounded hover:bg-second-3 flex flex-col justify-center items-center">
-                                        <div className="group relative inline-flex justify-center overflow-hidden items-center">
-                                            <Link
-                                                href={`/${item.id}`}
-                                            >
-                                                <img src={`${API_URL}/${item.imageUrl}`} alt={`slide-${item.id}`} className="sm:w-full sm:block flex items-center w-[7.5rem] object-contain" />
+                  >
+                    <div className="group relative inline-flex justify-center overflow-hidden items-center">
+                      <Link href={`/${item.id}`}>
+                        <img
+                          src={`${API_URL}/${item.imageUrl}`}
+                          alt={`slide-${item.id}`}
+                          className="sm:w-full sm:block flex items-center w-[7.5rem] object-contain"
+                        />
+                      </Link>
+                      <div className="!absolute h-10  text-text-1 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all ">
+                        <button
+                          type="button"
+                          className="bg-primry text-white py-1.5 min-w-[270px] font-roboto text-sm flex justify-center gap-[4px] items-center"
+                          onClick={handleAddCart}
+                        >
+                          <ShoppingCart />
+                          Thêm vào giỏ hàng
+                        </button>
+                      </div>
+                    </div>
+                    {item.discount && (
+                      <span className="!absolute top-0 left-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
+                        -{item.discount}%
+                      </span>
+                    )}
+                    <div className="flex flex-col gap-[6px]">
+                      <h3 className="font-roboto text-sm font-normal flex justify-center xxl:truncate">
+                        {item.productName}
+                      </h3>
+                      <span className="font-roboto text-sm font-normal flex justify-center">
+                        {item.code}
+                      </span>
+                      <div className="flex justify-around">
+                        {item.discount ? (
+                          <>
+                            <span className="font-roboto text-sm flex justify-center text-primry font-semibold">
+                              {numeral(
+                                item.price -
+                                  (item.price * item.discount * 1) / 100
+                              ).format("0,0")}
+                              đ
+                            </span>
+                            <span className="font-roboto text-sm flex justify-center text-gray line-through">
+                              {numeral(item.price).format("0,0")}đ
+                            </span>
+                          </>
+                        ) : (
+                          <p className="font-roboto text-sm flex justify-center text-primry font-semibold">
+                            {numeral(item.price).format("0,0")}đ
+                          </p>
+                        )}
+                      </div>
 
-                                            </Link>
-                                            <div className="!absolute h-10  text-text-1 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all ">
-                                                <button
-                                                    type="button"
-                                                    className="bg-primry text-white py-1.5 min-w-[270px] font-roboto text-sm flex justify-center gap-[4px] items-center"
-                                                    onClick={handleAddCart}
-                                                >
-                                                    <ShoppingCart />
-                                                    Thêm vào giỏ hàng
-                                                </button>
-                                            </div>
-                                           
-                                        </div>
-                                        {item.discount && (<span className="!absolute top-0 left-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
-                                                -{item.discount}%
-                                            </span>)}
-                                        <div className="flex flex-col gap-[6px]">
-                                            <h3 className="font-roboto text-sm font-normal flex justify-center xxl:truncate">{item.productName}</h3>
-                                            <span className="font-roboto text-sm font-normal flex justify-center">{item.code}</span>
-                                            <div className="flex justify-around">
-                                                {item.discount ? (
-                                                    <>
-                                                        <span className="font-roboto text-sm flex justify-center text-primry font-semibold">{numeral(item.price - (item.price * item.discount * 1) / 100).format("0,0")}đ</span>
-                                                        <span className="font-roboto text-sm flex justify-center text-gray line-through">
-                                                            {numeral(item.price).format("0,0")}đ
-                                                        </span>
-                                                    </>
-                                                ) : (
-                                                    <p className="font-roboto text-sm flex justify-center text-primry font-semibold">
-                                                        {numeral(item.price).format("0,0")}đ
-                                                    </p>
-                                                )}
-                                            </div>
-
-                                            {/* <div className="flex justify-between px-[0.5rem]">
+                      {/* <div className="flex justify-between px-[0.5rem]">
                                                 <div className="font-roboto text-sm opacity-50 font-normal flex gap-[4px]">
                                                     <p>{item.rating.rate}</p>
                                                     <p>({item.rating.count})</p>
                                                 </div>
                                                 <p className="font-roboto text-sm opacity-50 font-normal">{item.sell} <span>đã bán</span></p>
                                             </div> */}
-                                        </div>
-                                    </div>
-
-                                </SwiperSlide>
-                            );
-                        })}
-                </Swiper>
-            </div>
-        </div>
-    );
+                    </div>
+                  </div>
+                </SwiperSlide>
+              );
+            })}
+        </Swiper>
+      </div>
+    </div>
+  );
 }
 
 export default memo(SellingProduct);
