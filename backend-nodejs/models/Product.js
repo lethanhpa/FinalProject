@@ -8,7 +8,7 @@ const productSchema = Schema(
         price: { type: Number, min: 0, default: 0, required: true },
         discount: { type: Number, min: 0, max: 100, default: 0, required: true },
         stockQuantity: { type: Number, min: 0, default: 0, required: true },
-        imageId: { type: Schema.Types.ObjectId, ref: 'Media', required: false },
+        // imageId: { type: Schema.Types.ObjectId, ref: 'Media', required: false },
         categoryId: { type: Schema.Types.ObjectId, ref: 'Category', required: false },
         reviewId: { type: Schema.Types.ObjectId, ref: 'Review', required: false },
         sizeId: { type: Schema.Types.ObjectId, ref: 'Review', required: false },
@@ -19,12 +19,12 @@ const productSchema = Schema(
     }
 );
 
-productSchema.virtual('productImages', {
-    ref: 'Media',
-    localField: 'imageId',
-    foreignField: '_id',
-    justOne: true,
-});
+// productSchema.virtual('productImages', {
+//     ref: 'Media',
+//     localField: 'imageId',
+//     foreignField: '_id',
+//     justOne: true,
+// });
 
 productSchema.virtual('category', {
     ref: 'Category',

@@ -1,28 +1,25 @@
 const express = require('express');
 const yup = require('yup');
+const router = express.Router();
 const ObjectId = require("mongodb").ObjectId;
 const { CONNECTION_STRING } = require('../constants/dbSettings');
 const { default: mongoose } = require('mongoose');
-const { Product } = require('../models');
+const { Product } = require('../models/index');
 
-// MONGOOSE
 mongoose.set('strictQuery', false);
 mongoose.connect(CONNECTION_STRING);
 
-const router = express.Router();
 
 //GEt ALL
-router.get('/', function (req, res, next) {
+router.get("/", async (req, res) => {
     try {
-        Product.find()
-            .then((result) => {
-                res.send(result);
-            })
-            .catch((err) => {
-                res.status(400).send({ message: err.message });
-            });
-    } catch (err) {
-        res.sendStatus(500);
+        let results = await Product.find()
+            .populate("category")
+            .populate("size")
+            .lean({ virtual: true });
+        res.json(results);
+    } catch (error) {
+        res.status(500).json({ ok: false, error });
     }
 });
 
@@ -42,7 +39,7 @@ router.get('/:id', async function (req, res, next) {
         .then(async () => {
             const id = req.params.id;
 
-            let found = await Product.findById(id);
+            let found = await Product.findById(id).populate('category').populate('size');
 
             if (found) {
                 return res.send({ ok: true, result: found });
