@@ -6,7 +6,7 @@ const sizeDetailSchema = new Schema(
         size: { type: String },
     },
     {
-        _id: false // Không cần tạo _id riêng cho mỗi size
+        _id: true 
     }
 );
 

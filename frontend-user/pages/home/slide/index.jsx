@@ -28,11 +28,11 @@ function Slide() {
         },
         {
             id: "5",
-            src: "./img/anh-banner-4.jpg",
+            src: "./img/anh-banner-10.jpg",
         },
         {
             id: "6",
-            src: "./img/anh-silde-10.jpg",
+            src: "./img/anh-banner-9.jpg",
         },
     ];
     return (
@@ -55,8 +55,8 @@ function Slide() {
             </Swiper>
             <div className="md:flex md:flex-col w-full hidden">
             <img src="./img/anh-banner-5.jpg" alt="aaa" className="sm:h-[9rem] h-[5rem] hover:-translate-y-1 hover:scale-105 duration-300" />
-            <img src="./img/anh-silde-10.jpg" alt="aaa" className="sm:h-[9rem] h-[5rem] hover:-translate-y-1 hover:scale-105 duration-300" />
-            <img src="./img/anh-banner-4.jpg" alt="aaa" className="sm:h-[9rem] h-[5rem] hover:-translate-y-1 hover:scale-105 duration-300" />
+            <img src="./img/anh-banner-10.jpg" alt="aaa" className="sm:h-[9rem] h-[5rem] hover:-translate-y-1 hover:scale-105 duration-300" />
+            <img src="./img/anh-banner-9.jpg" alt="aaa" className="sm:h-[9rem] h-[5rem] hover:-translate-y-1 hover:scale-105 duration-300" />
             </div>
         </div>)
 }

@@ -15,6 +15,9 @@ const router = express.Router();
 router.get('/', function (req, res, next) {
     try {
         Product.find()
+            .populate("category")
+            .populate("review")
+            .populate("size")
             .then((result) => {
                 res.send(result);
             })
@@ -42,7 +45,9 @@ router.get('/:id', async function (req, res, next) {
         .then(async () => {
             const id = req.params.id;
 
-            let found = await Product.findById(id);
+            let found = await Product.findById(id).populate("category")
+                .populate("review")
+                .populate("size");
 
             if (found) {
                 return res.send({ ok: true, result: found });
@@ -65,12 +70,11 @@ router.post('/', async function (req, res, next) {
             price: yup.number().min(0).required(),
             discount: yup.number().min(0).max(100).required(),
             stockQuantity: yup.number().min(0).required(),
-            imageId: yup
-                .string()
-                .required()
-                .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
-                    return ObjectId.isValid(value);
-                }),
+            // imageId: yup
+            //     .string()
+            //     .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
+            //         return ObjectId.isValid(value);
+            //     }),
             categoryId: yup
                 .string()
                 .required()
@@ -79,16 +83,16 @@ router.post('/', async function (req, res, next) {
                 }),
             reviewId: yup
                 .string()
-                .required()
-                .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
-                    return ObjectId.isValid(value);
-                }),
+            // .required()
+            // .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
+            //     return ObjectId.isValid(value);
+            // })
+            ,
             sizeId: yup
                 .string()
-                .required()
-                .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
-                    return ObjectId.isValid(value);
-                }),
+            // .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
+            //     return ObjectId.isValid(value);
+            // }),
         }),
     });
 

@@ -4,8 +4,8 @@ const { Schema, model } = mongoose;
 const reviewSchema = Schema(
     {
         customerId: { type: Schema.Types.ObjectId, ref: 'Customer', required: true },
-        ratingRate: { type: Number, default: 0, min: 0, max: 5, required: true },
-        comment: { type: String, required: true },
+        ratingRate: { type: Number, default: 0, min: 0, max: 5 },
+        comment: { type: String },
         reviewDate: { type: Date, default: Date.now },
     },
     {

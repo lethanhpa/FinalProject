@@ -17,10 +17,8 @@ function Home({ products }) {
 export default memo(Home);
 
 export async function getServerSideProps() {
-  console.log('aaabbbbbbbbcccccc');
   const responseProduct = await axiosClient.get("/products");
   const products = responseProduct.data;
-  console.log('products',products);
   return {
     props: {
       products,

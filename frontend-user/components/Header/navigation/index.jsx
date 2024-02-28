@@ -2,12 +2,33 @@ import React, { memo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import classNames from "classnames";
+import useSearch from "@/Store/SearchBar";
 import {
     Search,
 } from "lucide-react";
 
 function Navigation() {
     const router = useRouter();
+
+    const keyword = useSearch((state) => state.keyword);
+    const setKeyword = useSearch((state) => state.setKeyword);
+    const clearKeyword = useSearch((state) => state.clearKeyword);
+  
+    // search
+    React.useEffect(() => {
+      const isSearchPage = router.pathname === "/search-products";
+      if (isSearchPage) {
+        setKeyword(router.query.q || "");
+      } else {
+        clearKeyword();
+      }
+    }, [router.pathname, router.query.q, setKeyword, clearKeyword]);
+  
+    const onSearch = () => {
+      const encodeSearchQuery = encodeURI(keyword);
+      router.push(`/search-products?q=${encodeSearchQuery}`);
+    };
+
     return (<div className="flex container justify-between mt-[0.625rem] pb-[0.625rem]">
         <ul className="sm:flex xl:gap-[60px] md:gap-[20px] gap-[40px] hidden">
             <li
@@ -108,11 +129,14 @@ function Navigation() {
                 placeholder="Tìm kiếm nhanh...."
                 required
                 type="text"
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
             />
             <button
                 type="submit"
                 id="search"
                 aria-label="search"
+                onClick={onSearch}
                 className="text-black absolute right-2.5 lg:bottom-2.5 bottom-0.5 rounded-lg absolute:none truncate"
             >
                 <Search className="text-primry" />
