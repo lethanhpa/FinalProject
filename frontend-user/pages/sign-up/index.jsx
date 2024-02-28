@@ -164,10 +164,10 @@ const SignUp = () => {
           />
         </Form.Item>
 
-        <div className="mx-12 md:space-x-3 md:flex block">
+        <div className="mx-12 xl:space-x-3 lg:block xl:flex">
           <Form.Item
             name="province"
-            style={{ width: 200 }}
+            className="xl:w-[221px] lg:w-full"
             rules={[
               { required: true, message: "Vui lòng chọn Tỉnh/Thành phố" },
             ]}
@@ -191,7 +191,7 @@ const SignUp = () => {
 
           <Form.Item
             name="district"
-            style={{ width: 200 }}
+            className="xl:w-[221px] lg:w-full"
             rules={[{ required: true, message: "Vui lòng chọn Quận/Huyện" }]}
           >
             <Select
@@ -213,7 +213,7 @@ const SignUp = () => {
 
           <Form.Item
             name="ward"
-            style={{ width: 200 }}
+            className="xl:w-[221px] lg:w-full"
             rules={[{ required: true, message: "Vui lòng chọn Phường/Xã" }]}
           >
             <Select placeholder="Chọn Phường/Xã" size="large">

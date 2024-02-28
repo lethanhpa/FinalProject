@@ -1,7 +1,6 @@
 import React, { memo } from "react";
 import TopHeader from "./top-header";
 import Navigation from "./navigation";
-import SignIn from "@/pages/sign-in";
 
 function Header() {
   return (

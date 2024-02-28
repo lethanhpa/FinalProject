@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { ShoppingCart, Phone, AlignJustify, X, Search } from "lucide-react";
 import classNames from "classnames";
 import Link from "next/link";
@@ -25,6 +25,15 @@ function TopHeader() {
   const onClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      setIsLogin(true);
+    }
+  }, [router]);
+
   return (
     <div className="flex justify-between container pt-[0.625rem]">
       <div className="sm:flex hidden justify-center items-center gap-[0.25rem] text-center ">

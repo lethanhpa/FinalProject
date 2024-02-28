@@ -38,7 +38,7 @@ module.exports = {
       },
       colors: {
         red: "#FF0000",
-        primry:"#FF782C",
+        primry: "#FF782C",
         black: "#000000",
         gray: "#D1CFCF",
         white: "#ffffff"
