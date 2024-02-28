@@ -1,5 +1,5 @@
-import React, { memo } from "react";
-import { Form, Input, Button, Radio, DatePicker, Space } from "antd";
+import React, { memo, useState, useEffect } from "react";
+import { Form, Input, Button, Radio, DatePicker, Space, Select } from "antd";
 import {
   UserOutlined,
   MailOutlined,
@@ -9,12 +9,63 @@ import {
   PhoneOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
-import Link from "next/link";
 
 const SignUp = () => {
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+
   const onFinish = (values) => {
-    // Xử lý logic đăng ký ở đây
     console.log(values);
+  };
+
+  useEffect(() => {
+    fetchProvinces();
+    fetchDistricts();
+    fetchWards();
+  }, []);
+
+  const fetchProvinces = () => {
+    fetch("https://vapi.vnappmob.com/api/province/")
+      .then((response) => response.json())
+      .then((data) => {
+        setProvinces(data.results);
+        console.log("««««« data »»»»»", data.results);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi gọi API:", error);
+      });
+  };
+
+  const fetchDistricts = (provinceId) => {
+    fetch(`https://vapi.vnappmob.com/api/province/district/${provinceId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setDistricts(data.results);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi gọi API:", error);
+      });
+  };
+
+  const fetchWards = (districtId) => {
+    fetch(`https://vapi.vnappmob.com/api/province/ward/${districtId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setWards(data.results);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi gọi API:", error);
+      });
+  };
+
+  const handleProvinceChange = (value) => {
+    fetchDistricts(value);
+    setWards([]);
+  };
+
+  const handleDistrictChange = (value) => {
+    fetchWards(value);
   };
 
   return (
@@ -113,6 +164,76 @@ const SignUp = () => {
           />
         </Form.Item>
 
+        <div className="mx-12 xl:space-x-3 lg:block xl:flex">
+          <Form.Item
+            name="province"
+            className="xl:w-[221px] lg:w-full"
+            rules={[
+              { required: true, message: "Vui lòng chọn Tỉnh/Thành phố" },
+            ]}
+          >
+            <Select
+              placeholder="Chọn Tỉnh/Thành phố"
+              onChange={handleProvinceChange}
+              size="large"
+            >
+              {provinces.length > 0 &&
+                provinces.map((province) => (
+                  <Option
+                    key={province.province_id}
+                    value={province.province_id}
+                  >
+                    {province.province_name}
+                  </Option>
+                ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="district"
+            className="xl:w-[221px] lg:w-full"
+            rules={[{ required: true, message: "Vui lòng chọn Quận/Huyện" }]}
+          >
+            <Select
+              placeholder="Chọn Quận/Huyện"
+              onChange={handleDistrictChange}
+              size="large"
+            >
+              {districts.length > 0 &&
+                districts.map((district) => (
+                  <Option
+                    key={district.district_id}
+                    value={district.district_id}
+                  >
+                    {district.district_name}
+                  </Option>
+                ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="ward"
+            className="xl:w-[221px] lg:w-full"
+            rules={[{ required: true, message: "Vui lòng chọn Phường/Xã" }]}
+          >
+            <Select placeholder="Chọn Phường/Xã" size="large">
+              {wards.length > 0 &&
+                wards.map((ward) => (
+                  <Option key={ward.ward_id} value={ward.ward_id}>
+                    {ward.ward_name}
+                  </Option>
+                ))}
+            </Select>
+          </Form.Item>
+        </div>
+
+        <Form.Item
+          name="address"
+          className="mx-12"
+          rules={[{ required: true, message: "Vui lòng nhập địa chỉ cụ thể" }]}
+        >
+          <Input size="large" placeholder="Nhập địa chỉ cụ thể" />
+        </Form.Item>
         <Form.Item
           name="phoneNumber"
           className="mx-12"

@@ -1,25 +1,50 @@
-import React, { memo } from "react";
-import { Form, Input, Button } from "antd";
+import React, { memo, useState } from "react";
+import { Form, Input, Button, message } from "antd";
 import {
   MailOutlined,
   LockOutlined,
   EyeOutlined,
   EyeInvisibleOutlined,
 } from "@ant-design/icons";
+import { useRouter } from "next/router";
 import Link from "next/link";
 
 function SignIn() {
-  const onSubmitHandle = async (data) => {
-    // Xử lý logic đăng nhập ở đây
-    console.log(data);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const customers = [
+    {
+      email: "user@gmail.com",
+      password: "User123456",
+    },
+  ];
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleSubmit = async () => {
+    const customer = customers.find(
+      (c) => c.email === email && c.password === password
+    );
+    if (customer) {
+      message.success("Đăng nhập thành công!!!");
+      router.push("/");
+    } else {
+      message.error("Đăng nhập thất bại");
+      console.log("Invalid email or password");
+    }
   };
 
   return (
     <div className="py-9 flex items-center justify-center">
-      <Form
-        onFinish={onSubmitHandle}
-        className="p-4 sm:p-8 shadow-2xl w-full sm:w-7/12 "
-      >
+      <Form className="p-4 sm:p-8 shadow-2xl w-full sm:w-7/12 ">
         <h2 className="mt-2 font-bold text-3xl text-center">
           Chào mừng trở lại
         </h2>
@@ -42,6 +67,10 @@ function SignIn() {
           ]}
         >
           <Input
+            type="email"
+            id="email"
+            value={email}
+            onChange={handleEmailChange}
             className="h-12"
             prefix={<MailOutlined className="mr-2 text-lg text-primry " />}
             placeholder="Email"
@@ -64,6 +93,10 @@ function SignIn() {
         >
           <Input.Password
             className="h-12"
+            type="password"
+            id="password"
+            value={password}
+            onChange={handlePasswordChange}
             prefix={<LockOutlined className="mr-2 text-lg text-primry" />}
             placeholder="Mật khẩu"
             iconRender={(visible) =>
@@ -76,6 +109,7 @@ function SignIn() {
           <Button
             type="primry"
             htmlType="submit"
+            onClick={handleSubmit}
             className="w-full bg-primry text-white p-2 h-12 "
           >
             Đăng nhập
