@@ -29,9 +29,6 @@ function Diamond({products}) {
         disableOnInteraction: false,
         reverseDirection: true,
     });
-   
-    const filteredProducts = products.filter(product => product.productName.toLowerCase().includes("kim cương"));
-    console.log(filteredProducts);
 
     const swiperRef = useRef();
 

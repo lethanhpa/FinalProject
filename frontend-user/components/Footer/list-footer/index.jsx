@@ -4,7 +4,7 @@ import { Facebook, Instagram, Twitter, Linkedin } from 'lucide-react';
 
 function ListFooter() {
     return (<div className="border-t border-gray">
-        <div className="container sm:grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 flex flex-col items-center mt-[1.875rem] mb-[50px]">
+        <div className="container sm:grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 flex flex-col items-center mt-[1.875rem] pb-[50px]">
             <div className="flex flex-col gap-[0.25rem] xxl:w-[20.375rem] w-[18.75rem]">
                 <div className="flex justify-center items-center text-center">
                     <img src="./img/logo.png" alt="logo" className="w-[6.25rem]" />

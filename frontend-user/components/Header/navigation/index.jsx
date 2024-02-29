@@ -33,7 +33,7 @@ function Navigation() {
         <ul className="sm:flex xl:gap-[60px] md:gap-[20px] gap-[40px] hidden">
             <li
                 className={classNames(
-                    "text-base font-normal font-roboto leading-7 hover:text-primary",
+                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300",
                 )}
             >
                 <Link
@@ -48,7 +48,7 @@ function Navigation() {
             </li>
             <li
                 className={classNames(
-                    "text-base font-normal font-roboto leading-7 hover:text-primary",
+                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300",
                 )}
             >
                 <Link
@@ -63,7 +63,7 @@ function Navigation() {
             </li>
             <li
                 className={classNames(
-                    "text-base font-normal font-roboto leading-7 hover:text-primary",
+                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300",
                 )}
             >
                 <Link
@@ -78,7 +78,7 @@ function Navigation() {
             </li>
             <li
                 className={classNames(
-                    "text-base font-normal font-roboto leading-7 hover:text-primary",
+                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300",
                 )}
             >
                 <Link
@@ -93,7 +93,7 @@ function Navigation() {
             </li>
             <li
                 className={classNames(
-                    "text-base font-normal font-roboto leading-7 hover:text-primary",
+                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300",
                 )}
             >
                 <Link
@@ -108,7 +108,7 @@ function Navigation() {
             </li>
             <li
                 className={classNames(
-                    "text-base font-normal font-roboto leading-7 hover:text-primary",
+                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300",
                 )}
             >
                 <Link
@@ -122,7 +122,7 @@ function Navigation() {
                 </Link>
             </li>
         </ul>
-        <div className="relative md:flex sm:justify-center border-red hidden  ">
+        <div className="relative md:flex sm:justify-center hidden hover:-translate-y-1 hover:scale-105  duration-300 ">
             <input
                 id="search"
                 className="block p-2 text-sm border-2 border-primry rounded-full lg:w-[24rem] md:w-[14rem]"

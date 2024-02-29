@@ -141,7 +141,7 @@ function TopHeader() {
               <div className="flex justify-end">
                 <X onClick={onClose} className="cursor-pointer mr-4 pt-2" />
               </div>
-              <div className="flex justify-center items-center gap-[0.25rem] text-center py-[0.5rem]">
+              {/* <div className="flex justify-center items-center gap-[0.25rem] text-center py-[0.5rem]">
                 <Phone className="w-[1.3rem] h-[1.3rem] text-primry" />
                 <Link
                   href="tel:+88015-88888-9999"
@@ -150,11 +150,11 @@ function TopHeader() {
                 >
                   190028979
                 </Link>
-              </div>
+              </div> */}
               <ul className="sm:hidden flex flex-col gap-[0.5rem] items-center">
                 <li
                   className={classNames(
-                    "text-base font-normal font-roboto leading-7"
+                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300"
                   )}
                 >
                   <Link
@@ -168,7 +168,7 @@ function TopHeader() {
                 </li>
                 <li
                   className={classNames(
-                    "text-base font-normal font-roboto leading-7"
+                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300"
                   )}
                 >
                   <Link
@@ -182,7 +182,7 @@ function TopHeader() {
                 </li>
                 <li
                   className={classNames(
-                    "text-base font-normal font-roboto leading-7"
+                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300"
                   )}
                 >
                   <Link
@@ -198,7 +198,7 @@ function TopHeader() {
                 </li>
                 <li
                   className={classNames(
-                    "text-base font-normal font-roboto leading-7"
+                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300"
                   )}
                 >
                   <Link
@@ -212,7 +212,7 @@ function TopHeader() {
                 </li>
                 <li
                   className={classNames(
-                    "text-base font-normal font-roboto leading-7"
+                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300"
                   )}
                 >
                   <Link
@@ -226,7 +226,7 @@ function TopHeader() {
                 </li>
                 <li
                   className={classNames(
-                    "text-base font-normal font-roboto leading-7"
+                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300"
                   )}
                 >
                   <Link
@@ -239,7 +239,7 @@ function TopHeader() {
                   </Link>
                 </li>
               </ul>
-              <div className="relative sm:justify-center border-red md:hidden sm:pt-2 pt-[0.5rem]">
+              <div className="relative sm:justify-center hover:-translate-y-1 hover:scale-105  duration-300 md:hidden sm:pt-2 pt-[0.5rem]">
                 <input
                   id="search"
                   className="block p-2 text-sm border-2 border-primry rounded-full lg:w-[24rem] md:w-[18rem]"

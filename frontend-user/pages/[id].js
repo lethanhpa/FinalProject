@@ -59,16 +59,16 @@ function ProductDetails({ product }) {
     </div>
   );
   return (
-    <div className="container flex mt-[50px] mb-[200px] justify-center" >
+    <div className="container flex mt-[50px] md:mb-[200px] mb-[50px] justify-center" >
       {product ? (
-        <div key={product._id} className="flex gap-[100px] ">
+        <div key={product._id} className="md:flex items-center lg:gap-[100px] gap-[50px] ">
           <div>
             <img src={`${API_URL}/${product.imageUrl}`} alt={`slide-${product.id}`} className="hover:-translate-y-1 hover:scale-105  duration-300 text-clip  sm:block flex items-center w-[28rem] object-contain" style={{
               background:
                 "-webkit-linear-gradient(top,#fff 0%,#f7f7f7 100%)",
             }} />
           </div>
-          <div className="flex flex-col gap-3 mr-[100px] w-[400px] ">
+          <div className="flex flex-col justify-center gap-3 md:mr-[100px] max-w-[400px] md:mt-0 mt-[50px]">
             <h4 className="flex gap-4 text-xl font-roboto font-bold">Jewelry | {product.productName}</h4>
             <p className="font-roboto text-md">Mã : {product.code}</p>
 
@@ -87,7 +87,7 @@ function ProductDetails({ product }) {
             </div>
             {
               product.discount > 0 && (<div className="flex font-roboto text-md justify-between"><p>Giảm giá :</p> <p className="font-bold text-lg">{product.discount}%</p></div>)
-}
+            }
 
             <div className="flex justify-between">
               <p>
@@ -183,7 +183,7 @@ function ProductDetails({ product }) {
               </div>
             </div>
           </div>
-        </div>) : (<p>hello</p>)
+        </div>) : (<p>Loading...</p>)
       }
 
 
