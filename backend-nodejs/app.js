@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const passport = require('passport');
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
@@ -10,6 +11,9 @@ const usersRouter = require('./routes/users');
 // MONGOSE
 const { default: mongoose } = require('mongoose');
 const { CONNECTION_STRING } = require('./constants/dbSettings');
+
+const { passportConfigEmployee, passportConfigCustomer, passportConfigLocal } = require('./middlewares/passport');
+
 
 const categoriesRouter = require('./routes/categories');
 const productImagesRouter = require('./routes/productImages');
@@ -25,6 +29,13 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+const cors = require('cors');
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+  optionSuccessStatus: 200
+}
+app.use(cors(corsOptions));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -48,6 +59,10 @@ mongoose.connection.on('error', (err) => {
     );
   }
 });
+
+passport.use(passportConfigEmployee);
+passport.use(passportConfigCustomer);
+passport.use(passportConfigLocal);
 
 app.use('/categories', categoriesRouter);
 app.use('/productImages', productImagesRouter);

@@ -1,11 +1,20 @@
-import React, { memo, useRef, useState } from "react";
-import { ShoppingCart, Phone, AlignJustify, X, Search } from "lucide-react";
+import React, { memo, useRef, useState, useEffect } from "react";
+import {
+  ShoppingCart,
+  Phone,
+  AlignJustify,
+  X,
+  Search,
+  LogOut,
+} from "lucide-react";
 import classNames from "classnames";
 import Link from "next/link";
 import { listAccount } from "@/constants/data-account.js";
 import Navigation from "../navigation";
 import { useRouter } from "next/router";
 import { UserAddOutlined, LoginOutlined } from "@ant-design/icons";
+import jwt_decode from "jwt-decode";
+import axios from "../../../libraries/axiosClient";
 ("../navigation/index");
 
 function TopHeader() {
@@ -16,6 +25,37 @@ function TopHeader() {
   };
   const [isShowAccount, setIsShowAccount] = React.useState(false);
   const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      setIsLogin(true);
+    }
+  }, [router]);
+
+  // useEffect(() => {
+  //   const fetchCart = async () => {
+  //     try {
+  //       const token = localStorage.getItem("token");
+
+  //       const decoded = jwt_decode(token);
+
+  //       const customerId = decoded._id;
+
+  //       await axios.get(`/cart/${customerId}`);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   fetchCart();
+  // }, [router]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLogin(false);
+    router.push("/");
+  };
 
   const [open, setOpen] = React.useState(false);
   const showDrawer = () => {
@@ -44,7 +84,7 @@ function TopHeader() {
           className="md:w-[3.375rem] md:h-[3.375rem] w-[2.5rem] h-[2.5rem]"
         />
         <span className="items-center flex text-primry text-xl font-normal leading-7 font-roboto">
-        Jewellery
+          Jewellery
         </span>
       </Link>
 
@@ -72,7 +112,7 @@ function TopHeader() {
                 id="myDropdown"
                 className={classNames(
                   "absolute min-w-[13rem] bg-primry z-40",
-                  isShowAccount ? "block right-20 mt-[30px]" : "hidden"
+                  isShowAccount ? "block right-48 mt-[30px]" : "hidden"
                 )}
               >
                 <div className="pt-[18px] pr-[12px] pb-[10px] pl-[20px] flex flex-col gap-[13px] ">
@@ -92,6 +132,17 @@ function TopHeader() {
                         </a>
                       );
                     })}
+                  <button
+                    className="flex gap-[16px] items-center text-white"
+                    onClick={handleLogout}
+                  >
+                    <p>
+                      <LogOut size={24} />
+                    </p>
+                    <p className="font-poppins text-sm font-normal leading-5">
+                      Đăng xuất
+                    </p>
+                  </button>
                 </div>
               </div>
             </div>

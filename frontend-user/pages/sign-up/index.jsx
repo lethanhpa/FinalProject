@@ -1,5 +1,14 @@
 import React, { memo, useState, useEffect } from "react";
-import { Form, Input, Button, Radio, DatePicker, Space, Select } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Radio,
+  DatePicker,
+  Space,
+  Select,
+  message,
+} from "antd";
 import {
   UserOutlined,
   MailOutlined,
@@ -9,15 +18,19 @@ import {
   PhoneOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
+import { useRouter } from "next/router";
+import axios from "../../libraries/axiosClient";
+const apiName = "customers";
 
 const SignUp = () => {
+  console.log("««««« apiName »»»»»", apiName);
+
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
-
-  const onFinish = (values) => {
-    console.log(values);
-  };
+  const [createForm] = Form.useForm();
+  const [refresh, setRefresh] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     fetchProvinces();
@@ -30,7 +43,6 @@ const SignUp = () => {
       .then((response) => response.json())
       .then((data) => {
         setProvinces(data.results);
-        console.log("««««« data »»»»»", data.results);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API:", error);
@@ -42,6 +54,7 @@ const SignUp = () => {
       .then((response) => response.json())
       .then((data) => {
         setDistricts(data.results);
+        console.log("««««« data.results »»»»»", data.results.payload);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API:", error);
@@ -53,6 +66,7 @@ const SignUp = () => {
       .then((response) => response.json())
       .then((data) => {
         setWards(data.results);
+        console.log("««««« xã.results »»»»»", data.results);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API:", error);
@@ -68,9 +82,30 @@ const SignUp = () => {
     fetchWards(value);
   };
 
+  const onFinish = (values) => {
+    const { provinceId, districtId, wardId } = values;
+    axios
+      .post(apiName, { provinceId, districtId, wardId })
+      .then((_response) => {
+        setRefresh((f) => f + 1);
+        createForm.resetFields();
+        router.push("/sign-in");
+        message.success("Đăng ký thành công!");
+      })
+      .catch(
+        (err) => {
+          console.error(err);
+          message.error("Đăng ký thất bại");
+        },
+        [refresh]
+      );
+  };
+
   return (
     <div className="py-9 flex items-center justify-center">
       <Form
+        form={createForm}
+        name="create-form"
         onFinish={onFinish}
         className="p-4 sm:p-8 shadow-2xl w-full sm:w-6/12"
       >
@@ -131,14 +166,11 @@ const SignUp = () => {
           <Input.Password
             prefix={<LockOutlined className="mr-2 text-lg text-primry" />}
             placeholder="Mật khẩu"
-            iconRender={(visible) =>
-              visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
-            }
             size="large"
           />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           name="confirmPassword"
           className="mx-12"
           dependencies={["password"]}
@@ -157,16 +189,13 @@ const SignUp = () => {
           <Input.Password
             prefix={<LockOutlined className="mr-2 text-lg text-primry" />}
             placeholder="Nhập lại mật khẩu"
-            iconRender={(visible) =>
-              visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
-            }
             size="large"
           />
-        </Form.Item>
+        </Form.Item> */}
 
         <div className="mx-12 xl:space-x-3 lg:block xl:flex">
           <Form.Item
-            name="province"
+            name="provinceId"
             className="xl:w-[221px] lg:w-full"
             rules={[
               { required: true, message: "Vui lòng chọn Tỉnh/Thành phố" },
@@ -190,7 +219,7 @@ const SignUp = () => {
           </Form.Item>
 
           <Form.Item
-            name="district"
+            name="districtId"
             className="xl:w-[221px] lg:w-full"
             rules={[{ required: true, message: "Vui lòng chọn Quận/Huyện" }]}
           >
@@ -212,7 +241,7 @@ const SignUp = () => {
           </Form.Item>
 
           <Form.Item
-            name="ward"
+            name="wardId"
             className="xl:w-[221px] lg:w-full"
             rules={[{ required: true, message: "Vui lòng chọn Phường/Xã" }]}
           >

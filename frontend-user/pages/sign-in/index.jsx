@@ -1,25 +1,14 @@
 import React, { memo, useState } from "react";
 import { Form, Input, Button, message } from "antd";
-import {
-  MailOutlined,
-  LockOutlined,
-  EyeOutlined,
-  EyeInvisibleOutlined,
-} from "@ant-design/icons";
+import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import axios from "../../libraries/axiosClient";
 
-function SignIn() {
+const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-
-  const customers = [
-    {
-      email: "user@gmail.com",
-      password: "User123456",
-    },
-  ];
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -29,16 +18,38 @@ function SignIn() {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = async () => {
-    const customer = customers.find(
-      (c) => c.email === email && c.password === password
-    );
-    if (customer) {
-      message.success("Đăng nhập thành công!!!");
-      router.push("/");
-    } else {
-      message.error("Đăng nhập thất bại");
-      console.log("Invalid email or password");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const account = {
+      email,
+      password,
+    };
+
+    try {
+      const response = await axios.post("/customers/login", account);
+      const { token } = response.data;
+
+      const customer = await axios.get("/customers/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (customer.data.status === false) {
+        message.error("Tài khoản của bạn đã bị khóa.");
+      } else {
+        localStorage.setItem("token", token);
+
+        axios.defaults.headers.Authorization = `Bearer ${token}`;
+
+        message.success("Đăng nhập thành công!!!");
+
+        router.push("/");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("Đăng nhập thất bại.");
     }
   };
 
@@ -99,15 +110,12 @@ function SignIn() {
             onChange={handlePasswordChange}
             prefix={<LockOutlined className="mr-2 text-lg text-primry" />}
             placeholder="Mật khẩu"
-            iconRender={(visible) =>
-              visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
-            }
           />
         </Form.Item>
 
         <Form.Item className="text-center mx-12">
           <Button
-            type="primry"
+            type="submit"
             htmlType="submit"
             onClick={handleSubmit}
             className="w-full bg-primry text-white p-2 h-12 "
@@ -128,6 +136,6 @@ function SignIn() {
       </Form>
     </div>
   );
-}
+};
 
 export default memo(SignIn);

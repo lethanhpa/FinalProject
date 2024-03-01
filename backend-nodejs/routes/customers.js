@@ -18,7 +18,6 @@ const router = express.Router();
 router.post(
   "/login",
   validateSchema(loginSchema),
-  // passport.authenticate('local', { session: false }),
   async (req, res, next) => {
     try {
       const { email } = req.body;
@@ -50,9 +49,9 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      
+
       const customer = await Customer.findById(req.user._id);
-      
+
       if (!customer) return res.status(404).send({ message: 'Not found' });
 
       res.status(200).json(customer);
@@ -106,6 +105,16 @@ router.get('/:id', function (req, res) {
 router.post('/', async (req, res) => {
   try {
     const data = req.body;
+
+    const { provinceId, districtId, wardId } = req.body;
+    const newCustomer = new Customer({
+      provinceId,
+      districtId,
+      wardId,
+    });
+    const savedCustomer = await newCustomer.save();
+    res.status(201).send(savedCustomer);
+
     const email = data.email;
     const emailUnique = await Customer.findOne({ email });
     if (emailUnique) {
