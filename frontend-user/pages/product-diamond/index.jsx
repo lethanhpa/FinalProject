@@ -4,6 +4,8 @@ import { API_URL } from "@/constants";
 import Link from "next/link";
 import numeral from "numeral";
 import axiosClient from "@/libraries/axiosClient";
+import MoveTop from "@/components/App/AppMoveTop";
+
 
 function ProductDiamond({products}) {
 
@@ -12,7 +14,8 @@ function ProductDiamond({products}) {
     };
 
     return (
-        <div className="grid grid-cols-5 gap-2 container">
+        <>
+                <div className="grid grid-cols-5 gap-2 container">
             {products && products.filter(product => product.productName.toLowerCase().includes("kim cương")).map((item) => {
                 return (
                     <div className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[100px] min-h-[100px] shadow-md rounded hover:bg-second-3 flex flex-col justify-center items-center mt-[3.125rem] mb-[3.125rem]" style={{
@@ -69,6 +72,9 @@ function ProductDiamond({products}) {
 
             })}
         </div>
+         <MoveTop />
+        </>
+
     )
 }
 

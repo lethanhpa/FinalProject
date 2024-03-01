@@ -65,6 +65,7 @@ router.post('/', async function (req, res, next) {
                     size: yup.string().required(),
                 })
             ).required(),
+            stock: yup.number.required(),
         }),
     });
 

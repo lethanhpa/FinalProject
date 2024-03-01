@@ -1,11 +1,11 @@
 import React, { memo, useRef, useState } from "react";
-import { ShoppingCart, Phone, AlignJustify, X, Search } from "lucide-react";
+import { ShoppingCart, AlignJustify, X, Search, LogIn  } from "lucide-react";
 import classNames from "classnames";
 import Link from "next/link";
 import { listAccount } from "@/constants/data-account.js";
 import Navigation from "../navigation";
 import { useRouter } from "next/router";
-import { UserAddOutlined, LoginOutlined } from "@ant-design/icons";
+import { UserAddOutlined } from "@ant-design/icons";
 ("../navigation/index");
 
 function TopHeader() {
@@ -114,7 +114,7 @@ function TopHeader() {
         ) : (
           <>
             <Link href="/sign-in" className="flex">
-              <LoginOutlined className="text-2xl md:w-[1.75rem] md:h-[1.75rem] w-[1.5rem] h-[1.5rem]" />
+              <LogIn className="text-2xl md:w-[1.75rem] md:h-[1.75rem] w-[1.5rem] h-[1.5rem]" />
               <span className="text-sm text-black leading-7 font-normal sm:block hidden font-roboto">
                 Đăng nhập
               </span>

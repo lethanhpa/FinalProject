@@ -102,7 +102,7 @@ function ProductDetails({ product }) {
             </div>
             <div className="flex gap-4">
               {
-                product.size.sizes && product.size.sizes.map((item) => {
+                product.size && product.size.sizes.map((item) => {
                   return (
                     <label
                       key={item._id}
@@ -183,7 +183,7 @@ function ProductDetails({ product }) {
               </div>
             </div>
           </div>
-        </div>) : (<p>Loading...</p>)
+        </div>) : (<p>loading...</p>)
       }
 
 
