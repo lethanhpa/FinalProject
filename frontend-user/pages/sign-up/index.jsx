@@ -23,8 +23,6 @@ import axios from "../../libraries/axiosClient";
 const apiName = "customers";
 
 const SignUp = () => {
-  console.log("««««« apiName »»»»»", apiName);
-
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
@@ -54,7 +52,6 @@ const SignUp = () => {
       .then((response) => response.json())
       .then((data) => {
         setDistricts(data.results);
-        console.log("««««« data.results »»»»»", data.results.payload);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API:", error);
@@ -66,7 +63,6 @@ const SignUp = () => {
       .then((response) => response.json())
       .then((data) => {
         setWards(data.results);
-        console.log("««««« xã.results »»»»»", data.results);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API:", error);
@@ -83,22 +79,36 @@ const SignUp = () => {
   };
 
   const onFinish = (values) => {
-    const { provinceId, districtId, wardId } = values;
-    axios
-      .post(apiName, { provinceId, districtId, wardId })
-      .then((_response) => {
-        setRefresh((f) => f + 1);
-        createForm.resetFields();
-        router.push("/sign-in");
-        message.success("Đăng ký thành công!");
-      })
-      .catch(
-        (err) => {
+    const { provinceId, districtId, wardId, address } = values;
+
+    const provinceName = provinces.find(
+      (province) => province.province_id === provinceId
+    )?.province_name;
+    const districtName = districts.find(
+      (district) => district.district_id === districtId
+    )?.district_name;
+    const wardName = wards.find((ward) => ward.ward_id === wardId)?.ward_name;
+
+    if (provinceName && districtName && wardName) {
+      const fullAddress = `${address}, ${wardName}, ${districtName}, ${provinceName}  `;
+
+      const dataToSend = { ...values, address: fullAddress };
+
+      axios
+        .post(apiName, dataToSend)
+        .then((_response) => {
+          setRefresh((f) => f + 1);
+          createForm.resetFields();
+          router.push("/sign-in");
+          message.success("Đăng ký thành công!");
+        })
+        .catch((err) => {
           console.error(err);
           message.error("Đăng ký thất bại");
-        },
-        [refresh]
-      );
+        });
+    } else {
+      message.error("Đã xảy ra lỗi khi tạo địa chỉ hoàn chỉnh.");
+    }
   };
 
   return (
@@ -160,7 +170,15 @@ const SignUp = () => {
           className="mx-12"
           rules={[
             { required: true, message: "Vui lòng nhập mật khẩu" },
-            { min: 6, message: "Mật khẩu phải có ít nhất 6 ký tự" },
+            {
+              min: 6,
+              message: "Mật khẩu phải có ít nhất 6 ký tự",
+            },
+            {
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/,
+              message:
+                "Mật khẩu phải chứa ít nhất một chữ cái viết thường, một chữ cái viết hoa và một số",
+            },
           ]}
         >
           <Input.Password
@@ -170,7 +188,7 @@ const SignUp = () => {
           />
         </Form.Item>
 
-        {/* <Form.Item
+        <Form.Item
           name="confirmPassword"
           className="mx-12"
           dependencies={["password"]}
@@ -191,7 +209,7 @@ const SignUp = () => {
             placeholder="Nhập lại mật khẩu"
             size="large"
           />
-        </Form.Item> */}
+        </Form.Item>
 
         <div className="mx-12 xl:space-x-3 lg:block xl:flex">
           <Form.Item
@@ -205,17 +223,16 @@ const SignUp = () => {
               placeholder="Chọn Tỉnh/Thành phố"
               onChange={handleProvinceChange}
               size="large"
-            >
-              {provinces.length > 0 &&
-                provinces.map((province) => (
-                  <Option
-                    key={province.province_id}
-                    value={province.province_id}
-                  >
-                    {province.province_name}
-                  </Option>
-                ))}
-            </Select>
+              options={
+                provinces.length > 0 &&
+                provinces.map((province) => {
+                  return {
+                    value: province.province_id,
+                    label: province.province_name,
+                  };
+                })
+              }
+            />
           </Form.Item>
 
           <Form.Item
@@ -227,17 +244,16 @@ const SignUp = () => {
               placeholder="Chọn Quận/Huyện"
               onChange={handleDistrictChange}
               size="large"
-            >
-              {districts.length > 0 &&
-                districts.map((district) => (
-                  <Option
-                    key={district.district_id}
-                    value={district.district_id}
-                  >
-                    {district.district_name}
-                  </Option>
-                ))}
-            </Select>
+              options={
+                districts.length > 0 &&
+                districts.map((district) => {
+                  return {
+                    value: district.district_id,
+                    label: district.district_name,
+                  };
+                })
+              }
+            />
           </Form.Item>
 
           <Form.Item
@@ -245,14 +261,19 @@ const SignUp = () => {
             className="xl:w-[221px] lg:w-full"
             rules={[{ required: true, message: "Vui lòng chọn Phường/Xã" }]}
           >
-            <Select placeholder="Chọn Phường/Xã" size="large">
-              {wards.length > 0 &&
-                wards.map((ward) => (
-                  <Option key={ward.ward_id} value={ward.ward_id}>
-                    {ward.ward_name}
-                  </Option>
-                ))}
-            </Select>
+            <Select
+              placeholder="Chọn Phường/Xã"
+              size="large"
+              options={
+                wards.length > 0 &&
+                wards.map((ward) => {
+                  return {
+                    value: ward.ward_id,
+                    label: ward.ward_name,
+                  };
+                })
+              }
+            />
           </Form.Item>
         </div>
 
@@ -282,9 +303,9 @@ const SignUp = () => {
           <Space>
             <TeamOutlined className="ml-3 mr-3 text-lg text-primry" />
             <Radio.Group>
-              <Radio value="male">Nam</Radio>
-              <Radio value="female">Nữ</Radio>
-              <Radio value="lgbt">Khác</Radio>
+              <Radio value="Nam">Nam</Radio>
+              <Radio value="Nữ">Nữ</Radio>
+              <Radio value="LGBT">LGBT</Radio>
             </Radio.Group>
           </Space>
         </Form.Item>

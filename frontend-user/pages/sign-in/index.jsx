@@ -92,13 +92,15 @@ const SignIn = () => {
           name="password"
           className="mx-12"
           rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập mật khẩu!",
-            },
+            { required: true, message: "Vui lòng nhập mật khẩu" },
             {
               min: 6,
               message: "Mật khẩu phải có ít nhất 6 ký tự",
+            },
+            {
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/,
+              message:
+                "Mật khẩu phải chứa ít nhất một chữ cái viết thường, một chữ cái viết hoa và một số",
             },
           ]}
         >

@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { UserAddOutlined, LoginOutlined } from "@ant-design/icons";
 import jwt_decode from "jwt-decode";
 import axios from "../../../libraries/axiosClient";
+import { message } from "antd";
 ("../navigation/index");
 
 function TopHeader() {
@@ -55,6 +56,7 @@ function TopHeader() {
     localStorage.removeItem("token");
     setIsLogin(false);
     router.push("/");
+    message.success("Đăng xuất thành công");
   };
 
   const [open, setOpen] = React.useState(false);

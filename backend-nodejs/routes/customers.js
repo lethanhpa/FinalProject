@@ -18,6 +18,7 @@ const router = express.Router();
 router.post(
   "/login",
   validateSchema(loginSchema),
+  // passport.authenticate('local', { session: false }),
   async (req, res, next) => {
     try {
       const { email } = req.body;
@@ -105,16 +106,6 @@ router.get('/:id', function (req, res) {
 router.post('/', async (req, res) => {
   try {
     const data = req.body;
-
-    const { provinceId, districtId, wardId } = req.body;
-    const newCustomer = new Customer({
-      provinceId,
-      districtId,
-      wardId,
-    });
-    const savedCustomer = await newCustomer.save();
-    res.status(201).send(savedCustomer);
-
     const email = data.email;
     const emailUnique = await Customer.findOne({ email });
     if (emailUnique) {
