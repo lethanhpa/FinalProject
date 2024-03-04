@@ -8,15 +8,34 @@ import axiosClient from "@/libraries/axiosClient";
 import { API_URL } from "@/constants";
 
 function Products({ products, categories }) {
-  const [visibleProducts, setVisibleProducts] = useState(4);
-  const totalProducts = products.length;
+  const [visibleProducts, setVisibleProducts] = useState(20);
+  // const totalProducts = products.length;
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([products]);
+
+  useEffect(() => {
+    if (selectedCategory) {
+      const filtered = products.filter(
+        (product) => product.category === selectedCategory
+      );
+      setFilteredProducts(filtered);
+    } else {
+      setFilteredProducts(products);
+    }
+  }, [selectedCategory, products]);
+
+  const totalProducts = filteredProducts.length;
 
   const handleAddCart = (productId) => {
     addToCart(productId);
   };
 
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+  };
+
   const handleShowMore = () => {
-    const newVisibleProducts = visibleProducts + 4;
+    const newVisibleProducts = visibleProducts + 20;
     const nextVisibleProducts = Math.min(newVisibleProducts, totalProducts);
     setVisibleProducts(nextVisibleProducts);
   };
@@ -26,18 +45,17 @@ function Products({ products, categories }) {
       <select
         id="categories"
         name="category"
-        value={categories}
-        className="px-5"
+        className="px-10 mb-10 py-1.5 "
+        onChange={handleCategoryChange}
       >
-        {categories &&
-          categories.map((item) => (
-            <option key={item._id} value={item._id}>
-              {item.name}
-            </option>
-          ))}
+        {categories.map((item) => (
+          <option key={item._id} value={item._id}>
+            {item.name}
+          </option>
+        ))}
       </select>
       <div className="grid lg:grid-cols-4 gap-10 md:grid-cols-3  sm:grid-cols-2">
-        {products.slice(0, visibleProducts).map((item) => (
+        {filteredProducts.slice(0, visibleProducts).map((item) => (
           <div
             className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[100px] min-h-[100px] shadow-md rounded hover:bg-second-3 flex flex-col justify-center items-center"
             style={{
@@ -70,7 +88,8 @@ function Products({ products, categories }) {
             )}
             <div className="flex flex-col gap-[6px]">
               <p className="font-roboto text-sm font-normal flex justify-center xxl:truncate text-center">
-                {item.productName}
+                {item.productName} || 
+                {/* {item.category.name} */}
               </p>
               <span className="font-roboto text-sm font-normal flex justify-center">
                 {item.code}
@@ -152,3 +171,4 @@ export async function getStaticProps() {
     };
   }
 }
+
