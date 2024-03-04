@@ -12,12 +12,6 @@ const listAccount = [
     name: "Lịch sử mua hàng",
     link: "/purchase-history",
   },
-  {
-    id: "3",
-    icon: <LogOut size={24} />,
-    name: "Logout",
-    link: "./",
-  },
 ];
 
 export { listAccount };

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
-const bcrypt =require("bcryptjs");
+const bcrypt = require("bcryptjs");
 
 const customerSchema = new Schema(
   {
@@ -34,7 +34,7 @@ const customerSchema = new Schema(
       validate: {
         validator: function (value) {
           return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/.test(value);
-          
+
         },
         message: 'Password must contain at least one lowercase letter, one uppercase letter, and one number',
       },
@@ -42,8 +42,8 @@ const customerSchema = new Schema(
     address: { type: String, required: true },
     gender: { type: String, required: true },
     birthday: { type: Date },
-    status: { type: Boolean, required: true},
-    avatar: { type: String, required: true},
+    status: { type: Boolean },
+    avatar: { type: String },
 
   },
   {

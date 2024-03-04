@@ -1,5 +1,14 @@
 import React, { memo, useState, useEffect } from "react";
-import { Form, Input, Button, Radio, DatePicker, Space, Select } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Radio,
+  DatePicker,
+  Space,
+  Select,
+  message,
+} from "antd";
 import {
   UserOutlined,
   MailOutlined,
@@ -9,15 +18,17 @@ import {
   PhoneOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
+import { useRouter } from "next/router";
+import axios from "../../libraries/axiosClient";
+const apiName = "customers";
 
 const SignUp = () => {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
-
-  const onFinish = (values) => {
-    console.log(values);
-  };
+  const [createForm] = Form.useForm();
+  const [refresh, setRefresh] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     fetchProvinces();
@@ -30,7 +41,6 @@ const SignUp = () => {
       .then((response) => response.json())
       .then((data) => {
         setProvinces(data.results);
-        console.log("««««« data »»»»»", data.results);
       })
       .catch((error) => {
         console.error("Lỗi khi gọi API:", error);
@@ -68,9 +78,44 @@ const SignUp = () => {
     fetchWards(value);
   };
 
+  const onFinish = (values) => {
+    const { provinceId, districtId, wardId, address } = values;
+
+    const provinceName = provinces.find(
+      (province) => province.province_id === provinceId
+    )?.province_name;
+    const districtName = districts.find(
+      (district) => district.district_id === districtId
+    )?.district_name;
+    const wardName = wards.find((ward) => ward.ward_id === wardId)?.ward_name;
+
+    if (provinceName && districtName && wardName) {
+      const fullAddress = `${address}, ${wardName}, ${districtName}, ${provinceName}  `;
+
+      const dataToSend = { ...values, address: fullAddress };
+
+      axios
+        .post(apiName, dataToSend)
+        .then((_response) => {
+          setRefresh((f) => f + 1);
+          createForm.resetFields();
+          router.push("/sign-in");
+          message.success("Đăng ký thành công!");
+        })
+        .catch((err) => {
+          console.error(err);
+          message.error("Đăng ký thất bại");
+        });
+    } else {
+      message.error("Đã xảy ra lỗi khi tạo địa chỉ hoàn chỉnh.");
+    }
+  };
+
   return (
     <div className="py-9 flex items-center justify-center">
       <Form
+        form={createForm}
+        name="create-form"
         onFinish={onFinish}
         className="p-4 sm:p-8 shadow-2xl w-full sm:w-6/12"
       >
@@ -125,15 +170,20 @@ const SignUp = () => {
           className="mx-12"
           rules={[
             { required: true, message: "Vui lòng nhập mật khẩu" },
-            { min: 6, message: "Mật khẩu phải có ít nhất 6 ký tự" },
+            {
+              min: 6,
+              message: "Mật khẩu phải có ít nhất 6 ký tự",
+            },
+            {
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/,
+              message:
+                "Mật khẩu phải chứa ít nhất một chữ cái viết thường, một chữ cái viết hoa và một số",
+            },
           ]}
         >
           <Input.Password
             prefix={<LockOutlined className="mr-2 text-lg text-primry" />}
             placeholder="Mật khẩu"
-            iconRender={(visible) =>
-              visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
-            }
             size="large"
           />
         </Form.Item>
@@ -157,16 +207,13 @@ const SignUp = () => {
           <Input.Password
             prefix={<LockOutlined className="mr-2 text-lg text-primry" />}
             placeholder="Nhập lại mật khẩu"
-            iconRender={(visible) =>
-              visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
-            }
             size="large"
           />
         </Form.Item>
 
         <div className="mx-12 xl:space-x-3 lg:block xl:flex">
           <Form.Item
-            name="province"
+            name="provinceId"
             className="xl:w-[221px] lg:w-full"
             rules={[
               { required: true, message: "Vui lòng chọn Tỉnh/Thành phố" },
@@ -176,21 +223,20 @@ const SignUp = () => {
               placeholder="Chọn Tỉnh/Thành phố"
               onChange={handleProvinceChange}
               size="large"
-            >
-              {provinces.length > 0 &&
-                provinces.map((province) => (
-                  <Option
-                    key={province.province_id}
-                    value={province.province_id}
-                  >
-                    {province.province_name}
-                  </Option>
-                ))}
-            </Select>
+              options={
+                provinces.length > 0 &&
+                provinces.map((province) => {
+                  return {
+                    value: province.province_id,
+                    label: province.province_name,
+                  };
+                })
+              }
+            />
           </Form.Item>
 
           <Form.Item
-            name="district"
+            name="districtId"
             className="xl:w-[221px] lg:w-full"
             rules={[{ required: true, message: "Vui lòng chọn Quận/Huyện" }]}
           >
@@ -198,32 +244,36 @@ const SignUp = () => {
               placeholder="Chọn Quận/Huyện"
               onChange={handleDistrictChange}
               size="large"
-            >
-              {districts.length > 0 &&
-                districts.map((district) => (
-                  <Option
-                    key={district.district_id}
-                    value={district.district_id}
-                  >
-                    {district.district_name}
-                  </Option>
-                ))}
-            </Select>
+              options={
+                districts.length > 0 &&
+                districts.map((district) => {
+                  return {
+                    value: district.district_id,
+                    label: district.district_name,
+                  };
+                })
+              }
+            />
           </Form.Item>
 
           <Form.Item
-            name="ward"
+            name="wardId"
             className="xl:w-[221px] lg:w-full"
             rules={[{ required: true, message: "Vui lòng chọn Phường/Xã" }]}
           >
-            <Select placeholder="Chọn Phường/Xã" size="large">
-              {wards.length > 0 &&
-                wards.map((ward) => (
-                  <Option key={ward.ward_id} value={ward.ward_id}>
-                    {ward.ward_name}
-                  </Option>
-                ))}
-            </Select>
+            <Select
+              placeholder="Chọn Phường/Xã"
+              size="large"
+              options={
+                wards.length > 0 &&
+                wards.map((ward) => {
+                  return {
+                    value: ward.ward_id,
+                    label: ward.ward_name,
+                  };
+                })
+              }
+            />
           </Form.Item>
         </div>
 
@@ -253,9 +303,9 @@ const SignUp = () => {
           <Space>
             <TeamOutlined className="ml-3 mr-3 text-lg text-primry" />
             <Radio.Group>
-              <Radio value="male">Nam</Radio>
-              <Radio value="female">Nữ</Radio>
-              <Radio value="lgbt">Khác</Radio>
+              <Radio value="Nam">Nam</Radio>
+              <Radio value="Nữ">Nữ</Radio>
+              <Radio value="LGBT">LGBT</Radio>
             </Radio.Group>
           </Space>
         </Form.Item>

@@ -7,9 +7,15 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
+const { passportConfigEmployee, passportConfigCustomer, passportConfigLocal } = require('./middlewares/passport');
+
 // MONGOSE
 const { default: mongoose } = require('mongoose');
 const { CONNECTION_STRING } = require('./constants/dbSettings');
+
+passport.use(passportConfigEmployee);
+passport.use(passportConfigCustomer);
+passport.use(passportConfigLocal);
 
 const categoriesRouter = require('./routes/categories');
 const productImagesRouter = require('./routes/productImages');
@@ -24,6 +30,14 @@ const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+const cors = require('cors');
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+  optionSuccessStatus: 200
+}
+app.use(cors(corsOptions));
 
 app.use(logger('dev'));
 app.use(express.json());

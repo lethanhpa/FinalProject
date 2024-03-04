@@ -1,11 +1,21 @@
-import React, { memo, useRef, useState } from "react";
-import { ShoppingCart, AlignJustify, X, Search, LogIn  } from "lucide-react";
+import React, { memo, useRef, useState, useEffect } from "react";
+import {
+  ShoppingCart,
+  Phone,
+  AlignJustify,
+  X,
+  Search,
+  LogOut,
+} from "lucide-react";
 import classNames from "classnames";
 import Link from "next/link";
 import { listAccount } from "@/constants/data-account.js";
 import Navigation from "../navigation";
 import { useRouter } from "next/router";
-import { UserAddOutlined } from "@ant-design/icons";
+import { UserAddOutlined, LoginOutlined } from "@ant-design/icons";
+import jwt_decode from "jwt-decode";
+import axios from "../../../libraries/axiosClient";
+import { message } from "antd";
 ("../navigation/index");
 
 function TopHeader() {
@@ -16,6 +26,38 @@ function TopHeader() {
   };
   const [isShowAccount, setIsShowAccount] = React.useState(false);
   const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      setIsLogin(true);
+    }
+  }, [router]);
+
+  // useEffect(() => {
+  //   const fetchCart = async () => {
+  //     try {
+  //       const token = localStorage.getItem("token");
+
+  //       const decoded = jwt_decode(token);
+
+  //       const customerId = decoded._id;
+
+  //       await axios.get(`/cart/${customerId}`);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   fetchCart();
+  // }, [router]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLogin(false);
+    router.push("/");
+    message.success("Đăng xuất thành công");
+  };
 
   const [open, setOpen] = React.useState(false);
   const showDrawer = () => {
@@ -44,7 +86,7 @@ function TopHeader() {
           className="md:w-[3.375rem] md:h-[3.375rem] w-[2.5rem] h-[2.5rem]"
         />
         <span className="items-center flex text-primry text-xl font-normal leading-7 font-roboto">
-        Jewellery
+          Jewellery
         </span>
       </Link>
 
@@ -72,7 +114,7 @@ function TopHeader() {
                 id="myDropdown"
                 className={classNames(
                   "absolute min-w-[13rem] bg-primry z-40",
-                  isShowAccount ? "block right-20 mt-[30px]" : "hidden"
+                  isShowAccount ? "block right-48 mt-[30px]" : "hidden"
                 )}
               >
                 <div className="pt-[18px] pr-[12px] pb-[10px] pl-[20px] flex flex-col gap-[13px] ">
@@ -92,6 +134,17 @@ function TopHeader() {
                         </a>
                       );
                     })}
+                  <button
+                    className="flex gap-[16px] items-center text-white"
+                    onClick={handleLogout}
+                  >
+                    <p>
+                      <LogOut size={24} />
+                    </p>
+                    <p className="font-poppins text-sm font-normal leading-5">
+                      Đăng xuất
+                    </p>
+                  </button>
                 </div>
               </div>
             </div>
@@ -114,7 +167,7 @@ function TopHeader() {
         ) : (
           <>
             <Link href="/sign-in" className="flex">
-              <LogIn className="text-2xl md:w-[1.75rem] md:h-[1.75rem] w-[1.5rem] h-[1.5rem]" />
+              <LoginOutlined className="text-2xl md:w-[1.75rem] md:h-[1.75rem] w-[1.5rem] h-[1.5rem]" />
               <span className="text-sm text-black leading-7 font-normal sm:block hidden font-roboto">
                 Đăng nhập
               </span>
@@ -141,7 +194,7 @@ function TopHeader() {
               <div className="flex justify-end">
                 <X onClick={onClose} className="cursor-pointer mr-4 pt-2" />
               </div>
-              {/* <div className="flex justify-center items-center gap-[0.25rem] text-center py-[0.5rem]">
+              <div className="flex justify-center items-center gap-[0.25rem] text-center py-[0.5rem]">
                 <Phone className="w-[1.3rem] h-[1.3rem] text-primry" />
                 <Link
                   href="tel:+88015-88888-9999"
@@ -150,11 +203,11 @@ function TopHeader() {
                 >
                   190028979
                 </Link>
-              </div> */}
+              </div>
               <ul className="sm:hidden flex flex-col gap-[0.5rem] items-center">
                 <li
                   className={classNames(
-                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300"
+                    "text-base font-normal font-roboto leading-7"
                   )}
                 >
                   <Link
@@ -168,7 +221,7 @@ function TopHeader() {
                 </li>
                 <li
                   className={classNames(
-                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300"
+                    "text-base font-normal font-roboto leading-7"
                   )}
                 >
                   <Link
@@ -182,7 +235,7 @@ function TopHeader() {
                 </li>
                 <li
                   className={classNames(
-                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300"
+                    "text-base font-normal font-roboto leading-7"
                   )}
                 >
                   <Link
@@ -198,7 +251,7 @@ function TopHeader() {
                 </li>
                 <li
                   className={classNames(
-                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300"
+                    "text-base font-normal font-roboto leading-7"
                   )}
                 >
                   <Link
@@ -212,7 +265,7 @@ function TopHeader() {
                 </li>
                 <li
                   className={classNames(
-                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300"
+                    "text-base font-normal font-roboto leading-7"
                   )}
                 >
                   <Link
@@ -226,7 +279,7 @@ function TopHeader() {
                 </li>
                 <li
                   className={classNames(
-                    "text-base font-normal font-roboto leading-7 hover:-translate-y-1 hover:scale-105  duration-300"
+                    "text-base font-normal font-roboto leading-7"
                   )}
                 >
                   <Link
@@ -239,7 +292,7 @@ function TopHeader() {
                   </Link>
                 </li>
               </ul>
-              <div className="relative sm:justify-center hover:-translate-y-1 hover:scale-105  duration-300 md:hidden sm:pt-2 pt-[0.5rem]">
+              <div className="relative sm:justify-center border-red md:hidden sm:pt-2 pt-[0.5rem]">
                 <input
                   id="search"
                   className="block p-2 text-sm border-2 border-primry rounded-full lg:w-[24rem] md:w-[18rem]"
