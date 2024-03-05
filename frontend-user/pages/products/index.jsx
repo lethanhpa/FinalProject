@@ -1,5 +1,5 @@
 import router from "next/router";
-import React, { useState, memo, useEffect } from "react";
+import React, { useState, memo } from "react";
 import { ShoppingCart } from "lucide-react";
 import { Button, Divider } from "antd";
 import numeral from "numeral";
@@ -9,29 +9,14 @@ import { API_URL } from "@/constants";
 
 function Products({ products, categories }) {
   const [visibleProducts, setVisibleProducts] = useState(20);
-  // const totalProducts = products.length;
+  // const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState([products]);
 
-  useEffect(() => {
-    if (selectedCategory) {
-      const filtered = products.filter(
-        (product) => product.category === selectedCategory
-      );
-      setFilteredProducts(filtered);
-    } else {
-      setFilteredProducts(products);
-    }
-  }, [selectedCategory, products]);
-
-  const totalProducts = filteredProducts.length;
+  const totalProducts = products.length;
 
   const handleAddCart = (productId) => {
     addToCart(productId);
-  };
-
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
   };
 
   const handleShowMore = () => {
@@ -40,23 +25,68 @@ function Products({ products, categories }) {
     setVisibleProducts(nextVisibleProducts);
   };
 
+  const handleCategorySelect = (categoryId) => {
+    if (!selectedCategories.includes(categoryId)) {
+      setSelectedCategories([...selectedCategories, categoryId]);
+    }
+    setSelectedCategory(categoryId);
+  };
+
+  const handleCategoryRemove = (categoryId) => {
+    const updatedCategories = selectedCategories.filter(
+      (selectedId) => selectedId !== categoryId
+    );
+    setSelectedCategories(updatedCategories);
+    setSelectedCategory("");
+  };
+
+  const filteredProducts = selectedCategory
+    ? products.filter((product) => product.categoryId === selectedCategory)
+    : products;
+  console.log("««««« selectedCategory »»»»»", selectedCategory);
+
   return (
     <div className="container mt-10">
-      <select
-        id="categories"
-        name="category"
-        className="px-10 mb-10 py-1.5 "
-        onChange={handleCategoryChange}
-      >
-        {categories.map((item) => (
-          <option key={item._id} value={item._id}>
-            {item.name}
-          </option>
-        ))}
-      </select>
+      <div className=" items-center justify-between mb-5">
+        <select
+          id="categories"
+          name="category"
+          className="px-10 py-1.5 mr-3"
+          onChange={(e) => handleCategorySelect(e.target.value)}
+          value={selectedCategory}
+        >
+          <option value="">Tất cả danh mục</option>
+          {categories.map((item) => (
+            <option key={item._id} value={item._id}>
+              {item.name}
+            </option>
+          ))}
+        </select>
+        {selectedCategories.length > 0 && (
+          <div className="flex items-center">
+            <span className="mr-2">Đã chọn:</span>
+            {selectedCategories.map((categoryId) => {
+              const category = categories.find((category) => category._id === categoryId);
+              return (
+                <div key={categoryId} className="flex items-center mr-2">
+                  <span>{category.name}</span>
+                  <button
+                    className="ml-1 text-red-500"
+                    onClick={() => handleCategoryRemove(categoryId)}
+                  >
+                    x
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
       <div className="grid lg:grid-cols-4 gap-10 md:grid-cols-3  sm:grid-cols-2">
         {filteredProducts.slice(0, visibleProducts).map((item) => (
           <div
+            key={item._id}
             className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[100px] min-h-[100px] shadow-md rounded hover:bg-second-3 flex flex-col justify-center items-center"
             style={{
               background: "-webkit-linear-gradient(top,#fff 0%,#f7f7f7 100%)",
@@ -88,8 +118,7 @@ function Products({ products, categories }) {
             )}
             <div className="flex flex-col gap-[6px]">
               <p className="font-roboto text-sm font-normal flex justify-center xxl:truncate text-center">
-                {item.productName} || 
-                {/* {item.category.name} */}
+                {item.productName}
               </p>
               <span className="font-roboto text-sm font-normal flex justify-center">
                 {item.code}
@@ -135,10 +164,11 @@ function Products({ products, categories }) {
           </div>
         ))}
       </div>
+
       <span className="flex justify-center font-elle mt-7 mb-3">
-        Hiển thị {visibleProducts}/{totalProducts}
+        {/* Hiển thị {products.length}/{totalProducts} */}
       </span>
-      {visibleProducts < totalProducts && (
+      {filteredProducts.length > visibleProducts && (
         <button
           className=" block mx-auto py-3 px-5 mb-10 border border-primry text-black bg-white hover:bg-primry hover:text-white transition-colors duration-300"
           onClick={handleShowMore}
@@ -171,4 +201,3 @@ export async function getStaticProps() {
     };
   }
 }
-
