@@ -111,9 +111,9 @@ function Products({ products, categories }) {
       return "100,000,000đ - 150,000,000đ";
     if (selectedValue === "150000000 - 200000000")
       return "150,000,000đ - 200,000,000đ";
-    if (selectedValue === "200000000 - ") {
+    if (selectedValue === "200000000 -") 
       return "Trên 200,000,000đ";
-    }
+    
   };
 
   const checkDiscountedPriceRange = (product, selectedPrice) => {
@@ -133,9 +133,9 @@ function Products({ products, categories }) {
 
   return (
     <div className="container mt-10">
-      <div className="mb-5 ">
-        <div className="flex items-center justify-between mb-1 space-x-4  ">
-          <div className="w-1/4">
+      <div className="mb-5">
+        <div className="flex items-center justify-between mb-1 space-x-4">
+          <div className="w-1/4 md:flex hidden">
             <select
               id="filter-category"
               name="filter-category"
@@ -153,7 +153,7 @@ function Products({ products, categories }) {
               ))}
             </select>
           </div>
-          <div className="w-1/4">
+          <div className="w-1/4 md:flex hidden">
             <select
               id="filter-price"
               name="filter-price"
@@ -192,7 +192,7 @@ function Products({ products, categories }) {
               <option value="200000000 -">Trên 200,000,000đ</option>
             </select>
           </div>
-          <div className="w-1/4 relative md:flex sm:justify-center border-red hidden">
+          <div className="w-1/4 relative flex">
             <input
               id="search"
               className="border w-full px-2 py-1.5 text-left"
@@ -211,7 +211,7 @@ function Products({ products, categories }) {
               <Search className="text-primry" />
             </button>
           </div>
-          <div className="w-1/4">
+          <div className="w-1/4 md:flex hidden">
             <select
               id="filter-material"
               name="filter-material"
@@ -226,7 +226,7 @@ function Products({ products, categories }) {
               <option value="Bạc">Bạc</option>
             </select>
           </div>
-          <div className="w-1/4">
+          <div className="w-1/4 md:flex hidden">
             <select
               id="filter-stone"
               name="filter-stone"
@@ -244,7 +244,7 @@ function Products({ products, categories }) {
         </div>
         <div className="flex items-center mb-5">
           {selectedCategory && (
-            <div className="flex items-center mr-2 border px-1 py-0.1 mt-3 bg-pink">
+            <div className="flex items-center mr-2 border px-1 py-0.1 mt-3 bg-pink ">
               <span>
                 {
                   categories.find(
