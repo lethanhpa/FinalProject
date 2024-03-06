@@ -1,7 +1,7 @@
 import router from "next/router";
-import React, { useState, memo, useEffect } from "react";
+import React, { useState, memo } from "react";
 import { ShoppingCart, Search } from "lucide-react";
-import { Button, Divider } from "antd";
+import { Button, Divider, FloatButton } from "antd";
 import numeral from "numeral";
 import Link from "next/link";
 import axiosClient from "@/libraries/axiosClient";
@@ -9,11 +9,12 @@ import { API_URL } from "@/constants";
 
 function Products({ products, categories }) {
   const [visibleProducts, setVisibleProducts] = useState(20);
-  const [selectedCategories, setSelectedCategories] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedPrice, setSelectedPrice] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedMaterial, setSelectedMaterial] = useState("");
   const [selectedStone, setSelectedStone] = useState("");
-  const [selectedPrice, setSelectedPrice] = useState("");
 
   const totalProducts = products.length;
 
@@ -34,14 +35,6 @@ function Products({ products, categories }) {
     setSelectedCategory(categoryId);
   };
 
-  const handleCategoryRemove = (categoryId) => {
-    const updatedCategories = selectedCategories.filter(
-      (selectedId) => selectedId !== categoryId
-    );
-    setSelectedCategories(updatedCategories);
-    setSelectedCategory("");
-  };
-
   const handleMaterialSelect = (material) => {
     setSelectedMaterial(material);
   };
@@ -54,34 +47,79 @@ function Products({ products, categories }) {
     setSelectedPrice(price);
   };
 
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const filterProducts = () => {
+    let filteredProducts = products;
 
-  const handleSearchInputChange = (e) => {
-    setSearchKeyword(e.target.value);
-  };
-  const filteredProductsByCategory = selectedCategory
-    ? products.filter((product) => product.categoryId === selectedCategory)
-    : products;
+    if (selectedCategory) {
+      filteredProducts = filteredProducts.filter(
+        (product) => product.categoryId === selectedCategory
+      );
+    }
 
-  const filteredProductsByMaterial = selectedMaterial
-    ? filteredProductsByCategory.filter((product) =>
+    if (selectedMaterial) {
+      filteredProducts = filteredProducts.filter((product) =>
         product.productName
           .toLowerCase()
           .includes(selectedMaterial.toLowerCase())
-      )
-    : filteredProductsByCategory;
+      );
+    }
 
-  const filteredProductsByStone = selectedStone
-    ? filteredProductsByMaterial.filter((product) =>
+    if (selectedStone) {
+      filteredProducts = filteredProducts.filter((product) =>
         product.productName.toLowerCase().includes(selectedStone.toLowerCase())
-      )
-    : filteredProductsByMaterial;
-  const checkPriceRange = (product, selectedPrice) => {
-    // Tách lấy các giá trị tối thiểu và tối đa từ selectedPrice
-    const [minPrice, maxPrice] = selectedPrice.split("-");
-    const price = product.price;
+      );
+    }
 
-    // Kiểm tra xem giá của sản phẩm có nằm trong khoảng được chọn không
+    if (selectedPrice) {
+      filteredProducts = filteredProducts.filter((product) =>
+        checkDiscountedPriceRange(product, selectedPrice)
+      );
+    }
+
+    if (searchKeyword) {
+      filteredProducts = filteredProducts.filter((product) =>
+        product.productName.toLowerCase().includes(searchKeyword.toLowerCase())
+      );
+    }
+
+    return filteredProducts;
+  };;
+
+  const getDiscountedPrice = (product) => {
+    return product.discount
+      ? product.price - (product.price * product.discount) / 100
+      : product.price;
+  };
+
+  const formatSelectedValue = (selectedValue) => {
+    if (selectedValue === "- 5000000") {
+      return "Dưới 5,000,000đ";
+    }
+    if (selectedValue === "5000000 - 10000000")
+      return "5,000,000đ - 10,000,000đ";
+    if (selectedValue === "10000000 - 20000000")
+      return "10,000,000đ - 20,000,000đ";
+    if (selectedValue === "20000000 - 30000000")
+      return "20,000,000đ - 30,000,000đ";
+    if (selectedValue === "30000000 - 50000000")
+      return "30,000,000đ - 50,000,000đ";
+    if (selectedValue === "50000000 - 70000000")
+      return "50,000,000đ - 70,000,000đ";
+    if (selectedValue === "70000000 - 100000000")
+      return "70,000,000đ - 100,000,000đ";
+    if (selectedValue === "100000000 - 150000000")
+      return "100,000,000đ - 150,000,000đ";
+    if (selectedValue === "150000000 - 200000000")
+      return "150,000,000đ - 200,000,000đ";
+    if (selectedValue === "200000000 - ") {
+      return "Trên 200,000,000đ";
+    }
+  };
+
+  const checkDiscountedPriceRange = (product, selectedPrice) => {
+    const [minPrice, maxPrice] = selectedPrice.split("-");
+    const price = getDiscountedPrice(product);
+
     if (minPrice && maxPrice) {
       return price >= parseInt(minPrice) && price <= parseInt(maxPrice);
     } else if (minPrice) {
@@ -90,23 +128,8 @@ function Products({ products, categories }) {
       return price <= parseInt(maxPrice);
     }
   };
-  const filteredProductsByPrice = selectedPrice
-    ? filteredProductsByStone.filter((product) =>
-        checkPriceRange(product, selectedPrice)
-      )
-    : filteredProductsByStone;
-  const filteredProductsByKeyword = searchKeyword
-    ? filteredProductsByPrice.filter((product) =>
-        product.productName.toLowerCase().includes(searchKeyword.toLowerCase())
-      )
-    : filteredProductsByPrice;
-
-  useEffect(() => {
-    setSelectedMaterial("");
-    setSelectedStone(""); // Reset selected material when selected category changes
-    setSelectedPrice(""); // Reset selected material when selected category changes
-  }, [selectedCategory]);
-  console.log("««««« selectedCategory »»»»»", selectedCategory);
+  const selectedDisplayValue = formatSelectedValue(selectedPrice);
+  const filteredProducts = filterProducts();
 
   return (
     <div className="container mt-10">
@@ -141,16 +164,32 @@ function Products({ products, categories }) {
               <option value="" disabled hidden>
                 Lọc Giá Sản Phẩm
               </option>
-              <option value="5,000,000">Dưới 5,000,000đ</option>
-              <option value="10.000.000">5,000,000đ - 10,000,000đ</option>
-              <option value="20000000">10,000,000đ - 20,000,000đ</option>
-              <option value="30000000">20,000,000đ - 30,000,000đ</option>
-              <option value="50000000">30,000,000đ - 50,000,000đ</option>
-              <option value="70000000">50,000,000đ - 70,000,000đ</option>
-              <option value="100000000">70,000,000đ - 100,000,000đ</option>
-              <option value="150000000">100,000,000đ - 150,000,000đ</option>
-              <option value="200000000">150,000,000đ - 200,000,000đ</option>
-              <option value="200000001">Trên 200,000,000đ</option>
+              <option value="- 5000000">Dưới 5,000,000đ</option>
+              <option value="5000000 - 10000000">
+                5,000,000đ - 10,000,000đ
+              </option>
+              <option value="10000000 - 20000000">
+                10,000,000đ - 20,000,000đ
+              </option>
+              <option value="20000000 - 30000000">
+                20,000,000đ - 30,000,000đ
+              </option>
+              <option value="30000000 - 50000000">
+                30,000,000đ - 50,000,000đ
+              </option>
+              <option value="50000000 - 70000000">
+                50,000,000đ - 70,000,000đ
+              </option>
+              <option value="70000000 - 100000000">
+                70,000,000đ - 100,000,000đ
+              </option>
+              <option value="100000000 - 150000000">
+                100,000,000đ - 150,000,000đ
+              </option>
+              <option value="150000000 - 200000000">
+                150,000,000đ - 200,000,000đ
+              </option>
+              <option value="200000000 -">Trên 200,000,000đ</option>
             </select>
           </div>
           <div className="w-1/4 relative md:flex sm:justify-center border-red hidden">
@@ -160,7 +199,7 @@ function Products({ products, categories }) {
               placeholder="Tìm kiếm..."
               required
               type="text"
-              onChange={handleSearchInputChange}
+              onChange={(e) => setSearchKeyword(e.target.value)}
               value={searchKeyword}
             />
             <button
@@ -183,8 +222,8 @@ function Products({ products, categories }) {
               <option value="" disabled hidden>
                 Chất Liệu
               </option>
-              <option value="vàng">Vàng</option>
-              <option value="bạc">Bạc</option>
+              <option value="Vàng">Vàng</option>
+              <option value="Bạc">Bạc</option>
             </select>
           </div>
           <div className="w-1/4">
@@ -203,31 +242,64 @@ function Products({ products, categories }) {
             </select>
           </div>
         </div>
-        {selectedCategories.length > 0 && (
-          <div className="flex items-center mb-5">
-            <span className="mr-2">Đã chọn:</span>
-            {selectedCategories.map((categoryId) => {
-              const category = categories.find(
-                (category) => category._id === categoryId
-              );
-              return (
-                <div key={categoryId} className="flex items-center mr-2">
-                  <span>{category.name}</span>
-                  <button
-                    className="ml-1 text-red-500"
-                    onClick={() => handleCategoryRemove(categoryId)}
-                  >
-                    x
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+        <div className="flex items-center mb-5">
+          {selectedCategory && (
+            <div className="flex items-center mr-2 border px-1 py-0.1 mt-3 bg-pink">
+              <span>
+                {
+                  categories.find(
+                    (category) => category._id === selectedCategory
+                  )?.name
+                }
+              </span>
+              <button
+                className="ml-1 text-red-500 ml-3 pb-0.5"
+                onClick={() => setSelectedCategory("")}
+              >
+                x
+              </button>
+            </div>
+          )}
 
+          {selectedPrice && (
+            <div className="flex items-center mr-2 border px-1 py-0.1 mt-3 bg-pink">
+              <span>{selectedDisplayValue}</span>
+              <button
+                className="ml-1 text-red-500 ml-3 pb-0.5"
+                onClick={() => setSelectedPrice("")}
+              >
+                x
+              </button>
+            </div>
+          )}
+
+          {selectedMaterial && (
+            <div className="flex items-center mr-2 border px-1 py-0.1 mt-3 bg-pink">
+              <span>{selectedMaterial}</span>
+              <button
+                className="ml-1 text-red-500 ml-3 pb-0.5"
+                onClick={() => setSelectedMaterial("")}
+              >
+                x
+              </button>
+            </div>
+          )}
+
+          {selectedStone && (
+            <div className="flex items-center mr-2 border px-1 py-0.1 mt-3 bg-pink">
+              <span>{selectedStone}</span>
+              <button
+                className="ml-1 text-red-500 ml-3 pb-0.5"
+                onClick={() => setSelectedStone("")}
+              >
+                x
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
       <div className="grid lg:grid-cols-4 gap-10 md:grid-cols-3  sm:grid-cols-2">
-        {filteredProductsByKeyword.slice(0, visibleProducts).map((item) => (
+        {filteredProducts.slice(0, visibleProducts).map((item) => (
           <div
             key={item._id}
             className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[100px] min-h-[100px] shadow-md rounded hover:bg-second-3 flex flex-col justify-center items-center"
@@ -287,7 +359,6 @@ function Products({ products, categories }) {
               </div>
               <Divider>
                 <Button
-                  // type="primary"
                   className="bg-slate-800 text-white hover:bg-white hover:text-black"
                   onClick={() => {
                     router.push(`/${item.id}`);
@@ -307,11 +378,11 @@ function Products({ products, categories }) {
           </div>
         ))}
       </div>
-
       <span className="flex justify-center font-elle mt-7 mb-3">
-        {/* Hiển thị {products.length}/{totalProducts} */}
+        Hiển thị {Math.min(filteredProducts.length, visibleProducts)}/
+        {filteredProducts.length} sản phẩm
       </span>
-      {filteredProductsByCategory.length > visibleProducts && (
+      {filteredProducts.length > visibleProducts && (
         <button
           className=" block mx-auto py-3 px-5 mb-10 border border-primry text-black bg-white hover:bg-primry hover:text-white transition-colors duration-300"
           onClick={handleShowMore}
@@ -319,10 +390,10 @@ function Products({ products, categories }) {
           XEM THÊM SẢN PHẨM
         </button>
       )}
+      <FloatButton.BackTop />
     </div>
   );
 }
-
 export default memo(Products);
 
 export async function getStaticProps() {
