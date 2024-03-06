@@ -106,7 +106,7 @@ function Products({ products, categories }) {
     setSelectedStone(""); // Reset selected material when selected category changes
     setSelectedPrice(""); // Reset selected material when selected category changes
   }, [selectedCategory]);
-    console.log("««««« selectedCategory »»»»»", selectedCategory);
+  console.log("««««« selectedCategory »»»»»", selectedCategory);
 
   return (
     <div className="container mt-10">
@@ -128,36 +128,6 @@ function Products({ products, categories }) {
                   {item.name}
                 </option>
               ))}
-            </select>
-          </div>
-          <div className="w-1/4">
-            <select
-              id="filter-material"
-              name="filter-material"
-              className="w-full px-2 py-1.5"
-              onChange={(e) => handleMaterialSelect(e.target.value)}
-              value={selectedMaterial}
-            >
-              <option value="" disabled hidden>
-                Chất Liệu
-              </option>
-              <option value="vàng">Vàng</option>
-              <option value="bạc">Bạc</option>
-            </select>
-          </div>
-          <div className="w-1/4">
-            <select
-              id="filter-stone"
-              name="filter-stone"
-              className="w-full px-2 py-1.5"
-              onChange={(e) => handleStoneSelect(e.target.value)}
-              value={selectedStone}
-            >
-              <option value="" disabled hidden>
-                Đá Đính Kèm
-              </option>
-              <option value="Kim Cương">Kim Cương</option>
-              <option value="Đá">Đá</option>
             </select>
           </div>
           <div className="w-1/4">
@@ -193,7 +163,6 @@ function Products({ products, categories }) {
               onChange={handleSearchInputChange}
               value={searchKeyword}
             />
-
             <button
               type="submit"
               id="search"
@@ -202,6 +171,36 @@ function Products({ products, categories }) {
             >
               <Search className="text-primry" />
             </button>
+          </div>
+          <div className="w-1/4">
+            <select
+              id="filter-material"
+              name="filter-material"
+              className="w-full px-2 py-1.5"
+              onChange={(e) => handleMaterialSelect(e.target.value)}
+              value={selectedMaterial}
+            >
+              <option value="" disabled hidden>
+                Chất Liệu
+              </option>
+              <option value="vàng">Vàng</option>
+              <option value="bạc">Bạc</option>
+            </select>
+          </div>
+          <div className="w-1/4">
+            <select
+              id="filter-stone"
+              name="filter-stone"
+              className="w-full px-2 py-1.5"
+              onChange={(e) => handleStoneSelect(e.target.value)}
+              value={selectedStone}
+            >
+              <option value="" disabled hidden>
+                Đá Đính Kèm
+              </option>
+              <option value="Kim Cương">Kim Cương</option>
+              <option value="Đá">Đá</option>
+            </select>
           </div>
         </div>
         {selectedCategories.length > 0 && (
