@@ -23,7 +23,6 @@ function Account() {
         const data = response.data;
 
         setCustomers(data);
-        console.log("««««« data »»»»»", data);
       } catch (error) {
         console.error(error);
       }
@@ -45,46 +44,45 @@ function Account() {
         <div className="container">
           {customers && (
             <div className="text-gray-800 py-10 px-4 sm:px-6 lg:px-8">
-              <div className="max-w-4xl mx-auto">
-                <div className="flex">
-                <div className=" space-y-6">
-                  <div className="">
+              <div className="max-w-4xl mx-auto border border-gray p-6">
+              <div className="mb-12">
                     <img
-                      src="https://scontent.fdad4-1.fna.fbcdn.net/v/t39.30808-6/415028565_3664751977177475_3727908222255302408_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=9c7eae&_nc_eui2=AeHXWYySZuN2mURY3ROBSltDRE7gxU6Y6NBETuDFTpjo0FRQlIR2QFyjGmG5l3uGIOZY6G50FG3w_45eLqB51wha&_nc_ohc=q3LZzAG18V8AX9Zk1qA&_nc_ht=scontent.fdad4-1.fna&oh=00_AfAa1ckprBc8CzeVCoghJO-D-1DbXUzePjkXQjnGeYN_AA&oe=65EB93A0"
+                      src="https://scontent-hkg4-1.xx.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEapVeY6ZN8p1KqTMpK1wVyso2H55p0AlGyjYfnmnQCUc9WDYxsYPNxRa5Malv8fDsIEqS8M8VG-CCje6Gel7_1&_nc_ohc=g3hIEEKhSb4AX97x2u0&_nc_ht=scontent-hkg4-1.xx&oh=00_AfD6aJ1AVX0BE_B6rBoSc2ZU2elj4alGYpoxw8n3XFxUhQ&oe=6610B9B8"
                       alt="Avatar"
-                      className="w-1/2 h-auto"
+                      className="w-[150px] h-auto rounded-full"
                     />
                   </div>
-
+                <div className="flex item-center justify-center">
+                <div className="space-y-6 w-1/2">
                   <div>
-                    <label className="block text-sm font-medium">Tên</label>
+                    <label className="block text-sm font-robot">Tên</label>
                     <p className="mt-1 text-lg">
                       {customers.lastName} {customers.firstName}
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium">
+                    <label className="block text-sm font-roboto">
                       Giới tính
                     </label>
                     <p className="mt-1 text-lg">{customers.gender}</p>
                   </div>
-                </div>
 
-                <div className="space-y-6">                  
                   <div>
-                    <label className="block text-sm font-medium">
+                    <label className="block text-sm font-roboto">
                       Số điện thoại
                     </label>
                     <p className="mt-1 text-lg">{customers.phoneNumber}</p>
                   </div>
+                </div>
 
+                <div className="space-y-6 w-1/2">
                   <div>
-                    <label className="block text-sm font-medium">Email</label>
+                    <label className="block text-sm font-roboto">Email</label>
                     <p className="mt-1 text-lg">{customers.email}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium">
+                    <label className="block text-sm font-roboto">
                       Ngày sinh
                     </label>
                     <p className="mt-1 text-lg">
@@ -93,7 +91,7 @@ function Account() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium">Địa chỉ</label>
+                    <label className="block text-sm font-roboto">Địa chỉ</label>
                     <p className="mt-1 text-lg">{customers.address}</p>
                   </div>
                 </div>
