@@ -83,7 +83,7 @@ function Products({ products, categories }) {
     }
 
     return filteredProducts;
-  };;
+  };
 
   const getDiscountedPrice = (product) => {
     return product.discount
@@ -111,9 +111,7 @@ function Products({ products, categories }) {
       return "100,000,000đ - 150,000,000đ";
     if (selectedValue === "150000000 - 200000000")
       return "150,000,000đ - 200,000,000đ";
-    if (selectedValue === "200000000 -") 
-      return "Trên 200,000,000đ";
-    
+    if (selectedValue === "200000000 -") return "Trên 200,000,000đ";
   };
 
   const checkDiscountedPriceRange = (product, selectedPrice) => {
