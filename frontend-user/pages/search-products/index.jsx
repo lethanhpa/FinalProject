@@ -1,6 +1,6 @@
 "use client";
 import React, { memo } from "react";
-import useCartStore from "@/Store/CartStore";
+import useCartStore from "@/store/CartStore";
 import { ShoppingCart } from 'lucide-react';
 import { API_URL } from "@/constants";
 import axiosClient from "@/libraries/axiosClient";

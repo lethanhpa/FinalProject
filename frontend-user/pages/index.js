@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import HomePage from "./home/index";
 import MoveTop from "@/components/App/AppMoveTop";
 import axiosClient from "@/libraries/axiosClient";
+import FacebookMsg from "@/components/Facebook/FacebookMsg"
 
 function Home({ products }) {
   return (
@@ -9,6 +10,7 @@ function Home({ products }) {
       <HomePage
         products={products}
       />
+      <FacebookMsg/>
       <MoveTop />
     </main>
   );

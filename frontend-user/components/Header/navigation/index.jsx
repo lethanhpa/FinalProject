@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import classNames from "classnames";
-import useSearch from "@/Store/SearchBar";
+import useSearch from "@/store/SearchBar";
 import {
     Search,
 } from "lucide-react";
