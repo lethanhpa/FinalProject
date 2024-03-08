@@ -13,8 +13,6 @@ import {
   UserOutlined,
   MailOutlined,
   LockOutlined,
-  EyeOutlined,
-  EyeInvisibleOutlined,
   PhoneOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
