@@ -3,6 +3,7 @@
     "axios": "^1.6.7",
     "express": "^4.18.2",
     "numeral": "^2.0.6",
+    "react-facebook": "^9.0.12",
     "zustand": "^4.5.0"
   }
 }
