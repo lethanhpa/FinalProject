@@ -130,8 +130,11 @@ function Products({ products, categories }) {
   const filteredProducts = filterProducts();
 
   return (
-    <div className="container mt-10">
-      <div className="mb-5">
+    <div className="container mt-5">
+      <div className="flex justify-center">
+      <img className="mb-5" src="./img/banner-product.png" alt="products" />
+      </div>
+      <div className="mb-5 mx-2.5">
         <div className="flex items-center justify-between mb-1 space-x-4">
           <div className="w-1/4 md:flex hidden">
             <select
@@ -296,7 +299,7 @@ function Products({ products, categories }) {
           )}
         </div>
       </div>
-      <div className="grid lg:grid-cols-4 gap-10 md:grid-cols-3  sm:grid-cols-2">
+      <div className="grid lg:grid-cols-4 gap-10 md:grid-cols-3 sm:grid-cols-2 mx-2.5">
         {filteredProducts.slice(0, visibleProducts).map((item) => (
           <div
             key={item._id}
@@ -378,7 +381,7 @@ function Products({ products, categories }) {
       </div>
       <span className="flex justify-center font-elle mt-7 mb-3">
         Hiển thị {Math.min(filteredProducts.length, visibleProducts)}/
-        {filteredProducts.length} sản phẩm
+        {filteredProducts.length}
       </span>
       {filteredProducts.length > visibleProducts && (
         <button
