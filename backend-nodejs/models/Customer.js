@@ -43,14 +43,20 @@ const customerSchema = new Schema(
     gender: { type: String, required: true },
     birthday: { type: Date },
     status: { type: Boolean },
-    avatar: { type: String },
-
+    // avatarUrl: { type: Schema.Types.ObjectId, ref: 'Media' },
   },
   {
     versionKey: false,
     timestamps: true,
   }
 );
+
+// customerSchema.virtual('customerAvatar', {
+//     ref: 'Media',
+//     localField: 'avatarUrl',
+//     foreignField: '_id',
+//     justOne: true,
+// });
 
 customerSchema.virtual("fullName").get(function () {
   return this.firstName + " " + this.lastName;

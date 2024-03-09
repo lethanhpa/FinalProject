@@ -126,6 +126,37 @@ router.post('/', async (req, res) => {
   }
 });
 
+// //POST ảnh đại diện cho khách hàng
+// router.post('/:id/avatar', async (req, res, next) => {
+//   try {
+//     const { id } = req.params;
+
+//     const customer = await Customer.findById(id);
+
+//     if (!customer) {
+//       return res.status(404).json({ message: 'Không tìm thấy khách hàng' });
+//     }
+
+//     upload(req, res, async (err) => {
+//       if (err instanceof multer.MulterError) {
+//         res.status(500).json({ type: 'MulterError', err: err });
+//       } else if (err) {
+//         res.status(500).json({ type: 'UnknownError', err: err });
+//       } else {
+//         customer.avatarUrl = `/uploads/customers/${id}/${req.file.filename}`;
+//         await customer.save();
+
+//         const publicUrl = `${req.protocol}://${req.get('host')}/uploads/customers/${id}/${req.file.filename}`;
+//         res.status(200).json({ message: 'Ảnh đại diện đã được cập nhật thành công', avatarUrl: publicUrl });
+//       }
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Đã xảy ra lỗi khi cập nhật ảnh đại diện' });
+//   }
+// });
+
+
 
 //DELETE
 router.delete('/:id', function (req, res, next) {

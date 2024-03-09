@@ -20,6 +20,7 @@ passport.use(passportConfigLocal);
 
 const categoriesRouter = require('./routes/categories');
 const productImagesRouter = require('./routes/productImages');
+const customerAvatarRouter = require('./routes/customerAvatar');
 const reviewsRouter = require('./routes/reviews');
 const sizesRouter = require('./routes/sizes');
 const productsRouter = require('./routes/products');
@@ -65,6 +66,7 @@ mongoose.connection.on('error', (err) => {
 });
 
 app.use('/categories', categoriesRouter);
+app.use('/customerAvatar', customerAvatarRouter);
 app.use('/productImages', productImagesRouter);
 app.use('/reviews', reviewsRouter);
 app.use('/sizes', sizesRouter);

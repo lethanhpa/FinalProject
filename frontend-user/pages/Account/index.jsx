@@ -1,5 +1,6 @@
 import React, { memo, useState, useEffect } from "react";
 import axios from "../../libraries/axiosClient";
+import { API_URL } from "@/constants";
 import Moment from "moment";
 import { useRouter } from "next/router";
 import {
@@ -12,16 +13,17 @@ import {
   Modal,
   Radio,
   DatePicker,
-  Upload
+  Upload,
 } from "antd";
 import {
   UserOutlined,
   PhoneOutlined,
   TeamOutlined,
   EnvironmentOutlined,
-  PlusOutlined
+  UploadOutlined,
 } from "@ant-design/icons";
 import { jwtDecode } from "jwt-decode";
+import ImgCrop from "antd-img-crop";
 
 const apiName = "/customers";
 
@@ -36,7 +38,6 @@ function Account() {
   const [districts, setDistricts] = useState([]);
   const [refresh, setRefresh] = useState(0);
   const [wards, setWards] = useState([]);
-  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     fetchProvinces();
@@ -121,8 +122,6 @@ function Account() {
     [refresh];
   };
 
-  
-
   const fetchCustomers = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -146,119 +145,112 @@ function Account() {
     }
   }, [router]);
 
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  const handleImageChange = (event) => {
-    setSelectedImage(event.target.files[0]);
-  };
-
-  const handleImageUpload = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("image", selectedImage);
-
-      // Gửi yêu cầu POST để tải lên ảnh lên máy chủ
-      const response = await axios.post("/api/uploadImage", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      // Ở đây, bạn có thể lấy URL của ảnh từ response.data và lưu vào cơ sở dữ liệu
-      const imageUrl = response.data.imageUrl;
-
-      // Sau khi lưu vào cơ sở dữ liệu, bạn có thể thực hiện các hành động khác, ví dụ hiển thị ảnh đã tải lên
-      console.log("Đã tải lên ảnh thành công:", imageUrl);
-    } catch (error) {
-      console.error("Lỗi khi tải lên ảnh:", error);
-    }
-  };
-
   return (
     <>
       {isLogin ? (
         <div>
           {customers && (
             <>
-              <div className="text-gray-800 py-10 px-4 sm:px-6 lg:px-8 font-roboto">
-                <div className="max-w-4xl mx-auto border border-gray p-6">
-                  <div className="flex mt-8">
-                    <div className="w-1/3 ml-8 mr-14 space-y-6">
-                    <div>
-      <h2>Tải lên ảnh</h2>
-      <input type="file" onChange={handleImageChange} />
-      <button onClick={handleImageUpload}>Tải lên</button>
-    </div>
-                      <img
-                        src="https://scontent.fdad4-1.fna.fbcdn.net/v/t39.30808-1/425451190_1867342267049631_4750115328709052757_n.jpg?stp=dst-jpg_p320x320&_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeH16DOgmil9XJbKZ29oDY59DvDCT7tlJAMO8MJPu2UkAyHHPs6J_-_bD_ybzHNI2dc1RuFBK1POkETtmlu4U3pi&_nc_ohc=tfabMYX11moAX9gcmiK&_nc_ht=scontent.fdad4-1.fna&oh=00_AfBLMuDqzU78bF1RaGjWY6rRCrvACPeWFKJAib2uOkJ88w&oe=65EE6807"
-                        alt="Avatar"
-                        className="w-[300px] object-cover h-[300px]"
-                      />
-                    </div>
-
-                    <div className="space-y-6 w-1/2">
+              <div className="text-gray-800 py-4 px-4 sm:px-6 lg:px-8 font-roboto">
+                <div className="max-w-4xl mx-auto">
+                  <p className="text-center py-6 text-3xl">TÀI KHOẢN CỦA BẠN</p>
+                  <div className="flex mt-6">
+                    <div className="space-y-8 w-1/3">
                       <div>
-                        <label className="block text-lg text-slate-500">
-                          Tên
-                        </label>
-                        <p className="mt-1 text-lg border-b border-gray w-[400px]">
-                          {customers.lastName} {customers.firstName}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-lg text-slate-500">
-                          Giới tính
-                        </label>
-                        <p className="mt-1 text-lg border-b border-gray w-[400px]">
-                          {customers.gender}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-lg text-slate-500">
-                          Số điện thoại
-                        </label>
-                        <p className="mt-1 text-lg border-b border-gray w-[400px]">
-                          {customers.phoneNumber}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-lg text-slate-500">
+                        <label className="block text-lg border-b pb-2 text-slate-500">
                           Email
                         </label>
-                        <p className="mt-1 text-lg border-b border-gray w-[400px]">
+                        <p className="mt-2 text-lg border-gray">
                           {customers.email}
                         </p>
                       </div>
                       <div>
-                        <label className="block text-lg text-slate-500">
+                        <label className="block text-lg border-b pb-2 text-slate-500">
                           Ngày sinh
                         </label>
-                        <p className="mt-1 text-lg border-b border-gray w-[400px]">
+                        <p className="mt-2 text-lg border-gray">
                           {Moment(customers.birthday).format("DD/MM/YYYY")}
                         </p>
                       </div>
 
                       <div>
-                        <label className="block text-lg text-slate-500">
+                        <label className="block text-lg border-b pb-2 text-slate-500">
                           Địa chỉ
                         </label>
-                        <p className="mt-1 text-lg border-b border-gray w-[400px]">
+                        <p className="mt-2 text-lg border-gray">
                           {customers.address}
                         </p>
                       </div>
+                    </div>
 
-                      <div className="">
-                        <button
-                          onClick={() => {
-                            setOpen(true);
-                            setUpdateId(customers._id);
+                    <div className="w-1/3 mx-3 text-right">
+                      <ImgCrop rotationSlider>
+                        <Upload
+                          showUploadList={false}
+                          name="file"
+                          action={`${API_URL}/customerAvatar/customers/${customers._id}/avatar`}
+                          headers={{ authorization: "authorization-text" }}
+                          onChange={(info) => {
+                            if (info.file.status === "done") {
+                              message.success(
+                                "Cập nhật ảnh đại diện thành công!"
+                              );
+                            } else if (info.file.status === "error") {
+                              message.error("Cập nhật ảnh đại diện thất bại.");
+                            }
                           }}
-                          className="mt-8 mb-8 bg-black text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray hover:text-black transition-colors duration-300 w-[400px]"
                         >
-                          Chỉnh sửa thông tin cá nhân
-                        </button>
+                          <div className="relative">
+                            <img
+                              src={`${API_URL}/${customers.avatarUrl}`}
+                              alt={`Avatar-${customers._id}`}
+                              className="w-[300px] object-cover rounded-full h-[300px]"
+                            />
+                            <div className="absolute cursor-pointer rounded-full inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-lg opacity-0 hover:opacity-100 transition-opacity duration-300">
+                              Thay đổi ảnh đại diện
+                            </div>
+                          </div>
+                        </Upload>
+                      </ImgCrop>
+                    </div>
+
+                    <div className="w-1/3 text-right space-y-8">
+                      <div>
+                        <label className="block text-lg border-b pb-2 text-slate-500">
+                          Tên
+                        </label>
+                        <p className="mt-2 text-lg border-gray ">
+                          {customers.lastName} {customers.firstName}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-lg border-b pb-2 text-slate-500">
+                          Giới tính
+                        </label>
+                        <p className="mt-2 text-lg border-gray">
+                          {customers.gender}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-lg border-b pb-2 text-slate-500">
+                          Số điện thoại
+                        </label>
+                        <p className="mt-2 text-lg border-gray">
+                          {customers.phoneNumber}
+                        </p>
                       </div>
                     </div>
+                  </div>
+                  <div className="text-center pt-6">
+                    <button
+                      onClick={() => {
+                        setOpen(true);
+                        setUpdateId(customers._id);
+                      }}
+                      className="mt-8 mb-8 bg-black text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray hover:text-black transition-colors duration-300 w-[250px]"
+                    >
+                      Chỉnh sửa thông tin cá nhân
+                    </button>
                   </div>
                 </div>
               </div>
@@ -274,13 +266,11 @@ function Account() {
                 onOk={() => {
                   updateForm.submit();
                 }}
-                className=""
               >
                 <Form
                   form={updateForm}
                   name="update-form"
                   onFinish={onFinishUpdate}
-                  className=""
                 >
                   <Form.Item
                     name="firstName"
