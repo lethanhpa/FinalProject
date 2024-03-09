@@ -7,17 +7,24 @@ import {
   Trash2,
   Undo,
 } from "lucide-react";
-import {Result, Button} from "antd";
+import { Result, Button, message } from "antd";
 import Link from "next/link";
 import axiosClient from "@/libraries/axiosClient";
 import numeral from "numeral";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/router";
+import { API_URL } from "@/constants";
 
 function Carts() {
   const router = useRouter();
   const [carts, setCarts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const warning = () => {
+    messageApi.open({
+      type: "warning",
+      content: "Số lượng trong giỏ hàng vượt quá số lượng tồn kho!",
+    });
+  };
 
   useEffect(() => {
     const calculateTotalPrice = () => {
@@ -25,11 +32,18 @@ function Carts() {
 
       if (carts && Array.isArray(carts)) {
         carts.forEach((item) => {
-          if (item.products && Array.isArray(item.products)) {
-            item.products.forEach((product) => {
-              total +=
-            ((product.product.price * (100 - product.product.discount)) / 100) *
-            product.quantity;
+          if (item.cartDetails && Array.isArray(item.cartDetails)) {
+            item.cartDetails.forEach((product) => {
+              if (
+                product.product &&
+                product.product.price &&
+                product.quantity
+              ) {
+                total +=
+                  ((product.product.price * (100 - product.product.discount)) /
+                    100) *
+                  product.quantity;
+              }
             });
           }
         });
@@ -60,6 +74,28 @@ function Carts() {
     fetchData();
   }, [router]);
 
+  const handleQuantityChange = (productId, change) => {
+    const updatedCarts = carts.map((item) => {
+      if (item.cartDetails) {
+        item.cartDetails.forEach((product) => {
+          if (product._id === productId) {
+            const newQuantity = product.quantity + change;
+            if (newQuantity > product.product.stockQuantity) {
+              message.warning(
+                "Số lượng trong giỏ hàng vượt quá số lượng tồn kho!"
+              );
+              return;
+            }
+            product.quantity = newQuantity;
+          }
+        });
+      }
+      return item;
+    });
+
+    setCarts(updatedCarts.filter((item) => item));
+  };
+
   return (
     <div>
       <img src="https://file.hstatic.net/1000381168/file/baner-thanh-toan_78c520df795d4667b36605c554655bb1_master.png" />
@@ -79,22 +115,23 @@ function Carts() {
             </tr>
           </thead>
           <tbody className="border-b border-slate-400">
-            {carts && carts.length > 0 &&
+            {carts &&
+              carts.length > 0 &&
               carts.map((item) =>
-              item.cartDetails && item.cartDetails.length > 0 ? (
+                item.cartDetails && item.cartDetails.length > 0 ? (
                   item.cartDetails.map((product) => (
                     <tr key={product._id}>
-                      <td className="flex justify-center items-center">
+                      <td className="flex items-center  justify-start">
                         <div className="mr-4 my-5">
                           <img
-                            className="w-[200px] h-auto bg-pink"
-                            src={product.product?.imageUrl}
+                            className="w-[150px] bg-pink"
+                            src={`${API_URL}/${product.product?.imageUrl}`}
                             alt="Product Image"
                           />
                         </div>
                         <div>
                           <p className="font-elle font-light">
-                            {product.product?.name}
+                            {product.product?.productName}
                           </p>
                           <p>
                             <strong>Size:</strong>
@@ -104,21 +141,34 @@ function Carts() {
                       </td>
                       <td>
                         <div className="flex justify-center items-center">
-                          <button type="button">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleQuantityChange(product._id, -1)
+                            }
+                          >
                             <Minus size={15} strokeWidth={1.5} />
                           </button>
                           <div className=" w-10 flex justify-center items-center">
                             {product.quantity}
                           </div>
 
-                          <button type="button">
+                          <button
+                            type="button"
+                            onClick={() => handleQuantityChange(product._id, 1)}
+                          >
                             <Plus size={15} strokeWidth={1.5} />
                           </button>
                         </div>
                       </td>
                       <td>
                         <div className="flex justify-center items-center">
-                          {product.product?.price}đ
+                          {numeral(
+                            (product.product.price *
+                              (100 - product.product.discount)) /
+                              100
+                          ).format("0,0")}
+                          đ
                         </div>
                       </td>
                       <td>
@@ -143,15 +193,18 @@ function Carts() {
                   ))
                 ) : (
                   <Result
-                  key="no-products"
-                    title="There are no products in your cart yet"
+                    key="no-products"
+                    title="Không có sản phẩm nào trong giỏ hàng của bạn."
                     extra={
                       <Button
                         type="submit"
                         style={{ backgroundColor: "#1677ff", color: "#fff" }}
                         key="console"
                       >
-                        <Link href="/products">Return Shop!</Link>
+                        <Link href="/products">
+                          <Undo className="mr-3" size={24} strokeWidth={1} />
+                          Tiếp tục mua hàng.
+                        </Link>
                       </Button>
                     }
                   />
@@ -183,8 +236,8 @@ function Carts() {
             <div className="my-3 flex justify-end">
               <div className="mr-3">
                 <button className="flex border py-3 px-6 bg-gray hover:bg-white text-white hover:text-black font-elle">
-                  <Undo className="mr-3" size={24} strokeWidth={1} /> CHỌN THÊM SẢN
-                  PHẨM KHÁC
+                  <Undo className="mr-3" size={24} strokeWidth={1} /> CHỌN THÊM
+                  SẢN PHẨM KHÁC
                 </button>
               </div>
               <div className="ml-3">
