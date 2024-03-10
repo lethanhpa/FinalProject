@@ -1,77 +1,92 @@
 import React from 'react';
-import { Button, Checkbox, Form, Input } from 'antd';
-const onFinish = (values) => {
-  console.log('Success:', values);
-};
-const onFinishFailed = (errorInfo) => {
-  console.log('Failed:', errorInfo);
-};
+import { Table } from 'antd';
+const columns = [
+  {
+    title: 'Full Name',
+    width: 100,
+    dataIndex: 'name',
+    key: 'name',
+    fixed: 'left',
+  },
+  {
+    title: 'Age',
+    width: 100,
+    dataIndex: 'age',
+    key: 'age',
+    fixed: 'left',
+  },
+  {
+    title: 'Column 1',
+    dataIndex: 'address',
+    key: '1',
+    width: 150,
+  },
+  {
+    title: 'Column 2',
+    dataIndex: 'address',
+    key: '2',
+    width: 150,
+  },
+  {
+    title: 'Column 3',
+    dataIndex: 'address',
+    key: '3',
+    width: 150,
+  },
+  {
+    title: 'Column 4',
+    dataIndex: 'address',
+    key: '4',
+    width: 150,
+  },
+  {
+    title: 'Column 5',
+    dataIndex: 'address',
+    key: '5',
+    width: 150,
+  },
+  {
+    title: 'Column 6',
+    dataIndex: 'address',
+    key: '6',
+    width: 150,
+  },
+  {
+    title: 'Column 7',
+    dataIndex: 'address',
+    key: '7',
+    width: 150,
+  },
+  {
+    title: 'Column 8',
+    dataIndex: 'address',
+    key: '8',
+  },
+  {
+    title: 'Action',
+    key: 'operation',
+    fixed: 'right',
+    width: 100,
+    render: () => <a>action</a>,
+  },
+];
+const data = [];
+for (let i = 0; i < 100; i++) {
+  data.push({
+    key: i,
+    name: `Edward ${i}`,
+    age: 32,
+    address: `London Park no. ${i}`,
+  });
+}
 const App = () => (
-  <Form
-    name="basic"
-    labelCol={{
-      span: 8,
+  <Table
+    columns={columns}
+    dataSource={data}
+    scroll={{
+      x: 1500,
+      y: 300,
     }}
-    wrapperCol={{
-      span: 16,
-    }}
-    style={{
-      maxWidth: 600,
-    }}
-    initialValues={{
-      remember: true,
-    }}
-    onFinish={onFinish}
-    onFinishFailed={onFinishFailed}
-    autoComplete="off"
-  >
-    <Form.Item
-      label="Username"
-      name="username"
-      rules={[
-        {
-          required: true,
-          message: 'Please input your username!',
-        },
-      ]}
-    >
-      <Input />
-    </Form.Item>
-
-    <Form.Item
-      label="Password"
-      name="password"
-      rules={[
-        {
-          required: true,
-          message: 'Please input your password!',
-        },
-      ]}
-    >
-      <Input.Password />
-    </Form.Item>
-
-    <Form.Item
-      name="remember"
-      valuePropName="checked"
-      wrapperCol={{
-        offset: 8,
-        span: 16,
-      }}
-    >
-      <Checkbox>Remember me</Checkbox>
-    </Form.Item>
-
-    <Form.Item
-      wrapperCol={{
-        offset: 8,
-        span: 16,
-      }}
-    >
-      <Button type="primary" htmlType="submit">
-        Submit
-      </Button>
-    </Form.Item>
-  </Form>
+  />
 );
 export default App;
