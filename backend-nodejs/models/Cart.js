@@ -3,12 +3,21 @@ const { Schema, model } = mongoose;
 
 const cartDetailSchema = new Schema({
     productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+    sizeId: { type: Schema.Types.ObjectId, ref: 'Size', required: true },
     quantity: { type: Number, require: true, min: 0 },
+
 });
 
 cartDetailSchema.virtual('product', {
     ref: 'Product',
     localField: 'productId',
+    foreignField: '_id',
+    justOne: true,
+});
+
+cartDetailSchema.virtual('size', {
+    ref: 'Size',
+    localField: 'sizeId',
     foreignField: '_id',
     justOne: true,
 });

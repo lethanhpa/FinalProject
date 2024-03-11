@@ -1,4 +1,4 @@
-const { Cart, Customer, Product, Order } = require('../models/index');
+const { Cart, Customer, Product, Size } = require('../models/index');
 
 module.exports = {
     getDetail: async (req, res, next) => {
@@ -9,14 +9,16 @@ module.exports = {
 
             let results = await Cart.find({ customerId: id })
                 .populate("cartDetails.product")
+                .populate("cartDetails.size")
                 .populate("customer")
                 .lean({ virtual: true });
 
             if (found) {
                 let total = 0;
                 results.forEach((item) => {
-                    item.cartDetails.forEach((product) => {
+                    item.cartDetails.forEach((product, size) => {
                         total += product.quantity;
+                        total += size.quantity;
                     });
                 });
                 return res.send({ code: 200, payload: { found, results, total } });
@@ -34,14 +36,16 @@ module.exports = {
 
     create: async function (req, res, next) {
         try {
-            const { customerId, productId, quantity } = req.body;
+            const { customerId, productId, sizeId, quantity } = req.body;
 
             const getCustomer = Customer.findById(customerId);
             const getProduct = Product.findById(productId);
+            const getSize = Size.findById(sizeId);
 
-            const [customer, foundProduct] = await Promise.all([
+            const [customer, foundProduct, foundSize] = await Promise.all([
                 getCustomer,
                 getProduct,
+                getSize,
             ]);
 
             const errors = [];
@@ -49,9 +53,14 @@ module.exports = {
                 errors.push('Khách hàng không tồn tại');
             if (!foundProduct || foundProduct.isDelete)
                 errors.push('Sản phẩm không tồn tại');
+            if (!foundSize || foundSize.isDelete)
+                errors.push('Size không tồn tại');
 
             if (foundProduct && quantity > foundProduct.stock)
                 errors.push('Sản phảm vượt quá số lượng cho phép');
+
+            if (foundSize && quantity > foundSize.stock)
+                errors.push('Size sản phảm vượt quá số lượng cho phép');
 
             if (errors.length > 0) {
                 return res.status(404).json({
@@ -67,8 +76,9 @@ module.exports = {
 
             if (cart) { // GIỏ hàng đã tồn tại
                 let newProductCart = cart.cartDetails;
-                const checkProductExits = newProductCart.find(product => product.productId.toString() === productId.toString());
+                let newSizeCart = cart.cartDetails;
 
+                const checkProductExits = newProductCart.find(product => product.productId.toString() === productId.toString());
                 if (!checkProductExits) {
                     newProductCart.push({
                         productId,
@@ -95,9 +105,38 @@ module.exports = {
 
                 }
 
+
+                const checkSizeExits = newSizeCart.find(product => product.sizeId.toString() === sizeId.toString());
+                if (!checkSizeExits) {
+                    newSizeCart.push({
+                        sizeId,
+                        quantity,
+                    })
+                } else {
+                    const nextQuantity = quantity + checkSizeExits.quantity;
+
+                    if (nextQuantity > foundSize.stock) {
+                        return res.send({
+                            code: 404,
+                            message: `Số lượng size sản phẩm ${size._id} không khả dụng`,
+                        });
+                    }
+
+                    newSizeCart = newSizeCart.map((item) => {
+                        const size = { ...item };
+                        if (sizeId.toString() === size.sizeId.toString()) {
+                            size.quantity = nextQuantity;
+                        }
+
+                        return size;
+                    })
+
+                }
+
                 result = await Cart.findByIdAndUpdate(cart._id, {
                     customerId,
                     cartDetails: newProductCart,
+                    cartDetails: newSizeCart,
                 }, { new: true });
 
             } else { // Chưa có giỏ hàng
@@ -106,6 +145,7 @@ module.exports = {
                     cartDetails: [
                         {
                             productId,
+                            sizeId,
                             quantity,
                         }
                     ]
@@ -126,11 +166,11 @@ module.exports = {
 
     remove: async function (req, res, next) {
         try {
-            const { customerId, productId } = req.params;
+            const { customerId, productId, sizeId } = req.params;
 
             let cart = await Cart.findOneAndUpdate(
                 { customerId },
-                { $pull: { cartDetails: { productId } } }
+                { $pull: { cartDetails: { productId, sizeId } } }
             );
 
             if (!cart) {
