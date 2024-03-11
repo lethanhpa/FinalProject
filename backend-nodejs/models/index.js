@@ -8,7 +8,8 @@ const ShippingAddress = require('./ShippingAddress');
 const Customer = require('./Customer');
 const Employee = require('./Employee');
 const Cart = require('./Cart');
+const customerAvatar = require('./Media');
 
 module.exports = {
-    Category, Order, Product, productImages, Review, Size, ShippingAddress, Customer, Employee, Cart
+    Category, Order, Product, productImages, Review, Size, ShippingAddress, Customer, Employee, Cart, customerAvatar
 };

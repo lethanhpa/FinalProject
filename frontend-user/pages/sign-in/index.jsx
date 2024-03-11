@@ -94,13 +94,14 @@ const SignIn = () => {
           rules={[
             { required: true, message: "Vui lòng nhập mật khẩu" },
             {
-              min: 6,
-              message: "Mật khẩu phải có ít nhất 6 ký tự",
+              min: 8,
+              message: "Mật khẩu phải có ít nhất 8 ký tự",
             },
             {
-              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/,
+              pattern:
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{8,}$/,
               message:
-                "Mật khẩu phải chứa ít nhất một chữ cái viết thường, một chữ cái viết hoa và một số",
+                "Mật khẩu phải chứa ít nhất một chữ cái viết thường, một chữ cái viết hoa, một số và một ký tự đặc biệt",
             },
           ]}
         >
