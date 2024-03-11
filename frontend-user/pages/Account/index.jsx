@@ -20,7 +20,7 @@ import {
   PhoneOutlined,
   TeamOutlined,
   EnvironmentOutlined,
-  UploadOutlined,
+  CameraOutlined
 } from "@ant-design/icons";
 import { jwtDecode } from "jwt-decode";
 import ImgCrop from "antd-img-crop";
@@ -192,6 +192,7 @@ function Account() {
                           headers={{ authorization: "authorization-text" }}
                           onChange={(info) => {
                             if (info.file.status === "done") {
+                              router.reload();
                               message.success(
                                 "Cập nhật ảnh đại diện thành công!"
                               );
@@ -206,8 +207,8 @@ function Account() {
                               alt={`Avatar-${customers._id}`}
                               className="w-[300px] object-cover rounded-full h-[300px]"
                             />
-                            <div className="absolute cursor-pointer rounded-full inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-lg opacity-0 hover:opacity-100 transition-opacity duration-300">
-                              Thay đổi ảnh đại diện
+                            <div className="absolute cursor-pointer rounded-full inset-0 flex items-center justify-center bg-black bg-opacity-50 text-gray text-5xl opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <CameraOutlined />
                             </div>
                           </div>
                         </Upload>
