@@ -6,16 +6,15 @@ import { Button, Popover } from 'antd';
 import { Heart, Minus, Plus, RefreshCcw, Truck } from "lucide-react";
 
 import axiosClient from "@/libraries/axiosClient";
+import useCartStore from "@/store/CartStore";
 
 function ProductDetails({ product }) {
-
-  console.log('product', product.size.sizes._id);
 
   const [quantity, setQuantity] = React.useState(1);
  
   const handleQuantityChange = (action) => {
     if (action === "increase") {
-      if (quantity + 1 <= product.stockQuantity) {
+      if (quantity + 1 <= product.stock) {
         setQuantity(quantity + 1);
       }
     } else if (action === "decrease") {
@@ -38,9 +37,15 @@ function ProductDetails({ product }) {
     }
   };
 
-  const handleAddCart = () => {
-    console.log('addcart');
-  }
+  const { addToCart } = useCartStore();
+  const handleAddCart = (productId) => {
+    addToCart(productId);
+    console.log('aaaa',productId);
+  };
+
+const handleAddCartaaaa = () =>{
+  console.log("add cart");
+}
 
   const content = (
     <div className="w-[500px] font-roboto text-md">
@@ -104,10 +109,10 @@ function ProductDetails({ product }) {
             {
               product.discount > 0 && (<div className="flex font-roboto text-md justify-between"><p>Giảm giá :</p> <p className="font-bold text-lg">{product.discount}%</p></div>)
             }
-            {product.stockQuantity > 0 && <div className="flex justify-between font-roboto text-md">
+            {product.stock > 0 && <div className="flex justify-between font-roboto text-md">
               <p>
                 Số lượng còn : </p>
-              {product.stockQuantity} sản phẩm</div>}
+              {product.stock} sản phẩm</div>}
 
             <div className="flex justify-between">
               <div className="font-roboto text-md text-primry">Chọn kích cỡ :</div>
@@ -147,7 +152,7 @@ function ProductDetails({ product }) {
 
 
             {
-              product.stockQuantity > 0 ? (<div className="flex gap-8">
+              product.stock > 0 ? (<div className="flex gap-8">
                 <div className="flex">
                   <button
                     type="button"
@@ -160,7 +165,7 @@ function ProductDetails({ product }) {
                     className="border border-solid border-inherit lg:max-w-[75px] max-w-[50px] min-h-[44px] font-roboto text-xl font-medium leading-7 lg:px-[25px] px-[15px]"
                     // type="number"
                     min="1"
-                    max={product.stockQuantity}
+                    max={product.stock}
                     value={quantity}
                     onChange={(e) => setQuantity(parseInt(e.target.value))}
                   />
@@ -172,7 +177,7 @@ function ProductDetails({ product }) {
                     <Plus />
                   </button>
                 </div>
-                <Button onClick={handleAddCart} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
+                <Button onClick={()=> handleAddCart(product._id)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
               </div>) : (<div className="flex gap-8">
                 <div className="flex">
                   <button
@@ -198,7 +203,7 @@ function ProductDetails({ product }) {
                     <Plus />
                   </button>
                 </div>
-                <Button onClick={handleAddCart} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
+                <Button onClick={handleAddCartaaaa} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
               </div>)
             }
 
