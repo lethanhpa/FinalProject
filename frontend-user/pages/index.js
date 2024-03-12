@@ -1,8 +1,8 @@
 import React, { memo } from "react";
 import HomePage from "./home/index";
-import MoveTop from "@/components/App/AppMoveTop";
 import axiosClient from "@/libraries/axiosClient";
 import FacebookMsg from "@/components/Facebook/FacebookMsg"
+import { FloatButton } from "antd";
 
 function Home({ products }) {
   return (
@@ -11,7 +11,7 @@ function Home({ products }) {
         products={products}
       />
       <FacebookMsg/>
-      <MoveTop />
+      <FloatButton.BackTop />
     </main>
   );
 };

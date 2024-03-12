@@ -4,13 +4,14 @@ import numeral from "numeral";
 import Link from "next/link";
 import { Button, Popover } from 'antd';
 import { Heart, Minus, Plus, RefreshCcw, Truck } from "lucide-react";
+import { FloatButton } from "antd";
 
 import axiosClient from "@/libraries/axiosClient";
 
 function ProductDetails({ product }) {
 
   const [quantity, setQuantity] = React.useState(1);
- 
+
   const handleQuantityChange = (action) => {
     if (action === "increase") {
       if (quantity + 1 <= product.stockQuantity) {
@@ -32,7 +33,7 @@ function ProductDetails({ product }) {
     if (selectedProduct) {
       setStock(selectedProduct.stock);
     } else {
-      setStock(0); 
+      setStock(0);
     }
   };
 
@@ -225,8 +226,7 @@ function ProductDetails({ product }) {
           </div>
         </div>) : (<p>loading...</p>)
       }
-
-
+      <FloatButton.BackTop />
     </div >
   )
 }

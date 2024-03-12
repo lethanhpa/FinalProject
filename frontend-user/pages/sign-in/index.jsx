@@ -4,6 +4,7 @@ import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "../../libraries/axiosClient";
+import { FloatButton } from "antd";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -136,6 +137,7 @@ const SignIn = () => {
           </Link>
         </div>
       </Form>
+      <FloatButton.BackTop />
     </div>
   );
 };

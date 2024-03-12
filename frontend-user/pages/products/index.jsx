@@ -1,6 +1,6 @@
 import router from "next/router";
 import React, { useState, memo } from "react";
-import { ShoppingCart, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { Button, Divider, FloatButton } from "antd";
 import numeral from "numeral";
 import Link from "next/link";
@@ -17,10 +17,6 @@ function Products({ products, categories }) {
   const [selectedStone, setSelectedStone] = useState("");
 
   const totalProducts = products.length;
-
-  const handleAddCart = (productId) => {
-    addToCart(productId);
-  };
 
   const handleShowMore = () => {
     const newVisibleProducts = visibleProducts + 20;
@@ -132,7 +128,7 @@ function Products({ products, categories }) {
   return (
     <div className="container mt-5">
       <div className="flex justify-center">
-      <img className="mb-5" src="./img/banner-product.png" alt="products" />
+        <img className="mb-5" src="./img/banner-product.png" alt="products" />
       </div>
       <div className="mb-5 mx-2.5">
         <div className="flex items-center justify-between mb-1 space-x-4">
@@ -313,25 +309,15 @@ function Products({ products, categories }) {
                 <img
                   src={`${API_URL}/${item.imageUrl}`}
                   alt={`slide-${item.id}`}
-                  className="hover:-translate-y-1 hover:scale-105  duration-300 sm:w-full sm:block flex items-center w-[7.5rem] object-contain"
+                  className="hover:-translate-y-1 hover:scale-125  duration-300 sm:w-full sm:block flex items-center w-[7.5rem] object-contain"
                 />
               </Link>
-              <div className="!absolute h-10  text-text-1 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all ">
-                <button
-                  type="button"
-                  className="bg-primry text-white py-1.5 min-w-[270px] font-roboto text-sm flex justify-center gap-[4px] items-center"
-                  onClick={handleAddCart}
-                >
-                  <ShoppingCart />
-                  Thêm vào giỏ hàng
-                </button>
-              </div>
+              {item.discount > 0 && (
+                <div className="!absolute top-0 right-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
+                  -{item.discount}%
+                </div>
+              )}
             </div>
-            {item.discount > 0 && (
-              <span className="!absolute top-0 left-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
-                -{item.discount}%
-              </span>
-            )}
             <div className="flex flex-col gap-[6px]">
               <p className="font-roboto text-sm font-normal flex justify-center xxl:truncate text-center">
                 {item.productName}
@@ -360,7 +346,7 @@ function Products({ products, categories }) {
               </div>
               <Divider>
                 <Button
-                  className="bg-slate-800 text-white hover:bg-white hover:text-black"
+                  className="bg-black text-white hover:bg-white font-light"
                   onClick={() => {
                     router.push(`/${item.id}`);
                   }}

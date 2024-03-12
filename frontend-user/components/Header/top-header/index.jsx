@@ -10,11 +10,10 @@ import {
 import classNames from "classnames";
 import Link from "next/link";
 import { listAccount } from "@/constants/data-account.js";
-import Navigation from "../navigation";
 import { useRouter } from "next/router";
-import { UserAddOutlined, LoginOutlined } from "@ant-design/icons";
-import jwt_decode from "jwt-decode";
 import axios from "../../../libraries/axiosClient";
+import jwtDecode from "jwt-decode";
+import { UserAddOutlined, LoginOutlined } from "@ant-design/icons";
 import { message } from "antd";
 ("../navigation/index");
 
@@ -25,7 +24,27 @@ function TopHeader() {
     setIsShowAccount(!isShowAccount);
   };
   const [isShowAccount, setIsShowAccount] = React.useState(false);
+  const [customers, setCustomers] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
+
+  const fetchCustomers = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const decoded = jwtDecode(token);
+      const customerId = decoded._id;
+
+      const response = await axios.get(`/customers/${customerId}`);
+      const data = response.data;
+
+      setCustomers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -34,23 +53,6 @@ function TopHeader() {
       setIsLogin(true);
     }
   }, [router]);
-
-  // useEffect(() => {
-  //   const fetchCart = async () => {
-  //     try {
-  //       const token = localStorage.getItem("token");
-
-  //       const decoded = jwt_decode(token);
-
-  //       const customerId = decoded._id;
-
-  //       await axios.get(`/cart/${customerId}`);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   fetchCart();
-  // }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -68,16 +70,6 @@ function TopHeader() {
   };
   return (
     <div className="flex justify-between container pt-[0.625rem]">
-      {/* <div className="sm:flex hidden justify-center items-center gap-[0.25rem] text-center ">
-        <Phone className="text-primry" />
-        <Link
-          href="tel:+190028979"
-          aria-label="phone"
-          className="text-xl font-roboto font-medium leading-7 text-primry"
-        >
-          190028979
-        </Link>
-      </div> */}
       <Link href="/" className="flex justify-end">
         <img
           src="/img/logo.png"
@@ -108,7 +100,7 @@ function TopHeader() {
                 />
               </button>
               <span className="text-sm text-black leading-7 font-normal sm:block hidden font-roboto">
-                Tài khoản của tôi
+                {`${customers.lastName} ${customers.firstName}`} {`${customers.fullName}`}
               </span>
               <div
                 id="myDropdown"
@@ -216,7 +208,7 @@ function TopHeader() {
                       router.pathname === "/" ? "text-primry" : ""
                     }`}
                   >
-                    Trang chủ
+                    Trang Chủ
                   </Link>
                 </li>
                 <li
@@ -230,7 +222,7 @@ function TopHeader() {
                       router.pathname === "/products" ? "text-primry" : ""
                     }`}
                   >
-                    Sản phẩm
+                    Bộ Sưu Tập
                   </Link>
                 </li>
                 <li
@@ -246,7 +238,7 @@ function TopHeader() {
                         : ""
                     }`}
                   >
-                    Trang sức cưới
+                    Trang Sức Cưới
                   </Link>
                 </li>
                 <li
@@ -274,7 +266,7 @@ function TopHeader() {
                       router.pathname === "/promotion" ? "text-primry" : ""
                     }`}
                   >
-                    Khuyến mãi
+                    Khuyến Mãi
                   </Link>
                 </li>
                 <li
@@ -288,7 +280,7 @@ function TopHeader() {
                       router.pathname === "/contact" ? "text-primry" : ""
                     }`}
                   >
-                    Liên hệ
+                    Liên Hệ
                   </Link>
                 </li>
               </ul>

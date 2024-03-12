@@ -13,12 +13,11 @@ import {
   UserOutlined,
   MailOutlined,
   LockOutlined,
-  EyeOutlined,
-  EyeInvisibleOutlined,
   PhoneOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/router";
+import { FloatButton } from "antd";
 import axios from "../../libraries/axiosClient";
 const apiName = "customers";
 
@@ -332,6 +331,7 @@ const SignUp = () => {
           </Button>
         </Form.Item>
       </Form>
+      <FloatButton.BackTop />
     </div>
   );
 };

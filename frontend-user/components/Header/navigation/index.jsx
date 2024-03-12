@@ -41,7 +41,7 @@ function Navigation() {
               router.pathname === "/" ? "border-b-2 border-primry" : ""
             }`}
           >
-            Trang chủ
+            Trang Chủ
           </Link>
         </li>
         <li
@@ -55,7 +55,7 @@ function Navigation() {
               router.pathname === "/products" ? "border-b-2 border-primry" : ""
             }`}
           >
-            Sản phẩm
+            Bộ Sưu Tập
           </Link>
         </li>
         <li
@@ -71,7 +71,7 @@ function Navigation() {
                 : ""
             }`}
           >
-            Trang sức cưới
+            Trang Sức Cưới
           </Link>
         </li>
         <li
@@ -99,7 +99,7 @@ function Navigation() {
               router.pathname === "/promotion" ? "border-b-2 border-primry" : ""
             }`}
           >
-            Khuyến mãi
+            Khuyến Mãi
           </Link>
         </li>
         <li
@@ -113,7 +113,7 @@ function Navigation() {
               router.pathname === "/contact" ? "border-b-2 border-primry" : ""
             }`}
           >
-            Liên hệ
+            Liên Hệ
           </Link>
         </li>
       </ul>

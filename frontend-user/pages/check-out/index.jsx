@@ -1,4 +1,5 @@
 import React from "react";
+import { FloatButton } from "antd";
 const listProfile = [
   {
     id: "1",
@@ -94,7 +95,7 @@ function Checkout() {
                 <p className="text-base leading-4 ">7.167.000đ</p>
               </div>
               <div className="flex justify-between items-center w-full">
-			  <p className="text-base leading-4 ">Discount</p>
+                <p className="text-base leading-4 ">Discount</p>
                 <p className="text-base leading-4 ">7.167.000đ</p>
               </div>
               <div className="flex justify-between items-center w-full">
@@ -139,6 +140,7 @@ function Checkout() {
           </button>
         </div>
       </div>
+      <FloatButton.BackTop />
     </div>
   );
 }
