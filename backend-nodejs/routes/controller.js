@@ -124,6 +124,63 @@ module.exports = {
         }
     },
 
+    update: async function (req, res, next) {
+        try {
+            const { customerId, productId } = req.params;
+            const { quantity } = req.body;
+
+            const cart = await Cart.findOne({ customerId }).lean();
+
+            if (!cart) {
+                return res.status(404).json({
+                    code: 404,
+                    message: "Giỏ hàng không tồn tại",
+                });
+            }
+
+            let newProductCart = cart.cartDetails;
+            const productIndex = newProductCart.findIndex(product => product.productId.toString() === productId.toString());
+
+            if (productIndex === -1) {
+                return res.status(404).json({
+                    code: 404,
+                    message: "Sản phẩm không tồn tại trong giỏ hàng",
+                });
+            }
+
+            const foundProduct = await Product.findById(productId);
+
+            if (!foundProduct || foundProduct.isDelete) {
+                return res.status(404).json({
+                    code: 404,
+                    message: "Sản phẩm không tồn tại",
+                });
+            }
+
+            if (quantity > foundProduct.stock) {
+                return res.status(404).json({
+                    code: 404,
+                    message: "Số lượng sản phẩm không khả dụng",
+                });
+            }
+
+            newProductCart[productIndex].quantity = quantity;
+
+            const updatedCart = await Cart.findByIdAndUpdate(cart._id, {
+                cartDetails: newProductCart,
+            }, { new: true });
+
+            return res.send({
+                code: 200,
+                message: "Cập nhật số lượng sản phẩm thành công",
+                payload: updatedCart,
+            });
+        } catch (err) {
+            return res.status(500).json({ code: 500, error: err });
+        }
+
+    },
+
     remove: async function (req, res, next) {
         try {
             const { customerId, productId } = req.params;

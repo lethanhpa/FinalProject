@@ -69,7 +69,7 @@ router.post('/', async function (req, res, next) {
             code: yup.string().required(),
             price: yup.number().min(0).required(),
             discount: yup.number().min(0).max(100).required(),
-            stockQuantity: yup.number().min(0),
+            stock: yup.number().min(0),
             // imageId: yup
             //     .string()
             //     .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {

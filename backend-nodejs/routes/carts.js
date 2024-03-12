@@ -6,11 +6,13 @@ const {
     getDetailSchema,
     removeSchema,
     createSchema,
+    updateSchema,
     removeAllSchema
 } = require('../validation/cart');
 const {
     getDetail,
     create,
+    update,
     remove,
     removeAllProducts
 } = require('./controller');
@@ -20,6 +22,9 @@ router.route('/')
 
 router.route('/:id')
     .get(validateSchema(getDetailSchema), getDetail)
+
+router.route('/:customerId/:productId')
+    .patch(validateSchema(updateSchema), update);
 
 router.route('/:customerId/:productId')
     .delete(validateSchema(removeSchema), remove)
