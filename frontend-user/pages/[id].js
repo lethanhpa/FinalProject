@@ -9,6 +9,8 @@ import axiosClient from "@/libraries/axiosClient";
 
 function ProductDetails({ product }) {
 
+  console.log('product', product.size.sizes._id);
+
   const [quantity, setQuantity] = React.useState(1);
  
   const handleQuantityChange = (action) => {

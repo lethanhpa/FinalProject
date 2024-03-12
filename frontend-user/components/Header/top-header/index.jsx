@@ -10,10 +10,10 @@ import {
 import classNames from "classnames";
 import Link from "next/link";
 import { listAccount } from "@/constants/data-account.js";
-import Navigation from "../navigation";
+import { API_URL } from "@/constants";
 import { useRouter } from "next/router";
 import { UserAddOutlined, LoginOutlined } from "@ant-design/icons";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import axios from "../../../libraries/axiosClient";
 import { message } from "antd";
 ("../navigation/index");
@@ -26,6 +26,7 @@ function TopHeader() {
   };
   const [isShowAccount, setIsShowAccount] = React.useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const [customers, setCustomers] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -34,6 +35,20 @@ function TopHeader() {
       setIsLogin(true);
     }
   }, [router]);
+
+
+  const handleClickOutside = (e) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      setIsShowAccount(false);
+    }
+  };
+
+  React.useEffect(() => {
+    const handleDocumentClick = (e) => {
+      handleClickOutside(e);
+    };
+    document.addEventListener("mousedown", handleDocumentClick);
+  }, [isShowAccount, setIsShowAccount]);
 
   // useEffect(() => {
   //   const fetchCart = async () => {
@@ -51,6 +66,33 @@ function TopHeader() {
   //   };
   //   fetchCart();
   // }, [router]);
+
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
+
+  const fetchCustomers = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const decoded = jwtDecode(token);
+      const customerId = decoded._id;
+
+      const response = await axios.get(`/customers/${customerId}`);
+      const data = response.data;
+
+      setCustomers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      setIsLogin(true);
+    }
+  }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -101,14 +143,14 @@ function TopHeader() {
                 onClick={HandleDropAccount}
               >
                 <img
-                  src="/img/user.svg"
+                  src={`${API_URL}/${customers.avatarUrl}`}
                   alt="user"
                   title="wiicamp-logo"
-                  className=" md:w-[1.75rem] md:h-[1.75rem] w-[1.5rem] h-[1.5rem]"
+                  className=" md:w-[2rem] md:h-[2rem] w-[1.5rem] h-[1.5rem] rounded-full"
                 />
               </button>
               <span className="text-sm text-black leading-7 font-normal sm:block hidden font-roboto">
-                Tài khoản của tôi
+                {customers.firstName} {customers.lastName}
               </span>
               <div
                 id="myDropdown"
@@ -212,9 +254,8 @@ function TopHeader() {
                 >
                   <Link
                     href="/"
-                    className={`flex items-center ${
-                      router.pathname === "/" ? "text-primry" : ""
-                    }`}
+                    className={`flex items-center ${router.pathname === "/" ? "text-primry" : ""
+                      }`}
                   >
                     Trang chủ
                   </Link>
@@ -226,9 +267,8 @@ function TopHeader() {
                 >
                   <Link
                     href="/products"
-                    className={`flex items-center ${
-                      router.pathname === "/products" ? "text-primry" : ""
-                    }`}
+                    className={`flex items-center ${router.pathname === "/products" ? "text-primry" : ""
+                      }`}
                   >
                     Sản phẩm
                   </Link>
@@ -240,11 +280,10 @@ function TopHeader() {
                 >
                   <Link
                     href="/wedding-jewelry"
-                    className={`flex items-center ${
-                      router.pathname === "/wedding-jewelry"
+                    className={`flex items-center ${router.pathname === "/wedding-jewelry"
                         ? "text-primry"
                         : ""
-                    }`}
+                      }`}
                   >
                     Trang sức cưới
                   </Link>
@@ -256,9 +295,8 @@ function TopHeader() {
                 >
                   <Link
                     href="/brand"
-                    className={`flex items-center ${
-                      router.pathname === "/brand" ? "text-primry" : ""
-                    }`}
+                    className={`flex items-center ${router.pathname === "/brand" ? "text-primry" : ""
+                      }`}
                   >
                     Thương Hiệu
                   </Link>
@@ -270,9 +308,8 @@ function TopHeader() {
                 >
                   <Link
                     href="/promotion"
-                    className={`flex items-center ${
-                      router.pathname === "/promotion" ? "text-primry" : ""
-                    }`}
+                    className={`flex items-center ${router.pathname === "/promotion" ? "text-primry" : ""
+                      }`}
                   >
                     Khuyến mãi
                   </Link>
@@ -284,9 +321,8 @@ function TopHeader() {
                 >
                   <Link
                     href="/contact"
-                    className={`flex items-center ${
-                      router.pathname === "/contact" ? "text-primry" : ""
-                    }`}
+                    className={`flex items-center ${router.pathname === "/contact" ? "text-primry" : ""
+                      }`}
                   >
                     Liên hệ
                   </Link>
