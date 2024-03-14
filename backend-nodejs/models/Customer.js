@@ -42,7 +42,7 @@ const customerSchema = new Schema(
     address: { type: String, required: true },
     gender: { type: String, required: true },
     birthday: { type: Date },
-    status: { type: Boolean },
+    status: { type: Boolean, default: false },
     // avatarUrl: { type: Schema.Types.ObjectId, ref: 'Media' },
   },
   {
