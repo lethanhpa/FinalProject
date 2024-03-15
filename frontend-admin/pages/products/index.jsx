@@ -33,6 +33,8 @@ function ManageProducts() {
   const [refresh, setRefresh] = useState(0);
   const [categories, setCategories] = useState([]);
   const [sizes, setSizes] = useState([]);
+  const [filteredInfo, setFilteredInfo] = useState({});
+  const [searchProductName, setSearchProductName] = useState("");
 
   useEffect(() => {
     axiosClient
@@ -238,7 +240,18 @@ function ManageProducts() {
       ) : (
         <>
           <h1 className="text-2xl text-center mt-3">Danh Sách Sản Phẩm</h1>
-          <div className="flex justify-end pr-2">
+          <div className="flex justify-between px-2 pb-3">
+            <Input.Search
+              placeholder="____________________"
+              className="w-auto bg-black rounded-lg h-3/4"
+              allowClear
+              enterButton
+              value={searchProductName}
+              onChange={(e) => setSearchProductName(e.target.value)}
+              onSearch={(value) => {
+                setFilteredInfo({ productName: [value] });
+              }}
+            />
             <button
               className="flex items-center py-1 px-1 mb-2 rounded-md border-2 border-black hover:bg-black hover:text-white"
               onClick={() => {
@@ -249,11 +262,16 @@ function ManageProducts() {
               <span>Thêm sản phẩm</span>
             </button>
           </div>
+
           <Table dataSource={data} rowKey="_id" scroll={{ x: true }}>
             <Column
               title="Tên sản phẩm"
               dataIndex="productName"
               key="productName"
+              filteredValue={filteredInfo.productName || null}
+              onFilter={(value, record) =>
+                record.productName.toLowerCase().includes(value.toLowerCase())
+              }
             />
             <Column title="Mã" dataIndex="code" key="code" />
             <Column

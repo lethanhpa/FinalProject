@@ -54,9 +54,8 @@ function HomePage() {
     <>
       <Menu
         mode="inline"
-        className="pt-[50] w-full h-screen"
+        className="w-auto h-screen"
         style={{
-          width: "256px",
           boxShadow: "5px 0 10px rgba(0,0,0,0.1)",
         }}
       >

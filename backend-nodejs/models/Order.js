@@ -3,6 +3,8 @@ const { Schema, model } = mongoose;
 
 const orderDetailSchema = new Schema({
     productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+    productName: { type: String, required: true },
+    imageUrl: { type: String },
     quantity: { type: Number, require: true, min: 0 },
     price: { type: Number, required: true, min: 0, default: 0 },
     discount: { type: Number, min: 0, max: 75, default: 0 },

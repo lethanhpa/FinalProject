@@ -13,6 +13,7 @@ import { API_URL } from "@/constants";
 import numeral from "numeral";
 import { EyeIcon, FilePenLine, Trash2 } from "lucide-react";
 import axiosClient from "@/libraries/axiosClient";
+import HomePage from "../home";
 
 const { Column } = Table;
 
@@ -79,13 +80,27 @@ function ManageOrder() {
       });
   };
 
+  const fetchProductInfo = async (productId) => {
+    try {
+      const response = await axios.get(`/products/${productId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin sản phẩm từ API /products ", error);
+      throw error;
+    }
+  };
+
   const text = "Xác nhận xóa ?";
 
   return (
     <div>
       <h1 className="text-2xl text-center my-3">Danh Sách Đơn Hàng</h1>
-
-      <Table dataSource={data} rowKey="_id" className="flex justify-center">
+      <Table
+        dataSource={data}
+        rowKey="_id"
+        scroll={{ x: true }}
+        className="w-full"
+      >
         <Column
           title="Khách hàng"
           key="customerName"
@@ -188,22 +203,14 @@ function ManageOrder() {
             span: 16,
           }}
         >
-          <Form.Item
-            label="Employees"
-            name="employeeId"
-            hasFeedback
-            required={true}
-            rules={[
-              {
-                required: true,
-                message: "Required to choose",
-              },
-            ]}
-          >
+          <Form.Item label="Employees" name="employeeId">
             <Select
               style={{ width: "80%" }}
               options={employees.map((c) => {
-                return { value: c._id, label: c.lastName + " " + c.firstName };
+                return {
+                  value: c._id,
+                  label: c.lastName + " " + c.firstName,
+                };
               })}
             />
           </Form.Item>
@@ -217,83 +224,81 @@ function ManageOrder() {
           </Form.Item>
         </Form>
       </Modal>
-
       <Modal
-  width={1000}
-  orderDetails={selectedOrderId}
-  open={openOrderDetail}
-  title="Order Detail"
-  onCancel={() => {
-    setOpenOrderDetail(false);
-  }}
-  footer={[
-    <Button
-      key="close"
-      onClick={() => {
-        setOpenOrderDetail(false);
-      }}
-    >
-      Close
-    </Button>,
-  ]}
->
-  <Table dataSource={selectedOrderId?.orderDetails} rowKey="_id">
-    <Table.Column
-      title="Tên sản phẩm"
-      dataIndex="product.productName"
-      key="product.productName"
-      render={(_text, record) => {
-        return <span>{record.productName}</span>;
-      }}
-    />
-    <Table.Column
-      title="Ảnh"
-      dataIndex="imageUrl"
-      key="imageUrl"
-      render={(_text, record) => (
-        <img
-          src={`${API_URL}${record.imageUrl}`}
-          alt={`Avatar-${record._id}`}
-          style={{ width: "auto", height: 100 }}
-        />
-      )}
-    />
-    <Table.Column
-      title="Quantity"
-      dataIndex="quantity"
-      key="quantity"
-      render={(_text, record) => {
-        return <span>{record.quantity}</span>;
-      }}
-    />
-    <Table.Column
-      title="Price"
-      dataIndex="price"
-      key="price"
-      render={(_text, record) => {
-        return <span>${numeral(record.price).format("0,0")}</span>;
-      }}
-    />
-    <Table.Column
-      title="Discount"
-      dataIndex="discount"
-      key="discount"
-      render={(_text, record) => {
-        return <span>{record.discount}%</span>;
-      }}
-    />
-    <Table.Column
-      title="Total"
-      key="total"
-      render={(_text, record) => {
-        const total =
-          record.quantity * record.price * (1 - record.discount / 100);
-        return <span>${numeral(total).format("0,0")}</span>;
-      }}
-    />
-  </Table>
-</Modal>
-
+        width={1000}
+        orderDetails={selectedOrderId}
+        open={openOrderDetail}
+        title="Chi tiết đơn hàng"
+        onCancel={() => {
+          setOpenOrderDetail(false);
+        }}
+        footer={[
+          <Button
+            key="close"
+            onClick={() => {
+              setOpenOrderDetail(false);
+            }}
+          >
+            Close
+          </Button>,
+        ]}
+      >
+        <Table dataSource={selectedOrderId?.orderDetails} rowKey="_id">
+          <Table.Column
+            title="Tên sản phẩm"
+            dataIndex="productName"
+            key="productName"
+            render={(_text, record) => {
+              return <span>{record.productName}</span>;
+            }}
+          />
+          <Table.Column
+            title="Ảnh"
+            dataIndex="imageUrl"
+            key="imageUrl"
+            render={(_text, record) => (
+              <img
+                src={`${API_URL}${record.imageUrl}`}
+                alt={`Avatar-${record._id}`}
+                style={{ width: "auto", height: 100 }}
+              />
+            )}
+          />
+          <Table.Column
+            title="Quantity"
+            dataIndex="quantity"
+            key="quantity"
+            render={(_text, record) => {
+              return <span>{record.quantity}</span>;
+            }}
+          />
+          <Table.Column
+            title="Price"
+            dataIndex="price"
+            key="price"
+            render={(_text, record) => {
+              return <span>{numeral(record.price).format("0,0")}đ</span>;
+            }}
+          />
+          <Table.Column
+            title="Discount"
+            dataIndex="discount"
+            key="discount"
+            render={(_text, record) => {
+              return <span>{record.discount}%</span>;
+            }}
+          />
+          <Table.Column
+            title="Total"
+            key="total"
+            render={(_text, record) => {
+              const total =
+                record.quantity * record.price * (1 - record.discount / 100);
+              return <span>{numeral(total).format("0,0")}đ</span>;
+            }}
+          />
+        </Table>
+      </Modal>
     </div>
   );
 }
