@@ -19,6 +19,7 @@ import {
 import { API_URL } from "@/constants";
 import axiosClient from "@/libraries/axiosClient";
 import numeral from "numeral";
+import HomePage from "../home";
 const { Column } = Table;
 
 const apiName = "/products";
@@ -130,7 +131,7 @@ function ManageProducts() {
           <h1 className="text-center text-2xl pb-3">Thêm sản phẩm</h1>
           {/* CREATE FORM */}
           <Form
-            className="w-4/5 h-screen"
+            className="w-4/5"
             form={createForm}
             name="create-form"
             onFinish={onFinish}
@@ -239,185 +240,188 @@ function ManageProducts() {
         </>
       ) : (
         <>
-          <h1 className="text-2xl text-center mt-3">Danh Sách Sản Phẩm</h1>
-          <div className="flex justify-between px-2 pb-3">
-            <Input.Search
-              placeholder="____________________"
-              className="w-auto bg-black rounded-lg h-3/4"
-              allowClear
-              enterButton
-              value={searchProductName}
-              onChange={(e) => setSearchProductName(e.target.value)}
-              onSearch={(value) => {
-                setFilteredInfo({ productName: [value] });
-              }}
-            />
-            <button
-              className="flex items-center py-1 px-1 mb-2 rounded-md border-2 border-black hover:bg-black hover:text-white"
-              onClick={() => {
-                setShowTable(false);
-              }}
-            >
-              <PackagePlus size={25} strokeWidth={1} />
-              <span>Thêm sản phẩm</span>
-            </button>
-          </div>
+          <div>
+            <HomePage />
+            <h1 className="text-2xl text-center mt-3">Danh Sách Sản Phẩm</h1>
+            <div className="flex justify-between px-2 pb-3">
+              <Input.Search
+                placeholder="____________________"
+                className="w-auto bg-black rounded-lg h-3/4"
+                allowClear
+                enterButton
+                value={searchProductName}
+                onChange={(e) => setSearchProductName(e.target.value)}
+                onSearch={(value) => {
+                  setFilteredInfo({ productName: [value] });
+                }}
+              />
+              <button
+                className="flex items-center py-1 px-1 mb-2 rounded-md border-2 border-black hover:bg-black hover:text-white"
+                onClick={() => {
+                  setShowTable(false);
+                }}
+              >
+                <PackagePlus size={25} strokeWidth={1} />
+                <span>Thêm sản phẩm</span>
+              </button>
+            </div>
 
-          <Table dataSource={data} rowKey="_id" scroll={{ x: true }}>
-            <Column
-              title="Tên sản phẩm"
-              dataIndex="productName"
-              key="productName"
-              filteredValue={filteredInfo.productName || null}
-              onFilter={(value, record) =>
-                record.productName.toLowerCase().includes(value.toLowerCase())
-              }
-            />
-            <Column title="Mã" dataIndex="code" key="code" />
-            <Column
-              title="Giá gốc"
-              sorter={(a, b) => a.price - b.price}
-              dataIndex="price"
-              key="price"
-              render={(text) => {
-                return <span>{numeral(text).format("0,0")}đ</span>;
-              }}
-            />
-            <Column
-              title="Giảm giá (%)"
-              sorter={(a, b) => a.discount - b.discount}
-              dataIndex="discount"
-              key="discount"
-            />
-            <Column
-              title="Kích cỡ"
-              dataIndex="_id"
-              key="sizes"
-              render={(sizeId) => <span>{getSizeBySizeId(sizeId)}</span>}
-            />
+            <Table dataSource={data} rowKey="_id" scroll={{ x: true }}>
+              <Column
+                title="Tên sản phẩm"
+                dataIndex="productName"
+                key="productName"
+                filteredValue={filteredInfo.productName || null}
+                onFilter={(value, record) =>
+                  record.productName.toLowerCase().includes(value.toLowerCase())
+                }
+              />
+              <Column title="Mã" dataIndex="code" key="code" />
+              <Column
+                title="Giá gốc"
+                sorter={(a, b) => a.price - b.price}
+                dataIndex="price"
+                key="price"
+                render={(text) => {
+                  return <span>{numeral(text).format("0,0")}đ</span>;
+                }}
+              />
+              <Column
+                title="Giảm giá (%)"
+                sorter={(a, b) => a.discount - b.discount}
+                dataIndex="discount"
+                key="discount"
+              />
+              <Column
+                title="Kích cỡ"
+                dataIndex="_id"
+                key="sizes"
+                render={(sizeId) => <span>{getSizeBySizeId(sizeId)}</span>}
+              />
 
-            <Column
-              title="Danh mục"
-              dataIndex="category.name"
-              key="category.name"
-              render={(_text, record) => {
-                return <span>{record.category.name}</span>;
-              }}
-            />
-            <Column
-              title="Ảnh"
-              dataIndex="imageUrl"
-              key="imageUrl"
-              render={(imageUrl, record) => (
-                <img
-                  src={`${API_URL}/${imageUrl}`}
-                  alt={`Avatar-${record._id}`}
-                  style={{ width: "auto", height: 100 }}
-                />
-              )}
-            />
-            <Column
-              title="Hành động"
-              key="action"
-              render={(record) => (
-                <Space size="middle">
-                  <button
-                    className="w-full flex justify-between items-center text-blue py-1 px-1 rounded-md border-2 border-blue hover:bg-gray hover:text-black"
-                    onClick={() => {
-                      setOpen(true);
-                      setUpdateId(record._id);
-                      updateForm.setFieldsValue(record);
-                    }}
-                  >
-                    <FilePenLine className="mr-2" size={20} strokeWidth={1} />
-                    Sửa
-                  </button>
-
-                  <Popconfirm
-                    placement="top"
-                    title={text}
-                    onConfirm={() => {
-                      axiosClient
-                        .delete(apiName + "/" + record._id)
-                        .then(() => {
-                          setRefresh((f) => f + 1);
-                          message.success("Xóa thành công", 1.5);
-                        });
-                    }}
-                    okText="Có"
-                    okButtonProps={{ className: "bg-black text-white" }}
-                    cancelText="Không"
-                  >
-                    <button className="w-full flex justify-between items-center text-red py-1 px-1 rounded-md border-2 border-red hover:bg-gray hover:text-black">
-                      <Trash2 className="mr-2" size={20} strokeWidth={1} />
-                      Xóa
+              <Column
+                title="Danh mục"
+                dataIndex="category.name"
+                key="category.name"
+                render={(_text, record) => {
+                  return <span>{record.category.name}</span>;
+                }}
+              />
+              <Column
+                title="Ảnh"
+                dataIndex="imageUrl"
+                key="imageUrl"
+                render={(imageUrl, record) => (
+                  <img
+                    src={`${API_URL}/${imageUrl}`}
+                    alt={`Avatar-${record._id}`}
+                    style={{ width: "auto", height: 100 }}
+                  />
+                )}
+              />
+              <Column
+                title="Hành động"
+                key="action"
+                render={(record) => (
+                  <Space size="middle">
+                    <button
+                      className="w-full flex justify-between items-center text-blue py-1 px-1 rounded-md border-2 border-blue hover:bg-gray hover:text-black"
+                      onClick={() => {
+                        setOpen(true);
+                        setUpdateId(record._id);
+                        updateForm.setFieldsValue(record);
+                      }}
+                    >
+                      <FilePenLine className="mr-2" size={20} strokeWidth={1} />
+                      Sửa
                     </button>
-                  </Popconfirm>
-                </Space>
-              )}
-            />
-          </Table>
-          <Modal
-            open={open}
-            onCancel={() => setOpen(false)}
-            okText="Cập nhật"
-            okButtonProps={{
-              style: {
-                color: "white",
-                background: "black",
-              },
-            }}
-            onOk={() => updateForm.submit()}
-            title="Chỉnh sửa thông tin nhân viên"
-            className="text-center"
-          >
-            <p style={{ textAlign: "center", color: "#888" }}>
-              Lưu ý: Chỉ có thể chỉnh sửa các thông tin trong khung
-            </p>
-            <Form
-              form={updateForm}
-              name="update-form"
-              onFinish={onUpdateFinish}
-              labelCol={{
-                span: 8,
+
+                    <Popconfirm
+                      placement="top"
+                      title={text}
+                      onConfirm={() => {
+                        axiosClient
+                          .delete(apiName + "/" + record._id)
+                          .then(() => {
+                            setRefresh((f) => f + 1);
+                            message.success("Xóa thành công", 1.5);
+                          });
+                      }}
+                      okText="Có"
+                      okButtonProps={{ className: "bg-black text-white" }}
+                      cancelText="Không"
+                    >
+                      <button className="w-full flex justify-between items-center text-red py-1 px-1 rounded-md border-2 border-red hover:bg-gray hover:text-black">
+                        <Trash2 className="mr-2" size={20} strokeWidth={1} />
+                        Xóa
+                      </button>
+                    </Popconfirm>
+                  </Space>
+                )}
+              />
+            </Table>
+            <Modal
+              open={open}
+              onCancel={() => setOpen(false)}
+              okText="Cập nhật"
+              okButtonProps={{
+                style: {
+                  color: "white",
+                  background: "black",
+                },
               }}
-              wrapperCol={{
-                span: 16,
-              }}
+              onOk={() => updateForm.submit()}
+              title="Chỉnh sửa thông tin nhân viên"
+              className="text-center"
             >
-              <Form.Item label="Họ" name="firstName">
-                <Input className="pointer-events-none" bordered={false} />
-              </Form.Item>
-              <Form.Item label="Tên" name="lastName">
-                <Input className="pointer-events-none" bordered={false} />
-              </Form.Item>
-              <Form.Item label="Ngày sinh" name="birthday">
-                <Input className="pointer-events-none" bordered={false} />
-              </Form.Item>
-              <Form.Item label="Giới tính" name="gender">
-                <Select className="text-start">
-                  <Select.Option value="Nam">Nam</Select.Option>
-                  <Select.Option value="Nữ">Nữ</Select.Option>
-                  <Select.Option value="LGBT">LGBT</Select.Option>
-                </Select>
-              </Form.Item>
-              <Form.Item label="Email" name="email">
-                <Input className="pointer-events-none" bordered={false} />
-              </Form.Item>
-              <Form.Item label="Số điện thoại" name="phoneNumber">
-                <Input className="pointer-events-none" bordered={false} />
-              </Form.Item>
-              <Form.Item label="Địa chỉ" name="address">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Chức vụ" name="role">
-                <Select className="text-start">
-                  <Select.Option value="Admin">Admin</Select.Option>
-                  <Select.Option value="Nhân viên">Nhân viên</Select.Option>
-                </Select>
-              </Form.Item>
-            </Form>
-          </Modal>
+              <p style={{ textAlign: "center", color: "#888" }}>
+                Lưu ý: Chỉ có thể chỉnh sửa các thông tin trong khung
+              </p>
+              <Form
+                form={updateForm}
+                name="update-form"
+                onFinish={onUpdateFinish}
+                labelCol={{
+                  span: 8,
+                }}
+                wrapperCol={{
+                  span: 16,
+                }}
+              >
+                <Form.Item label="Họ" name="firstName">
+                  <Input className="pointer-events-none" bordered={false} />
+                </Form.Item>
+                <Form.Item label="Tên" name="lastName">
+                  <Input className="pointer-events-none" bordered={false} />
+                </Form.Item>
+                <Form.Item label="Ngày sinh" name="birthday">
+                  <Input className="pointer-events-none" bordered={false} />
+                </Form.Item>
+                <Form.Item label="Giới tính" name="gender">
+                  <Select className="text-start">
+                    <Select.Option value="Nam">Nam</Select.Option>
+                    <Select.Option value="Nữ">Nữ</Select.Option>
+                    <Select.Option value="LGBT">LGBT</Select.Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item label="Email" name="email">
+                  <Input className="pointer-events-none" bordered={false} />
+                </Form.Item>
+                <Form.Item label="Số điện thoại" name="phoneNumber">
+                  <Input className="pointer-events-none" bordered={false} />
+                </Form.Item>
+                <Form.Item label="Địa chỉ" name="address">
+                  <Input />
+                </Form.Item>
+                <Form.Item label="Chức vụ" name="role">
+                  <Select className="text-start">
+                    <Select.Option value="Admin">Admin</Select.Option>
+                    <Select.Option value="Nhân viên">Nhân viên</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Form>
+            </Modal>
+          </div>
         </>
       )}
     </div>

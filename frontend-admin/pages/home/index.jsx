@@ -53,10 +53,10 @@ function HomePage() {
   return (
     <>
       <Menu
-        mode="inline"
-        className="w-auto h-screen"
+        mode="horizontal"
+        className="w-auto flex justify-center"
         style={{
-          boxShadow: "5px 0 10px rgba(0,0,0,0.1)",
+          boxShadow: "0 5px 10px rgba(0,0,0,0.1)",
         }}
       >
         {items.map((item) => (

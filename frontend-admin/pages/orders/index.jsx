@@ -80,20 +80,11 @@ function ManageOrder() {
       });
   };
 
-  const fetchProductInfo = async (productId) => {
-    try {
-      const response = await axios.get(`/products/${productId}`);
-      return response.data;
-    } catch (error) {
-      console.error("Lỗi khi lấy thông tin sản phẩm từ API /products ", error);
-      throw error;
-    }
-  };
-
   const text = "Xác nhận xóa ?";
 
   return (
     <div>
+      <HomePage/>
       <h1 className="text-2xl text-center my-3">Danh Sách Đơn Hàng</h1>
       <Table
         dataSource={data}

@@ -16,6 +16,7 @@ import {
   Trash2,
 } from "lucide-react";
 import axiosClient from "@/libraries/axiosClient";
+import HomePage from "../home";
 
 const { Column } = Table;
 
@@ -89,7 +90,7 @@ function ManageCategories() {
           <h1 className="text-center text-2xl pb-3">Thêm danh mục</h1>
           {/* CREATE FORM */}
           <Form
-            className="w-4/5 h-screen"
+            className="w-4/5"
             form={createForm}
             name="create-form"
             onFinish={onFinish}
@@ -127,6 +128,7 @@ function ManageCategories() {
         </>
       ) : (
         <>
+        <HomePage/>
           <h1 className="text-2xl text-center mt-3">Danh Sách Danh Mục</h1>
           <div className="flex justify-end pr-2">
             <button

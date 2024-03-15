@@ -4,6 +4,7 @@ import { LockIcon, UnlockIcon } from "lucide-react";
 import axiosClient from "@/libraries/axiosClient";
 import { API_URL } from "@/constants";
 import Moment from "moment";
+import HomePage from "../home";
 const { Column } = Table;
 
 const apiName = "/customers";
@@ -50,8 +51,13 @@ function ManageCustomers() {
 
   return (
     <div>
+      <HomePage />
       <h1 className="text-2xl text-center my-3">Danh Sách Khách Hàng</h1>
-      <Table dataSource={data} rowKey="_id" scroll={{ x: true, y: true }}>
+      <Table
+        dataSource={data}
+        rowKey="_id"
+        scroll={{ x: true }}
+      >
         <Column title="Họ" dataIndex="firstName" key="firstName" />
         <Column title="Tên" dataIndex="lastName" key="lastName" />
         <Column title="Email" dataIndex="email" key="email" />

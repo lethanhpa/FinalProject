@@ -113,7 +113,7 @@ function ManageEmployees() {
           <h1 className="text-center text-2xl pb-3">Thêm nhân viên</h1>
           {/* CREATE FORM */}
           <Form
-            className="w-4/5 h-screen"
+            className="w-4/5"
             form={createForm}
             name="create-form"
             onFinish={onFinish}
@@ -267,6 +267,7 @@ function ManageEmployees() {
         </>
       ) : (
         <div>
+          <HomePage/>
           <h1 className="text-2xl text-center mt-3">Danh Sách Nhân Viên</h1>
           <div className="flex justify-end pr-2">
             <button

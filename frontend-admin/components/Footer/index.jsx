@@ -2,7 +2,7 @@ import React from "react";
 
 function Footer() {
   return (
-    <div className=" bottom-0 w-full bg-black py-3">
+    <div className="bottom-0 fixed-auto w-full bg-black py-3">
       <div className="flex justify-center items-center">
         <img
           src="/img/2.png"
