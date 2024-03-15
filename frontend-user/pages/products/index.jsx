@@ -144,7 +144,7 @@ function Products({ products, categories }) {
               <option value="" disabled hidden>
                 Danh Mục
               </option>
-              {categories.map((item) => (
+              {categories.slice(1, 6).map((item) => (
                 <option key={item._id} value={item._id}>
                   {item.name}
                 </option>
