@@ -332,7 +332,7 @@ function ManageProducts() {
                 render={(imageUrl, record) => (
                   <img
                     src={`${API_URL}/${imageUrl}`}
-                    alt={`Avatar-${record._id}`}
+                    alt={`Image-${record._id}`}
                     style={{ width: "auto", height: 100 }}
                   />
                 )}
