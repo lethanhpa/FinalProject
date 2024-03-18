@@ -9,6 +9,9 @@ import {
   Space,
   Button,
   Popconfirm,
+  Upload,
+  Card,
+  Image
 } from "antd";
 import {
   ArrowBigLeftDash,
@@ -16,10 +19,17 @@ import {
   PackagePlus,
   Trash2,
 } from "lucide-react";
+import {
+  PlusOutlined,
+  EditOutlined,
+  UnorderedListOutlined,
+} from "@ant-design/icons";
 import { API_URL } from "@/constants";
 import axiosClient from "@/libraries/axiosClient";
 import numeral from "numeral";
 import HomePage from "../home";
+import { useRouter } from "next/router";
+
 const { Column } = Table;
 
 const apiName = "/products";
@@ -27,14 +37,17 @@ const apiName = "/products";
 function ManageProducts() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
+  const [files, setFiles] = useState();
   const [updateId, setUpdateId] = useState(0);
   const [showTable, setShowTable] = useState(true);
   const [createForm] = Form.useForm();
   const [updateForm] = Form.useForm();
+  const router = useRouter();
   const [refresh, setRefresh] = useState(0);
   const [categories, setCategories] = useState([]);
   const [sizes, setSizes] = useState([]);
   const [filteredInfo, setFilteredInfo] = useState({});
+  const [openDetailPicture, setOpenDetailPicture] = useState(false);
   const [searchProductName, setSearchProductName] = useState("");
 
   useEffect(() => {
@@ -79,7 +92,7 @@ function ManageProducts() {
       .then((_response) => {
         setRefresh((f) => f + 1);
         createForm.resetFields();
-        message.success("Thêm nhân viên mới thành công", 1.5);
+        message.success("Thêm sản phẩm mới thành công", 1.5);
         setShowTable(true);
       })
       .catch((err) => {
@@ -155,6 +168,34 @@ function ManageProducts() {
             >
               <Input />
             </Form.Item>
+
+            <Form.Item
+              label="Ảnh sản phẩm"
+              name="file"
+            >
+              <Upload
+                maxCount={1}
+                listType="picture-card"
+                showUploadList={true}
+                beforeUpload={(file) => {
+                  setFiles(file);
+                  return false;
+                }}
+                onRemove={() => {
+                  setFiles("");
+                }}
+              >
+                {!files ? (
+                  <div>
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </Upload>
+            </Form.Item>
+
             <Form.Item
               label="Mã"
               name="code"
@@ -191,7 +232,7 @@ function ManageProducts() {
             </Form.Item>
             <Form.Item
               label="Kích cỡ"
-              name="gender"
+              name="sizeId"
               rules={[
                 {
                   required: true,
@@ -200,11 +241,12 @@ function ManageProducts() {
               ]}
               hasFeedback
             >
-              <Select className="text-start">
-                <Select.Option value="Nam">Nam</Select.Option>
-                <Select.Option value="Nữ">Nữ</Select.Option>
-                <Select.Option value="LGBT">LGBT</Select.Option>
-              </Select>
+              <Select
+                style={{ width: "100%" }}
+                options={sizes.map((c) => {
+                  return { value: c._id, label: c._id };
+                })}
+              />
             </Form.Item>
             <Form.Item
               label="Danh mục"
@@ -214,7 +256,7 @@ function ManageProducts() {
               rules={[
                 {
                   required: true,
-                  message: "Required to choose",
+                  message: "Hãy điền đầy đủ thông tin",
                 },
               ]}
             >
@@ -312,11 +354,15 @@ function ManageProducts() {
                 dataIndex="imageUrl"
                 key="imageUrl"
                 render={(imageUrl, record) => (
-                  <img
-                    src={`${API_URL}/${imageUrl}`}
-                    alt={`Avatar-${record._id}`}
-                    style={{ width: "auto", height: 100 }}
-                  />
+                      <img
+                      src={`${API_URL}/${imageUrl}`}
+                      alt={`Avatar-${record._id}`}
+                      className="w-auto, h-[125px] cursor-pointer"
+                      onClick={() => {
+                        setUpdateId(record);
+                        setOpenDetailPicture(true);
+                      }}
+                    />
                 )}
               />
               <Column
@@ -371,12 +417,9 @@ function ManageProducts() {
                 },
               }}
               onOk={() => updateForm.submit()}
-              title="Chỉnh sửa thông tin nhân viên"
+              title="Chỉnh sửa thông tin sản phẩm"
               className="text-center"
             >
-              <p style={{ textAlign: "center", color: "#888" }}>
-                Lưu ý: Chỉ có thể chỉnh sửa các thông tin trong khung
-              </p>
               <Form
                 form={updateForm}
                 name="update-form"
@@ -388,38 +431,96 @@ function ManageProducts() {
                   span: 16,
                 }}
               >
-                <Form.Item label="Họ" name="firstName">
-                  <Input className="pointer-events-none" bordered={false} />
-                </Form.Item>
-                <Form.Item label="Tên" name="lastName">
-                  <Input className="pointer-events-none" bordered={false} />
-                </Form.Item>
-                <Form.Item label="Ngày sinh" name="birthday">
-                  <Input className="pointer-events-none" bordered={false} />
-                </Form.Item>
-                <Form.Item label="Giới tính" name="gender">
-                  <Select className="text-start">
-                    <Select.Option value="Nam">Nam</Select.Option>
-                    <Select.Option value="Nữ">Nữ</Select.Option>
-                    <Select.Option value="LGBT">LGBT</Select.Option>
-                  </Select>
-                </Form.Item>
-                <Form.Item label="Email" name="email">
-                  <Input className="pointer-events-none" bordered={false} />
-                </Form.Item>
-                <Form.Item label="Số điện thoại" name="phoneNumber">
-                  <Input className="pointer-events-none" bordered={false} />
-                </Form.Item>
-                <Form.Item label="Địa chỉ" name="address">
+                <Form.Item label="Tên sản phẩm" name="productName">
                   <Input />
                 </Form.Item>
-                <Form.Item label="Chức vụ" name="role">
-                  <Select className="text-start">
-                    <Select.Option value="Admin">Admin</Select.Option>
-                    <Select.Option value="Nhân viên">Nhân viên</Select.Option>
-                  </Select>
+                <Form.Item label="Mã" name="code">
+                  <Input />
+                </Form.Item>
+                <Form.Item label="Giá gốc" name="price">
+                  <Input />
+                </Form.Item>
+                <Form.Item label="Giảm giá (%)" name="discount">
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  label="Kích cỡ"
+                  name="sizeId"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy điền đầy đủ thông tin",
+                    },
+                  ]}
+                  hasFeedback
+                >
+                  <Select
+                    style={{ width: "100%" }}
+                    options={sizes.map((c) => {
+                      return { value: c._id, label: c._id };
+                    })}
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Danh mục"
+                  name="categoryId"
+                  hasFeedback
+                  required={true}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy điền đầy đủ thông tin",
+                    },
+                  ]}
+                >
+                  <Select
+                    style={{ width: "100%" }}
+                    options={categories.map((c) => {
+                      return { value: c._id, label: c.name };
+                    })}
+                  />
                 </Form.Item>
               </Form>
+            </Modal>
+            <Modal
+              open={openDetailPicture}
+              onCancel={() => setOpenDetailPicture(false)}
+              onOk={() => setOpenDetailPicture(false)}
+              okType="default"
+            >
+              {updateId && (
+                <div className="text-center">
+                  <div className="text-center  py-2 ">
+                    {updateId && updateId?.name}
+                  </div>{" "}
+                  <div className="text-center  py-2 ">Ảnh sản phẩm:</div>{" "}
+                  <div className="d-flex justify-content-center mb-5">
+                      <Image
+                        width={200}
+                        height={200}
+                        src={`${API_URL}${updateId?.imageUrl}`}
+                      />
+                  </div>
+                  <Upload
+                    showUploadList={false}
+                    name="file"
+                    action={`${API_URL}/productImages/products/${updateId?._id}/image`}
+                    headers={{ authorization: "authorization-text" }}
+                    onChange={(info) => {
+                      if (info.file.status === "done") {
+                        router.reload();
+                        message.success(
+                          "Cập nhật ảnh sản phẩm thành công!"
+                        );
+                      } else if (info.file.status === "error") {
+                        message.error("Cập nhật ảnh sản phẩm thất bại.");
+                      }
+                    }}
+                  >
+                    <Button icon={<EditOutlined />} />
+                  </Upload>
+                </div>
+              )}
             </Modal>
           </div>
         </>
