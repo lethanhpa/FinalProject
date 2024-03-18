@@ -11,7 +11,7 @@ import {
   Popconfirm,
   Upload,
   Card,
-  Image
+  Image,
 } from "antd";
 import {
   ArrowBigLeftDash,
@@ -50,69 +50,92 @@ function ManageProducts() {
   const [openDetailPicture, setOpenDetailPicture] = useState(false);
   const [searchProductName, setSearchProductName] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [createdProductId, setCreatedProductId] = useState(null);
 
   useEffect(() => {
-    axiosClient
-      .get(apiName)
-      .then((response) => {
-        const { data } = response;
-        setData(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    fetchData();
   }, [refresh]);
 
-  useEffect(() => {
-    axiosClient
-      .get("/categories")
-      .then((response) => {
-        const { data } = response;
-        setCategories(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [refresh]);
-
-  useEffect(() => {
-    axiosClient
-      .get("/sizes")
-      .then((response) => {
-        const { data } = response;
-        setSizes(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [refresh]);
-
-  const onFinish = (values) => {
-    axiosClient
-      .post(apiName, values)
-      .then((_response) => {
-        setRefresh((f) => f + 1);
-        createForm.resetFields();
-        message.success("Thêm sản phẩm mới thành công", 1.5);
-        setShowTable(true);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  const fetchData = async () => {
+    try {
+      const [productResponse, categoryResponse, sizeResponse] =
+        await Promise.all([
+          axiosClient.get(apiName),
+          axiosClient.get("/categories"),
+          axiosClient.get("/sizes"),
+        ]);
+      setData(productResponse.data);
+      setCategories(categoryResponse.data);
+      setSizes(sizeResponse.data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
   };
 
-  const onUpdateFinish = (values) => {
-    axiosClient
-      .patch(apiName + "/" + updateId, values)
-      .then((_response) => {
-        setRefresh((f) => f + 1);
-        updateForm.resetFields();
-        message.success("Cập nhật thành công", 1.5);
-        setOpen(false);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  const onFinish = async (values, fileList) => {
+    try {
+      const response = await axiosClient.post(apiName, values);
+      setCreatedProductId(response.data._id);
+
+      // Thêm sản phẩm mới vào mảng data
+      setData((prevData) => [...prevData, response.data]);
+
+      // Gọi hàm uploadProductImage để upload ảnh sản phẩm
+      if (fileList && fileList.length > 0) {
+        await uploadProductImage(response.data._id, fileList[0]);
+      }
+
+      createForm.resetFields();
+      message.success("Thêm sản phẩm mới thành công", 1.5);
+      setShowTable(true);
+    } catch (error) {
+      console.error("Error creating product: ", error);
+    }
+  };
+
+  const uploadProductImage = async (productId, file) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      await axiosClient.post(
+        `${API_URL}/productImages/products/${productId}/image`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      // Cập nhật ảnh sản phẩm vào đối tượng sản phẩm tương ứng trong mảng data
+      setData((prevData) =>
+        prevData.map((product) =>
+          product._id === productId
+            ? {
+                ...product,
+                imageUrl: `${API_URL}/productImages/products/${productId}/image`,
+              }
+            : product
+        )
+      );
+
+      message.success("Upload ảnh sản phẩm thành công");
+    } catch (error) {
+      console.error("Error uploading image: ", error);
+      message.error("Upload ảnh sản phẩm thất bại");
+    }
+  };
+
+  const onUpdateFinish = async (values) => {
+    try {
+      await axiosClient.patch(apiName + "/" + updateId, values);
+      updateForm.resetFields();
+      message.success("Cập nhật thành công", 1.5);
+      setOpen(false);
+      setRefresh((prevRefresh) => prevRefresh + 1);
+    } catch (error) {
+      console.error("Error updating product: ", error);
+    }
   };
 
   const getSizeBySizeId = (productId) => {
@@ -170,10 +193,7 @@ function ManageProducts() {
               <Input />
             </Form.Item>
 
-            <Form.Item
-              label="Ảnh sản phẩm"
-              name="file"
-            >
+            <Form.Item label="Ảnh sản phẩm" name="file">
               <Upload
                 maxCount={1}
                 listType="picture-card"
@@ -372,15 +392,15 @@ function ManageProducts() {
                 dataIndex="imageUrl"
                 key="imageUrl"
                 render={(imageUrl, record) => (
-                      <img
-                      src={`${API_URL}/${imageUrl}`}
-                      alt={`Avatar-${record._id}`}
-                      className="w-auto, h-[125px] cursor-pointer"
-                      onClick={() => {
-                        setUpdateId(record);
-                        setOpenDetailPicture(true);
-                      }}
-                    />
+                  <img
+                    src={`${API_URL}/${imageUrl}`}
+                    alt={`Avatar-${record._id}`}
+                    className="w-auto, h-[125px] cursor-pointer"
+                    onClick={() => {
+                      setUpdateId(record);
+                      setOpenDetailPicture(true);
+                    }}
+                  />
                 )}
               />
               <Column
@@ -513,11 +533,11 @@ function ManageProducts() {
                   </div>{" "}
                   <div className="text-center  py-2 ">Ảnh sản phẩm:</div>{" "}
                   <div className="d-flex justify-content-center mb-5">
-                      <Image
-                        width={200}
-                        height={200}
-                        src={`${API_URL}${updateId?.imageUrl}`}
-                      />
+                    <Image
+                      width={200}
+                      height={200}
+                      src={`${API_URL}${updateId?.imageUrl}`}
+                    />
                   </div>
                   <Upload
                     showUploadList={false}
@@ -527,9 +547,7 @@ function ManageProducts() {
                     onChange={(info) => {
                       if (info.file.status === "done") {
                         router.reload();
-                        message.success(
-                          "Cập nhật ảnh sản phẩm thành công!"
-                        );
+                        message.success("Cập nhật ảnh sản phẩm thành công!");
                       } else if (info.file.status === "error") {
                         message.error("Cập nhật ảnh sản phẩm thất bại.");
                       }
