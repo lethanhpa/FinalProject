@@ -36,6 +36,7 @@ function ManageProducts() {
   const [sizes, setSizes] = useState([]);
   const [filteredInfo, setFilteredInfo] = useState({});
   const [searchProductName, setSearchProductName] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   useEffect(() => {
     axiosClient
@@ -225,7 +226,6 @@ function ManageProducts() {
                 })}
               />
             </Form.Item>
-
             <Form.Item
               wrapperCol={{
                 offset: 8,
@@ -243,20 +243,35 @@ function ManageProducts() {
           <div>
             <HomePage />
             <h1 className="text-2xl text-center mt-3">Danh Sách Sản Phẩm</h1>
-            <div className="flex justify-between px-2 pb-3">
-              <Input.Search
-                placeholder="____________________"
-                className="w-auto bg-black rounded-lg h-3/4"
-                allowClear
-                enterButton
-                value={searchProductName}
-                onChange={(e) => setSearchProductName(e.target.value)}
-                onSearch={(value) => {
-                  setFilteredInfo({ productName: [value] });
-                }}
-              />
+            <div className="flex items-center justify-between px-2 pb-3">
+              <div className="flex items-center w-3/6">
+                <Input.Search
+                  placeholder="Tìm kiếm sản phẩm"
+                  className="w-auto bg-black rounded-lg h-3/4"
+                  allowClear
+                  enterButton
+                  value={searchProductName}
+                  onChange={(e) => setSearchProductName(e.target.value)}
+                  onSearch={(value) => {
+                    setFilteredInfo({ productName: [value] });
+                  }}
+                />
+                <Select
+                  className="w-2/6 ml-3  h-3/4"
+                  mode="multiple"
+                  placeholder="Chọn danh mục"
+                  value={selectedCategories}
+                  onChange={setSelectedCategories}
+                >
+                  {categories.map((category) => (
+                    <Select.Option key={category._id} value={category.name}>
+                      {category.name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </div>
               <button
-                className="flex items-center py-1 px-1 mb-2 rounded-md border-2 border-black hover:bg-black hover:text-white"
+                className="flex justify-end items-center py-1 px-1 mb-2 rounded-md border-2 border-black hover:bg-black hover:text-white"
                 onClick={() => {
                   setShowTable(false);
                 }}
@@ -298,11 +313,14 @@ function ManageProducts() {
                 key="sizes"
                 render={(sizeId) => <span>{getSizeBySizeId(sizeId)}</span>}
               />
-
               <Column
                 title="Danh mục"
                 dataIndex="category.name"
                 key="category.name"
+                filteredValue={selectedCategories}
+                onFilter={(value, record) =>
+                  record.category.name.includes(value)
+                }
                 render={(_text, record) => {
                   return <span>{record.category.name}</span>;
                 }}
