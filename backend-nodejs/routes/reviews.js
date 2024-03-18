@@ -75,8 +75,8 @@ router.post('/', async function (req, res, next) {
         .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
           return ObjectId.isValid(value);
         }),
-      ratingRate: yup.number().min(0).max(5).required(),
-      comment: yup.string().required(),
+      ratingRate: yup.number().min(0).max(5),
+      comment: yup.string(),
       reviewDate: yup.date(),
     }),
   });

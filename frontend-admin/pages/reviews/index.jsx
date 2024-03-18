@@ -62,20 +62,12 @@ function ManageReview() {
           key="customer"
           render={(_text, record) => {
             return (
-              <div className="flex items-center justify-between">
-                <span className="font-semibold ">{`${record.customer.firstName} ${record.customer.lastName}`}</span>
-
-                <img
-                  src={`${API_URL}/${record.customer.avatarUrl}`}
-                  alt={`Ảnh-${record.customer._id}`}
-                  style={{ width: 100, height: 100 }}
-                />
-              </div>
+              <span className="font-semibold">{`${record.customer.firstName} ${record.customer.lastName}`}</span>
             );
           }}
         />
         <Column
-          title="Tên"
+          title="Sản phẩm"
           dataIndex="productName"
           key="productName"
           render={(_text, record) => {
@@ -112,36 +104,9 @@ function ManageReview() {
           title="Ngày đánh giá"
           dataIndex="reviewDate"
           key="reviewDate"
-          className="w-32"
           render={(text) => {
             return <span>{Moment(text).format("DD/MM/YYYY")}</span>;
           }}
-        />
-        <Column
-          title="Hành động"
-          key="action"
-          render={(record) => (
-            <Space size="middle">
-              {!record.status && (
-                <button
-                  className="w-full flex justify-between items-center text-black py-1 px-1 rounded-md border-2 border-black hover:bg-gray hover:text-black"
-                  onClick={() => lockCustomers(record._id)}
-                >
-                  <LockIcon className="mr-2" size={20} strokeWidth={1} />
-                  Khóa
-                </button>
-              )}
-              {record.status && (
-                <button
-                  className="w-full flex justify-between items-center text-black py-1 px-1 rounded-md border-2 border-black hover:bg-gray hover:text-black"
-                  onClick={() => unlockCustomers(record._id)}
-                >
-                  <UnlockIcon className="mr-2" size={20} strokeWidth={1} />
-                  Mở
-                </button>
-              )}
-            </Space>
-          )}
         />
       </Table>
     </div>
