@@ -8,7 +8,7 @@ const productSchema = Schema(
         code: { type: String, required: true },
         price: { type: Number, min: 0, default: 0, required: true },
         discount: { type: Number, min: 0, max: 100, default: 0, required: true },
-        stockQuantity: { type: Number, min: 0, default: 0 },
+        stock: { type: Number, min: 0, default: 0 },
         // imageId: { type: Schema.Types.ObjectId, ref: 'Media' },
         categoryId: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
         reviewId: { type: Schema.Types.ObjectId, ref: 'Review' },
