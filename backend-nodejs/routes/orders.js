@@ -50,7 +50,7 @@ router.get("/:id", async function (req, res, next) {
         const { id } = req.params;
 
         const orders = await Order.find({ customerId: id })
-            .populate("orderDetails.product")
+            .populate("orderDetails.productId")
             .populate("customer")
             .lean({ virtual: true });
 

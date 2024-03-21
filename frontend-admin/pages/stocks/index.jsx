@@ -11,18 +11,19 @@ import {
 } from "antd";
 import {
   ArrowBigLeftDash,
-  ClipboardPlus,
+  PackagePlus,
   FilePenLine,
   Trash2,
 } from "lucide-react";
 import axiosClient from "@/libraries/axiosClient";
 import HomePage from "../home";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
 const { Column } = Table;
 
-const apiName = "/categories";
+const apiName = "/sizes";
 
-function ManageCategories() {
+function ManageStock() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [updateId, setUpdateId] = useState(0);
@@ -87,7 +88,7 @@ function ManageCategories() {
               <ArrowBigLeftDash size={25} strokeWidth={1} />
             </button>
           </div>
-          <h1 className="text-center text-2xl pb-3">Thêm Danh Mục</h1>
+          <h1 className="text-center text-2xl pb-3">Thêm Size & Số lượng</h1>
           {/* CREATE FORM */}
           <Form
             className="w-4/5"
@@ -102,18 +103,52 @@ function ManageCategories() {
             }}
           >
             <Form.Item
-              label="Nhập tên danh mục"
-              name="name"
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy điền danh mục",
-                },
-              ]}
-              hasFeedback
+              label="Tên sản phẩm"
+              name="productName"
+              rules={[{ required: true, message: "Bắt buộc nhập" }]}
             >
               <Input />
             </Form.Item>
+            <Form.List name="sizes">
+              {(fields, { add, remove }) => (
+                <>
+                  {fields.map(({ key, name, fieldKey, ...restField }) => (
+                    <Space key={key} align="baseline" className="mx-64">
+                      <Form.Item
+                        {...restField}
+                        name={[name, "size"]}
+                        fieldKey={[fieldKey, "size"]}
+                        label="Size"
+                        rules={[{ required: true, message: "Bắt buộc nhập" }]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "stock"]}
+                        fieldKey={[fieldKey, "stock"]}
+                        label="Số lượng"
+                        rules={[{ required: true, message: "Bắt buộc nhập" }]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <DeleteOutlined onClick={() => remove(name)} />
+                    </Space>
+                  ))}
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      block
+                      icon={<PlusOutlined />}
+                      className="mx-72"
+                    >
+                      Thêm Size & Số lượng
+                    </Button>
+                  </Form.Item>
+                </>
+              )}
+            </Form.List>
             <Form.Item
               wrapperCol={{
                 offset: 8,
@@ -129,7 +164,9 @@ function ManageCategories() {
       ) : (
         <>
           <HomePage />
-          <h1 className="text-2xl text-center mt-3">Danh Sách Danh Mục</h1>
+          <h1 className="text-2xl text-center mt-3">
+            Danh Sách Size & Số Lượng
+          </h1>
           <div className="flex justify-end pr-2">
             <button
               className="flex items-center py-1 px-1 mb-2 rounded-md border-2 border-black hover:bg-black hover:text-white"
@@ -137,18 +174,44 @@ function ManageCategories() {
                 setShowTable(false);
               }}
             >
-              <ClipboardPlus size={25} strokeWidth={1} />
-              <span>Thêm Danh Mục</span>
+              <PackagePlus size={25} strokeWidth={1} />
+              <span>Thêm Size & Số lượng</span>
             </button>
           </div>
-          <Table dataSource={data} rowKey="_id" className="flex justify-center">
+          <Table
+            dataSource={data}
+            rowKey="_id"
+            className="flex justify-center"
+            scroll={{ x: true }}
+          >
             <Column
               title="STT"
               render={(_text, _record, index) => {
                 return <span>{index + 1}</span>;
               }}
             />
-            <Column title="Tên danh mục" dataIndex="name" key="name" />
+            <Column
+              title="Tên sản phẩm"
+              dataIndex="productName"
+              key="productName"
+              className="font-bold"
+            />
+            <Column
+              title="Size & Số lượng"
+              dataIndex="sizes"
+              key="sizes"
+              render={(sizes) => (
+                <div>
+                  {sizes.map((item, index) => (
+                    <span key={item._id}>
+                      {index > 0 && " || "}
+                      Size: {item.size} Số lượng: {item.stock}
+                    </span>
+                  ))}
+                </div>
+              )}
+            />
+
             <Column
               title="Hành động"
               key="action"
@@ -193,7 +256,6 @@ function ManageCategories() {
           <Modal
             open={open}
             onCancel={() => setOpen(false)}
-            cancelText="Hủy"
             okText="Cập nhật"
             okButtonProps={{
               style: {
@@ -202,7 +264,7 @@ function ManageCategories() {
               },
             }}
             onOk={() => updateForm.submit()}
-            title="Sửa Danh Mục"
+            title="Sửa danh mục"
             className="text-center"
           >
             <Form
@@ -216,9 +278,53 @@ function ManageCategories() {
                 span: 16,
               }}
             >
-              <Form.Item label="Tên danh mục" name="name">
+              <Form.Item
+                label="Tên sản phẩm"
+                name="productName"
+                rules={[{ required: true, message: "Bắt buộc nhập" }]}
+              >
                 <Input />
               </Form.Item>
+              <Form.List name="sizes">
+                {(fields, { add, remove }) => (
+                  <>
+                    {fields.map(({ key, name, fieldKey, ...restField }) => (
+                      <Space key={key} align="baseline">
+                        <Form.Item
+                          {...restField}
+                          name={[name, "size"]}
+                          fieldKey={[fieldKey, "size"]}
+                          label="Size"
+                          rules={[{ required: true, message: "Bắt buộc nhập" }]}
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, "stock"]}
+                          fieldKey={[fieldKey, "stock"]}
+                          label="Số lượng"
+                          rules={[{ required: true, message: "Bắt buộc nhập" }]}
+                        >
+                          <Input />
+                        </Form.Item>
+                        <DeleteOutlined onClick={() => remove(name)} />
+                      </Space>
+                    ))}
+                    <Form.Item>
+                      <Button
+                        type="dashed"
+                        onClick={() => add()}
+                        block
+                        icon={<PlusOutlined />}
+                        className="mx-20"
+                      >
+                        Thêm Size & Số lượng
+                      </Button>
+                    </Form.Item>
+                  </>
+                )}
+              </Form.List>
             </Form>
           </Modal>
         </>
@@ -227,4 +333,4 @@ function ManageCategories() {
   );
 }
 
-export default memo(ManageCategories);
+export default memo(ManageStock);

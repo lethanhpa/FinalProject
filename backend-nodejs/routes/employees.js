@@ -137,6 +137,55 @@ router.post('/', async (req, res, next) => {
         res.sendStatus(500);
     }
 });
+// POST để khóa tài khoản nhân viên
+router.post('/:id/lock', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Tìm nhân viên theo ID
+        const employees = await Employee.findById(id);
+
+        if (!employees) {
+            return res.status(404).json({ message: 'Không tìm thấy nhân viên' });
+        }
+
+        // Đặt trạng thái isLocked của nhân viên thành true
+        employees.isLocked = true;
+
+        // Lưu thay đổi
+        await employees.save();
+
+        res.status(200).json({ message: 'Tài khoản đã bị khóa thành công' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Đã xảy ra lỗi khi khóa tài khoản' });
+    }
+});
+
+// POST để mở khóa tài khoản nhân viên
+router.post('/:id/unlock', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Tìm nhân viên theo ID
+        const employees = await Employee.findById(id);
+
+        if (!employees) {
+            return res.status(404).json({ message: 'Không tìm thấy nhân viên' });
+        }
+
+        // Đặt trạng thái isLocked của nhân viên thành false
+        employees.isLocked = false;
+
+        // Lưu thay đổi
+        await employees.save();
+
+        res.status(200).json({ message: 'Tài khoản đã được mở khóa thành công' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Đã xảy ra lỗi khi mở khóa tài khoản' });
+    }
+});
 
 // PATCH/:id
 router.patch('/:id', function (req, res, next) {

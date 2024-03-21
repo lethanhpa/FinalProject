@@ -50,9 +50,9 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      
+
       const customer = await Customer.findById(req.user._id);
-      
+
       if (!customer) return res.status(404).send({ message: 'Not found' });
 
       res.status(200).json(customer);
@@ -186,8 +186,8 @@ router.post('/:id/lock', async (req, res) => {
       return res.status(404).json({ message: 'Không tìm thấy khách hàng' });
     }
 
-    // Đặt trạng thái isLocked của khách hàng thành true
-    customer.isLocked = true;
+    // Đặt trạng thái.status của khách hàng thành true
+    customer.status = true;
 
     // Lưu thay đổi
     await customer.save();
@@ -211,8 +211,8 @@ router.post('/:id/unlock', async (req, res) => {
       return res.status(404).json({ message: 'Không tìm thấy khách hàng' });
     }
 
-    // Đặt trạng thái isLocked của khách hàng thành false
-    customer.isLocked = false;
+    // Đặt trạng thái.status của khách hàng thành false
+    customer.status = false;
 
     // Lưu thay đổi
     await customer.save();

@@ -1,66 +1,79 @@
-import React, { useState } from "react";
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
-import { Menu } from 'antd';
+import React from "react";
+import { Menu } from "antd";
 import {
-    UserOutlined,
-    FileDoneOutlined,
-    DropboxOutlined,
-    FileTextOutlined,
-    IdcardOutlined,
-} from "@ant-design/icons";
+  Users,
+  User,
+  Home,
+  PackageOpen,
+  BookOpen,
+  ShoppingCart,
+  Boxes,
+} from "lucide-react";
+import Link from "next/link";
 
 function HomePage() {
+  const items = [
+    {
+      label: "Trang Chủ",
+      key: "home",
+      icon: <Home size={20} strokeWidth={1} />,
+      path: "/",
+    },
+    {
+      label: "Quản Lý Nhân Viên",
+      key: "manageEmployees",
+      icon: <User size={20} strokeWidth={1} />,
+      path: "employees",
+    },
+    {
+      label: "Quản Lý Khách Hàng",
+      key: "manageCustomers",
+      icon: <Users size={20} strokeWidth={1} />,
+      path: "customers ",
+    },
+    {
+      label: "Quản Lý Số Lượng",
+      key: "manageStock",
+      icon: <Boxes size={20} strokeWidth={1} />,
+      path: "stocks",
+    },
+    {
+      label: "Quản Lý Sản Phẩm",
+      key: "manageProducts",
+      icon: <PackageOpen size={20} strokeWidth={1} />,
+      path: "products",
+    },
+    {
+      label: "Quản Lý Danh Mục",
+      key: "manageCategories",
+      icon: <BookOpen size={20} strokeWidth={1} />,
+      path: "categories",
+    },
+    {
+      label: "Quản Lý Đơn Hàng",
+      key: "manageOrders",
+      icon: <ShoppingCart size={20} strokeWidth={1} />,
+      path: "orders ",
+    },
+  ];
 
-    const items = [
-        {
-            label: "Home",
-            key: "home",
-            icon: <UserOutlined />,
-        },
-        {
-            label: "Manager Employees",
-            key: "manageEmployees",
-            icon: <UserOutlined />,
-        },
-        {
-            label: "Manager Customers",
-            key: "manageCustomers",
-            icon: <UserOutlined />,
-        },
-        {
-            label: "Manager Products",
-            key: "manageProducts",
-            icon: <DropboxOutlined />,
-        },
-        {
-            label: "Manager Categories",
-            key: "manageCategories",
-            icon: <FileTextOutlined />,
-        },
-        {
-            label: "Manager Supplier",
-            key: "manageSuppliers",
-            icon: <IdcardOutlined />,
-        },
-        {
-            label: "Manager Order",
-            icon: <FileDoneOutlined />,
-            key: "manageOrders",
-        },
-    ];
-
-    return (<>
-        <Menu
-            mode="inline"
-            className="pt-[50"
-            // openKeys={openKeys}
-            // onOpenChange={onOpenChange}
-            style={{
-                width: 256,
-            }}
-            items={items}
-        />
-    </>)
+  return (
+    <>
+      <Menu
+        mode="horizontal"
+        className="w-auto flex justify-center"
+        style={{
+          boxShadow: "0 5px 10px rgba(0,0,0,0.1)",
+        }}
+      >
+        {items.map((item) => (
+          <Menu.Item key={item.key} icon={item.icon}>
+            <Link href={item.path}>{item.label}</Link>
+          </Menu.Item>
+        ))}
+      </Menu>
+    </>
+  );
 }
 
 export default HomePage;
