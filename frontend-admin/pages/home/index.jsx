@@ -8,6 +8,7 @@ import {
   BookOpen,
   ShoppingCart,
   Boxes,
+  MessageSquareQuote,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -42,6 +43,12 @@ function HomePage() {
       key: "manageProducts",
       icon: <PackageOpen size={20} strokeWidth={1} />,
       path: "products",
+    },
+    {
+      label: "Quản Lý Đánh Giá",
+      key: "manageReviews",
+      icon: <MessageSquareQuote size={20} strokeWidth={1} />,
+      path: "reviews",
     },
     {
       label: "Quản Lý Danh Mục",

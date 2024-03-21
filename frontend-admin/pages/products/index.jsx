@@ -440,12 +440,13 @@ function ManageProducts() {
                 render={(imageUrl, record) => (
                   <img
                     src={`${API_URL}/${imageUrl}`}
-                    alt={`Avatar-${record._id}`}
                     className="w-auto, h-[125px] cursor-pointer"
                     onClick={() => {
                       setUpdateId(record);
                       setOpenDetailPicture(true);
                     }}
+                    alt={`Image-${record._id}`}
+                    style={{ width: "auto", height: 100 }}
                   />
                 )}
               />
