@@ -50,7 +50,7 @@ function ManageEmployees() {
       .then((_response) => {
         setRefresh((f) => f + 1);
         createForm.resetFields();
-        message.success("Thêm nhân viên mới thành công", 1.5);
+        message.success("Thêm mới thành công", 1.5);
         setShowTable(true);
       })
       .catch((err) => {
@@ -110,7 +110,7 @@ function ManageEmployees() {
               <ArrowBigLeftDash size={25} strokeWidth={1} />
             </button>
           </div>
-          <h1 className="text-center text-2xl pb-3">Thêm nhân viên</h1>
+          <h1 className="text-center text-2xl pb-3">Thêm Nhân Viên</h1>
           {/* CREATE FORM */}
           <Form
             className="w-4/5"
@@ -267,7 +267,7 @@ function ManageEmployees() {
         </>
       ) : (
         <div>
-          <HomePage/>
+          <HomePage />
           <h1 className="text-2xl text-center mt-3">Danh Sách Nhân Viên</h1>
           <div className="flex justify-end pr-2">
             <button
@@ -277,10 +277,16 @@ function ManageEmployees() {
               }}
             >
               <UserRoundPlus size={25} strokeWidth={1} />
-              <span>Thêm nhân viên</span>
+              <span>Thêm Nhân Viên</span>
             </button>
           </div>
           <Table dataSource={data} rowKey="_id" scroll={{ x: true }}>
+            <Column
+              title="STT"
+              render={(_text, _record, index) => {
+                return <span>{index + 1}</span>;
+              }}
+            />
             <Column title="Họ" dataIndex="firstName" key="firstName" />
             <Column title="Tên" dataIndex="lastName" key="lastName" />
             <Column title="Email" dataIndex="email" key="email" />
@@ -359,6 +365,7 @@ function ManageEmployees() {
           <Modal
             open={open}
             onCancel={() => setOpen(false)}
+            cancelText="Hủy"
             okText="Cập nhật"
             okButtonProps={{
               style: {
@@ -367,7 +374,7 @@ function ManageEmployees() {
               },
             }}
             onOk={() => updateForm.submit()}
-            title="Chỉnh sửa thông tin nhân viên"
+            title="Chỉnh Sửa Thông Tin Nhân Viên"
             className="text-center"
           >
             <p style={{ textAlign: "center", color: "#888" }}>

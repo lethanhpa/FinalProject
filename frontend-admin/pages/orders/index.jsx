@@ -11,7 +11,8 @@ import {
 } from "antd";
 import { API_URL } from "@/constants";
 import numeral from "numeral";
-import { EyeIcon, FilePenLine, Trash2 } from "lucide-react";
+import Moment from "moment";
+import { CircleXIcon, EyeIcon, FilePenLine } from "lucide-react";
 import axiosClient from "@/libraries/axiosClient";
 import HomePage from "../home";
 
@@ -84,7 +85,7 @@ function ManageOrder() {
 
   return (
     <div>
-      <HomePage/>
+      <HomePage />
       <h1 className="text-2xl text-center my-3">Danh Sách Đơn Hàng</h1>
       <Table
         dataSource={data}
@@ -92,6 +93,12 @@ function ManageOrder() {
         scroll={{ x: true }}
         className="w-full"
       >
+        <Column
+          title="STT"
+          render={(_text, _record, index) => {
+            return <span>{index + 1}</span>;
+          }}
+        />
         <Column
           title="Khách hàng"
           key="customerName"
@@ -101,12 +108,35 @@ function ManageOrder() {
             );
           }}
         />
-
         <Column title="Email" dataIndex="emailOrder" key="emailOrder" />
         <Column
           title="Số điện thoại"
           dataIndex="phoneNumberOrder"
           key="phoneNumberOrder"
+        />
+        <Column
+          title="Ngày đặt"
+          dataIndex="createdDate"
+          key="createdDate"
+          render={(text) => {
+            return <span>{Moment(text).format("DD/MM/YYYY")}</span>;
+          }}
+        />
+        <Column
+          title="Ngày đặt"
+          dataIndex="shippedDate"
+          key="shippedDate"
+          render={(text) => {
+            return <span>{Moment(text).format("DD/MM/YYYY")}</span>;
+          }}
+        />
+        <Column
+          title="Địa chỉ giao"
+          dataIndex="shippingAddressId"
+          key="shippingAddressId"
+          render={(text, record) => {
+            return <span>{`${record.shippingAddress.shippingAddress}`}</span>;
+          }}
         />
         <Column title="Phương thức" dataIndex="paymentType" key="paymentType" />
         <Column title="Trạng thái" dataIndex="status" key="status" />
@@ -114,9 +144,9 @@ function ManageOrder() {
           title="Nhân viên"
           dataIndex="employeesName"
           key="employees.name"
-          render={(_text, record) => {
+          render={(text, record) => {
             return (
-              <span>{`${record.employee.firstName} ${record.employee.lastName}`}</span>
+              <span>{`${record.employee?.firstName} ${record.employee?.lastName}`}</span>
             );
           }}
         />
@@ -162,8 +192,8 @@ function ManageOrder() {
                 cancelText="Không"
               >
                 <button className="w-full flex justify-between items-center text-red py-1 px-1 rounded-md border-2 border-red hover:bg-gray hover:text-black">
-                  <Trash2 className="mr-2" size={20} strokeWidth={1} />
-                  Xóa
+                  <CircleXIcon className="mr-2" size={20} strokeWidth={1} />
+                  Hủy
                 </button>
               </Popconfirm>
             </Space>
@@ -172,12 +202,12 @@ function ManageOrder() {
       </Table>
       <Modal
         open={open}
-        title="Update"
+        title="Chỉnh Sửa Trạng Thái Đơn Hàng"
         onCancel={() => {
           setOpen(false);
         }}
-        cancelText="Đóng"
-        okText="Đồng ý"
+        cancelText="Hủy"
+        okText="Cập nhật"
         okButtonProps={{ className: "bg-black text-white" }}
         onOk={() => {
           updateForm.submit();
@@ -194,7 +224,7 @@ function ManageOrder() {
             span: 16,
           }}
         >
-          <Form.Item label="Employees" name="employeeId">
+          <Form.Item label="Nhân viên" name="employeeId">
             <Select
               style={{ width: "80%" }}
               options={employees.map((c) => {
@@ -205,12 +235,11 @@ function ManageOrder() {
               })}
             />
           </Form.Item>
-
-          <Form.Item label="Status" name="status">
+          <Form.Item label="Trạng thái" name="status">
             <Select style={{ width: "80%" }}>
               <Select.Option value="WAITING">WAITING</Select.Option>
-              <Select.Option value="COMPLETED">COMPLETED</Select.Option>
-              <Select.Option value="CANCELED">CANCELED</Select.Option>
+              <Select.Option value="COMPLETE">COMPLETE</Select.Option>
+              <Select.Option value="CANCEL">CANCEL</Select.Option>
             </Select>
           </Form.Item>
         </Form>
@@ -219,7 +248,7 @@ function ManageOrder() {
         width={1000}
         orderDetails={selectedOrderId}
         open={openOrderDetail}
-        title="Chi tiết đơn hàng"
+        title="Chi Tiết Đơn Hàng"
         onCancel={() => {
           setOpenOrderDetail(false);
         }}
@@ -230,11 +259,21 @@ function ManageOrder() {
               setOpenOrderDetail(false);
             }}
           >
-            Close
+            Đóng
           </Button>,
         ]}
       >
-        <Table dataSource={selectedOrderId?.orderDetails} rowKey="_id">
+        <Table
+          dataSource={selectedOrderId?.orderDetails}
+          rowKey="_id"
+          scroll={{ x: true }}
+        >
+          <Column
+            title="STT"
+            render={(_text, _record, index) => {
+              return <span>{index + 1}</span>;
+            }}
+          />
           <Table.Column
             title="Tên sản phẩm"
             dataIndex="productName"
@@ -256,7 +295,7 @@ function ManageOrder() {
             )}
           />
           <Table.Column
-            title="Quantity"
+            title="Số lượng"
             dataIndex="quantity"
             key="quantity"
             render={(_text, record) => {
@@ -264,7 +303,7 @@ function ManageOrder() {
             }}
           />
           <Table.Column
-            title="Price"
+            title="Giá gốc"
             dataIndex="price"
             key="price"
             render={(_text, record) => {
@@ -272,7 +311,7 @@ function ManageOrder() {
             }}
           />
           <Table.Column
-            title="Discount"
+            title="Giảm giá (%)"
             dataIndex="discount"
             key="discount"
             render={(_text, record) => {
@@ -280,12 +319,16 @@ function ManageOrder() {
             }}
           />
           <Table.Column
-            title="Total"
+            title="Tổng tiền"
             key="total"
             render={(_text, record) => {
               const total =
                 record.quantity * record.price * (1 - record.discount / 100);
-              return <span>{numeral(total).format("0,0")}đ</span>;
+              return (
+                <span className="font-bold">
+                  {numeral(total).format("0,0")}đ
+                </span>
+              );
             }}
           />
         </Table>

@@ -7,6 +7,7 @@ import {
   PackageOpen,
   BookOpen,
   ShoppingCart,
+  Boxes,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -29,6 +30,12 @@ function HomePage() {
       key: "manageCustomers",
       icon: <Users size={20} strokeWidth={1} />,
       path: "customers ",
+    },
+    {
+      label: "Quản Lý Số Lượng",
+      key: "manageStock",
+      icon: <Boxes size={20} strokeWidth={1} />,
+      path: "stocks",
     },
     {
       label: "Quản Lý Sản Phẩm",

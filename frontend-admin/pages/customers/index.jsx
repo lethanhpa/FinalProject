@@ -53,11 +53,13 @@ function ManageCustomers() {
     <div>
       <HomePage />
       <h1 className="text-2xl text-center my-3">Danh Sách Khách Hàng</h1>
-      <Table
-        dataSource={data}
-        rowKey="_id"
-        scroll={{ x: true }}
-      >
+      <Table dataSource={data} rowKey="_id" scroll={{ x: true }}>
+        <Column
+          title="STT"
+          render={(_text, _record, index) => {
+            return <span>{index + 1}</span>;
+          }}
+        />
         <Column title="Họ" dataIndex="firstName" key="firstName" />
         <Column title="Tên" dataIndex="lastName" key="lastName" />
         <Column title="Email" dataIndex="email" key="email" />

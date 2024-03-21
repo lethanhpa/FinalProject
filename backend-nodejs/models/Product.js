@@ -12,7 +12,7 @@ const productSchema = Schema(
         // imageId: { type: Schema.Types.ObjectId, ref: 'Media' },
         categoryId: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
         reviewId: { type: Schema.Types.ObjectId, ref: 'Review' },
-        sizeId: { type: Schema.Types.ObjectId, ref: 'Review' },
+        sizeId: { type: Schema.Types.ObjectId, ref: 'Size' },
     },
     {
         versionKey: false,

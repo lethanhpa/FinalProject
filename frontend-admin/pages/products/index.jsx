@@ -10,7 +10,6 @@ import {
   Button,
   Popconfirm,
   Upload,
-  Card,
   Image,
 } from "antd";
 import {
@@ -19,11 +18,7 @@ import {
   PackagePlus,
   Trash2,
 } from "lucide-react";
-import {
-  PlusOutlined,
-  EditOutlined,
-  UnorderedListOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined, EditOutlined } from "@ant-design/icons";
 import { API_URL } from "@/constants";
 import axiosClient from "@/libraries/axiosClient";
 import numeral from "numeral";
@@ -37,7 +32,6 @@ const apiName = "/products";
 function ManageProducts() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
-  const [files, setFiles] = useState();
   const [updateId, setUpdateId] = useState(0);
   const [showTable, setShowTable] = useState(true);
   const [createForm] = Form.useForm();
@@ -50,7 +44,9 @@ function ManageProducts() {
   const [openDetailPicture, setOpenDetailPicture] = useState(false);
   const [searchProductName, setSearchProductName] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [createdProductId, setCreatedProductId] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [showSizeInput, setShowSizeInput] = useState(false);
+  const [showStockInput, setShowStockInput] = useState(true);
 
   useEffect(() => {
     fetchData();
@@ -70,33 +66,34 @@ function ManageProducts() {
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
+    [refresh];
   };
 
-  const onFinish = async (values, fileList) => {
+  const handleImageChange = (file) => {
+    setImageFile(file);
+  };
+
+  const onFinish = async (values) => {
     try {
       const response = await axiosClient.post(apiName, values);
-      setCreatedProductId(response.data._id);
+      const createdProductId = response.data.result._id;
 
-      // Thêm sản phẩm mới vào mảng data
-      setData((prevData) => [...prevData, response.data]);
-
-      // Gọi hàm uploadProductImage để upload ảnh sản phẩm
-      if (fileList && fileList.length > 0) {
-        await uploadProductImage(response.data._id, fileList[0]);
+      if (imageFile) {
+        uploadImage(createdProductId);
       }
 
-      createForm.resetFields();
-      message.success("Thêm sản phẩm mới thành công", 1.5);
-      setShowTable(true);
+      fetchData();
     } catch (error) {
-      console.error("Error creating product: ", error);
+      console.error("Creating product:", error);
     }
   };
 
-  const uploadProductImage = async (productId, file) => {
+  const uploadImage = async (productId) => {
+    const formData = new FormData();
+    formData.append("file", imageFile);
+    formData.append("filename", imageFile.name);
+
     try {
-      const formData = new FormData();
-      formData.append("file", file);
       await axiosClient.post(
         `${API_URL}/productImages/products/${productId}/image`,
         formData,
@@ -106,23 +103,26 @@ function ManageProducts() {
           },
         }
       );
-
-      // Cập nhật ảnh sản phẩm vào đối tượng sản phẩm tương ứng trong mảng data
-      setData((prevData) =>
-        prevData.map((product) =>
-          product._id === productId
-            ? {
-                ...product,
-                imageUrl: `${API_URL}/productImages/products/${productId}/image`,
-              }
-            : product
-        )
-      );
-
-      message.success("Upload ảnh sản phẩm thành công");
+      message.success("Thêm sản phẩm thành công");
+      setShowTable(true);
+      fetchData();
+      router.reload();
     } catch (error) {
-      console.error("Error uploading image: ", error);
-      message.error("Upload ảnh sản phẩm thất bại");
+      console.error("Error uploading product image:", error);
+    }
+  };
+
+  const handleCategoryChange = (value) => {
+    if (
+      value === "65d72854f159c29036e3b592" ||
+      value === "65d72873f159c29036e3b596" ||
+      value === "65d7fe3ff886833fc01e7771"
+    ) {
+      setShowSizeInput(true);
+      setShowStockInput(false);
+    } else {
+      setShowSizeInput(false);
+      setShowStockInput(true);
     }
   };
 
@@ -144,6 +144,17 @@ function ManageProducts() {
       const sizeObject = sizes.find((size) => size._id === product.sizeId);
       if (sizeObject && sizeObject.sizes.length > 0) {
         return sizeObject.sizes.map((item) => item.size).join(", ");
+      }
+    }
+    return "";
+  };
+
+  const getStockByStockId = (productId) => {
+    const product = data.find((item) => item._id === productId);
+    if (product && product.sizeId) {
+      const sizeObject = sizes.find((size) => size._id === product.sizeId);
+      if (sizeObject && sizeObject.sizes.length > 0) {
+        return sizeObject.sizes.map((item) => item.stock).join(", ");
       }
     }
     return "";
@@ -192,31 +203,6 @@ function ManageProducts() {
             >
               <Input />
             </Form.Item>
-
-            <Form.Item label="Ảnh sản phẩm" name="file">
-              <Upload
-                maxCount={1}
-                listType="picture-card"
-                showUploadList={true}
-                beforeUpload={(file) => {
-                  setFiles(file);
-                  return false;
-                }}
-                onRemove={() => {
-                  setFiles("");
-                }}
-              >
-                {!files ? (
-                  <div>
-                    <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>Upload</div>
-                  </div>
-                ) : (
-                  ""
-                )}
-              </Upload>
-            </Form.Item>
-
             <Form.Item
               label="Mã"
               name="code"
@@ -252,24 +238,6 @@ function ManageProducts() {
               <Input />
             </Form.Item>
             <Form.Item
-              label="Kích cỡ"
-              name="sizeId"
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy điền đầy đủ thông tin",
-                },
-              ]}
-              hasFeedback
-            >
-              <Select
-                style={{ width: "100%" }}
-                options={sizes.map((c) => {
-                  return { value: c._id, label: c._id };
-                })}
-              />
-            </Form.Item>
-            <Form.Item
               label="Danh mục"
               name="categoryId"
               hasFeedback
@@ -286,7 +254,65 @@ function ManageProducts() {
                 options={categories.map((c) => {
                   return { value: c._id, label: c.name };
                 })}
+                onChange={handleCategoryChange}
               />
+            </Form.Item>
+            {showStockInput && (
+              <Form.Item
+                label="Số lượng"
+                name="stock"
+                rules={[
+                  { required: true, message: "Hãy điền đầy đủ thông tin" },
+                ]}
+                hasFeedback
+              >
+                <Input />
+              </Form.Item>
+            )}
+            {showSizeInput && (
+              <Form.Item
+                label="Kích cỡ"
+                name="sizeId"
+                rules={[
+                  {
+                    required: true,
+                    message: "Hãy điền đầy đủ thông tin",
+                  },
+                ]}
+                hasFeedback
+              >
+                <Select
+                  style={{ width: "100%" }}
+                  options={sizes.map((c) => {
+                    return { value: c._id, label: c.productName };
+                  })}
+                />
+              </Form.Item>
+            )}
+
+            <Form.Item label="Ảnh sản phẩm" name="img">
+              <Upload
+                maxCount={1}
+                listType="picture-card"
+                showUploadList={true}
+                beforeUpload={(img) => {
+                  setImageFile(img);
+                  return false;
+                }}
+                onRemove={() => {
+                  setImageFile(null);
+                }}
+                onChange={(info) => handleImageChange(info.file)}
+              >
+                {!imageFile ? (
+                  <div>
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </Upload>
             </Form.Item>
             <Form.Item
               wrapperCol={{
@@ -345,6 +371,12 @@ function ManageProducts() {
 
             <Table dataSource={data} rowKey="_id" scroll={{ x: true }}>
               <Column
+                title="STT"
+                render={(_text, _record, index) => {
+                  return <span>{index + 1}</span>;
+                }}
+              />
+              <Column
                 title="Tên sản phẩm"
                 dataIndex="productName"
                 key="productName"
@@ -374,6 +406,20 @@ function ManageProducts() {
                 dataIndex="_id"
                 key="sizes"
                 render={(sizeId) => <span>{getSizeBySizeId(sizeId)}</span>}
+              />
+              <Column
+                title="Số lượng"
+                dataIndex="_id"
+                key="stock"
+                render={(text, record) => {
+                  const stockId = record._id;
+                  const stockQuantity = record.stock;
+                  if (stockQuantity) {
+                    return <span>{stockQuantity}</span>;
+                  } else {
+                    return <span>{getStockByStockId(stockId)}</span>;
+                  }
+                }}
               />
               <Column
                 title="Danh mục"
@@ -447,6 +493,7 @@ function ManageProducts() {
             <Modal
               open={open}
               onCancel={() => setOpen(false)}
+              cancelText="Hủy"
               okText="Cập nhật"
               okButtonProps={{
                 style: {
@@ -455,7 +502,7 @@ function ManageProducts() {
                 },
               }}
               onOk={() => updateForm.submit()}
-              title="Chỉnh sửa thông tin sản phẩm"
+              title="Chỉnh Sửa Thông Tin Sản Phẩm"
               className="text-center"
             >
               <Form
@@ -482,24 +529,6 @@ function ManageProducts() {
                   <Input />
                 </Form.Item>
                 <Form.Item
-                  label="Kích cỡ"
-                  name="sizeId"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Hãy điền đầy đủ thông tin",
-                    },
-                  ]}
-                  hasFeedback
-                >
-                  <Select
-                    style={{ width: "100%" }}
-                    options={sizes.map((c) => {
-                      return { value: c._id, label: c._id };
-                    })}
-                  />
-                </Form.Item>
-                <Form.Item
                   label="Danh mục"
                   name="categoryId"
                   hasFeedback
@@ -518,6 +547,24 @@ function ManageProducts() {
                     })}
                   />
                 </Form.Item>
+                <Form.Item
+                  label="Kích cỡ"
+                  name="sizeId"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Hãy điền đầy đủ thông tin",
+                    },
+                  ]}
+                  hasFeedback
+                >
+                  <Select
+                    style={{ width: "100%" }}
+                    options={sizes.map((c) => {
+                      return { value: c._id, label: c.productName };
+                    })}
+                  />
+                </Form.Item>
               </Form>
             </Modal>
             <Modal
@@ -525,13 +572,21 @@ function ManageProducts() {
               onCancel={() => setOpenDetailPicture(false)}
               onOk={() => setOpenDetailPicture(false)}
               okType="default"
+              okText="Cập nhật"
+              okButtonProps={{
+                style: {
+                  color: "white",
+                  background: "black",
+                },
+              }}
+              cancelText="Hủy"
             >
               {updateId && (
                 <div className="text-center">
                   <div className="text-center  py-2 ">
                     {updateId && updateId?.name}
-                  </div>{" "}
-                  <div className="text-center  py-2 ">Ảnh sản phẩm:</div>{" "}
+                  </div>
+                  <div className="text-center font-bold  py-2 ">Ảnh Sản Phẩm</div>
                   <div className="d-flex justify-content-center mb-5">
                     <Image
                       width={200}
