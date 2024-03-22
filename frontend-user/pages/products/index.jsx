@@ -1,6 +1,6 @@
 import router from "next/router";
 import React, { useState, memo } from "react";
-import { ShoppingCart, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { BackTop, Button, Divider } from "antd";
 import numeral from "numeral";
 import Link from "next/link";

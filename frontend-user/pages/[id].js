@@ -1,9 +1,8 @@
 import React, { memo } from "react";
 import { API_URL } from "@/constants";
 import numeral from "numeral";
-import Link from "next/link";
 import { BackTop, Button, Popover } from 'antd';
-import { Heart, Minus, Plus, RefreshCcw, Truck } from "lucide-react";
+import { Minus, Plus, RefreshCcw, Truck } from "lucide-react";
 
 import axiosClient from "@/libraries/axiosClient";
 import useCartStore from "@/store/CartStore";
@@ -84,7 +83,7 @@ function ProductDetails({ product }) {
       {product ? (
         <div key={product._id} className="md:flex items-center lg:gap-[100px] gap-[50px] ">
           <div>
-            <img src={`${API_URL}/${product.imageUrl}`} alt={`slide-${product.id}`} className="hover:-translate-y-1 hover:scale-125  duration-300 text-clip  sm:block flex items-center w-[28rem] object-contain" style={{
+            <img src={`${API_URL}/${product.imageUrl}`} alt={`slide-${product.id}`} className="hover:-translate-y-1 hover:scale-105  duration-300 text-clip  sm:block flex items-center w-[28rem] object-contain" style={{
               background:
                 "-webkit-linear-gradient(top,#fff 0%,#f7f7f7 100%)",
             }} />
