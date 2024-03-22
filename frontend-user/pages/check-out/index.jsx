@@ -1,3 +1,4 @@
+import { BackTop } from "antd";
 import React from "react";
 const listProfile = [
   {
@@ -139,6 +140,7 @@ function Checkout() {
           </button>
         </div>
       </div>
+      <BackTop/>
     </div>
   );
 }

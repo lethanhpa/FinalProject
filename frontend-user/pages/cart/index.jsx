@@ -7,7 +7,7 @@ import {
   Trash2,
   Undo,
 } from "lucide-react";
-import { Button, message, Popconfirm } from "antd";
+import { BackTop, Button, message, Popconfirm } from "antd";
 import Link from "next/link";
 import axiosClient from "@/libraries/axiosClient";
 import numeral from "numeral";
@@ -333,6 +333,7 @@ function Carts() {
           </div>
         )}
       </div>
+      <BackTop/>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import router from "next/router";
 import React, { useState, memo } from "react";
 import { Search } from "lucide-react";
-import { Button, Divider, FloatButton } from "antd";
+import { BackTop, Button, Divider } from "antd";
 import numeral from "numeral";
 import Link from "next/link";
 import axiosClient from "@/libraries/axiosClient";
@@ -365,19 +365,16 @@ function Promotion({ products, categories }) {
             </div>
           ))}
       </div>
-      <span className="flex justify-center font-elle mt-7 mb-3">
-        Hiển thị {Math.min(filteredProducts.length, visibleProducts)}/
-        {filteredProducts.length}
-      </span>
+
       {filteredProducts.length > visibleProducts && (
         <button
-          className=" block mx-auto py-3 px-5 mb-10 border border-primry text-black bg-white hover:bg-primry hover:text-white transition-colors duration-300"
+          className=" block mx-auto py-3 px-5 my-10 border border-primry text-black bg-white hover:bg-primry hover:text-white transition-colors duration-300"
           onClick={handleShowMore}
         >
           XEM THÊM SẢN PHẨM
         </button>
       )}
-      <FloatButton.BackTop />
+      <BackTop />
     </div>
   );
 }

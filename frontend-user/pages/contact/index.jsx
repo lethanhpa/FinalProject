@@ -7,6 +7,7 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 
 import "swiper/css";
+import { BackTop } from "antd";
 function Contact() {
 
     const listSlider = [
@@ -84,6 +85,7 @@ function Contact() {
                 </div>
             </div>
         </div>
+        <BackTop/>
     </div>)
 }
 

@@ -1,8 +1,8 @@
 import React, { memo } from "react";
 import HomePage from "./home/index";
-import MoveTop from "@/components/App/AppMoveTop";
 import axiosClient from "@/libraries/axiosClient";
 import FacebookMsg from "@/components/Facebook/FacebookMsg"
+import { BackTop } from "antd";
 
 function Home({ products }) {
   return (
@@ -10,8 +10,8 @@ function Home({ products }) {
       <HomePage
         products={products}
       />
-      <FacebookMsg/>
-      <MoveTop />
+      <FacebookMsg />
+      <BackTop />
     </main>
   );
 };

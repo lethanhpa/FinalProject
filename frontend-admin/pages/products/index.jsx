@@ -112,12 +112,37 @@ function ManageProducts() {
     }
   };
 
+  const onOpenModal = (record) => {
+    setOpen(true);
+    setUpdateId(record._id);
+    updateForm.setFieldsValue(record);
+
+    const categoryId = record.categoryId;
+
+    const category = categories.find((cat) => cat._id === categoryId);
+    if (category) {
+      const hasSizeCategory =
+        category._id === "65d72854f159c29036e3b592" ||
+        category._id === "65d72873f159c29036e3b596" ||
+        category._id === "65d7fe3ff886833fc01e7771";
+
+      if (hasSizeCategory) {
+        setShowSizeInput(true);
+        setShowStockInput(false);
+      } else {
+        setShowSizeInput(false);
+        setShowStockInput(true);
+      }
+    }
+  };
+
   const handleCategoryChange = (value) => {
-    if (
+    const hasSizeCategory =
       value === "65d72854f159c29036e3b592" ||
       value === "65d72873f159c29036e3b596" ||
-      value === "65d7fe3ff886833fc01e7771"
-    ) {
+      value === "65d7fe3ff886833fc01e7771";
+
+    if (hasSizeCategory) {
       setShowSizeInput(true);
       setShowStockInput(false);
     } else {
@@ -458,9 +483,7 @@ function ManageProducts() {
                     <button
                       className="w-full flex justify-between items-center text-blue py-1 px-1 rounded-md border-2 border-blue hover:bg-gray hover:text-black"
                       onClick={() => {
-                        setOpen(true);
-                        setUpdateId(record._id);
-                        updateForm.setFieldsValue(record);
+                        onOpenModal(record);
                       }}
                     >
                       <FilePenLine className="mr-2" size={20} strokeWidth={1} />
@@ -529,18 +552,7 @@ function ManageProducts() {
                 <Form.Item label="Giảm giá (%)" name="discount">
                   <Input />
                 </Form.Item>
-                <Form.Item
-                  label="Danh mục"
-                  name="categoryId"
-                  hasFeedback
-                  required={true}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Hãy điền đầy đủ thông tin",
-                    },
-                  ]}
-                >
+                <Form.Item label="Danh mục" name="categoryId">
                   <Select
                     style={{ width: "100%" }}
                     options={categories.map((c) => {
@@ -548,24 +560,21 @@ function ManageProducts() {
                     })}
                   />
                 </Form.Item>
-                <Form.Item
-                  label="Kích cỡ"
-                  name="sizeId"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Hãy điền đầy đủ thông tin",
-                    },
-                  ]}
-                  hasFeedback
-                >
-                  <Select
-                    style={{ width: "100%" }}
-                    options={sizes.map((c) => {
-                      return { value: c._id, label: c.productName };
-                    })}
-                  />
-                </Form.Item>
+                {showSizeInput && (
+                  <Form.Item label="Kích cỡ" name="sizeId">
+                    <Select
+                      style={{ width: "100%" }}
+                      options={sizes.map((c) => {
+                        return { value: c._id, label: c.productName };
+                      })}
+                    />
+                  </Form.Item>
+                )}
+                {showStockInput && (
+                  <Form.Item label="Số lượng" name="stock">
+                    <Input />
+                  </Form.Item>
+                )}
               </Form>
             </Modal>
             <Modal
@@ -587,7 +596,9 @@ function ManageProducts() {
                   <div className="text-center  py-2 ">
                     {updateId && updateId?.name}
                   </div>
-                  <div className="text-center font-bold  py-2 ">Ảnh Sản Phẩm</div>
+                  <div className="text-center font-bold  py-2 ">
+                    Ảnh Sản Phẩm
+                  </div>
                   <div className="d-flex justify-content-center mb-5">
                     <Image
                       width={200}

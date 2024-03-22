@@ -4,7 +4,7 @@ import { API_URL } from "@/constants";
 import Link from "next/link";
 import numeral from "numeral";
 import { Search } from "lucide-react";
-import { Button, Divider, FloatButton } from "antd";
+import { BackTop, Button, Divider } from "antd";
 import axiosClient from "@/libraries/axiosClient";
 
 function ProductGold({ products, categories }) {
@@ -302,7 +302,7 @@ function ProductGold({ products, categories }) {
           XEM THÊM SẢN PHẨM
         </button>
       )}
-      <FloatButton.BackTop />
+      <BackTop/>
     </div>
   );
 }

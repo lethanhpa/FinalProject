@@ -1,3 +1,4 @@
+import { BackTop } from "antd";
 import React, { memo } from "react";
 
 function Brand() {
@@ -36,6 +37,7 @@ function Brand() {
             <li>Top 50 thương hiệu tuyển dụng hấp dẫn nhất</li>
             <li>Top 50 công ty kinh doanh hiệu quả nhất</li>
         </ul>
+        <BackTop/>
     </div>)
 }
 

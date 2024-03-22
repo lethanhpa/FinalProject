@@ -8,6 +8,7 @@ import {
   Space,
   Select,
   message,
+  BackTop,
 } from "antd";
 import {
   UserOutlined,
@@ -332,6 +333,7 @@ const SignUp = () => {
           </Button>
         </Form.Item>
       </Form>
+      <BackTop/>
     </div>
   );
 };

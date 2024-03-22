@@ -13,13 +13,14 @@ import {
   Radio,
   DatePicker,
   Upload,
+  BackTop,
 } from "antd";
 import {
   UserOutlined,
   PhoneOutlined,
   TeamOutlined,
   EnvironmentOutlined,
-  CameraOutlined
+  CameraOutlined,
 } from "@ant-design/icons";
 import { jwtDecode } from "jwt-decode";
 import ImgCrop from "antd-img-crop";
@@ -207,7 +208,7 @@ function Account() {
                               className="w-[300px] object-cover rounded-full h-[300px]"
                             />
                             <div className="absolute cursor-pointer rounded-full inset-0 flex items-center justify-center bg-black bg-opacity-50 text-gray text-5xl opacity-0 hover:opacity-100 transition-opacity duration-300">
-                            <CameraOutlined />
+                              <CameraOutlined />
                             </div>
                           </div>
                         </Upload>
@@ -442,6 +443,7 @@ function Account() {
       ) : (
         <div>no data</div>
       )}
+      <BackTop />
     </>
   );
 }

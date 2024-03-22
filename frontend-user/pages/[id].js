@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { API_URL } from "@/constants";
 import numeral from "numeral";
 import Link from "next/link";
-import { Button, Popover } from 'antd';
+import { BackTop, Button, Popover } from 'antd';
 import { Heart, Minus, Plus, RefreshCcw, Truck } from "lucide-react";
 
 import axiosClient from "@/libraries/axiosClient";
@@ -11,7 +11,7 @@ import useCartStore from "@/store/CartStore";
 function ProductDetails({ product }) {
 
   const [quantity, setQuantity] = React.useState(1);
- 
+
   const handleQuantityChange = (action) => {
     if (action === "increase") {
       if (quantity + 1 <= product.stock) {
@@ -33,19 +33,19 @@ function ProductDetails({ product }) {
     if (selectedProduct) {
       setStock(selectedProduct.stock);
     } else {
-      setStock(0); 
+      setStock(0);
     }
   };
 
   const { addToCart } = useCartStore();
   const handleAddCart = (productId) => {
     addToCart(productId);
-    console.log('aaaa',productId);
+    console.log('aaaa', productId);
   };
 
-const handleAddCartaaaa = () =>{
-  console.log("add cart");
-}
+  const handleAddCartaaaa = () => {
+    console.log("add cart");
+  }
 
   const content = (
     <div className="w-[500px] font-roboto text-md">
@@ -177,7 +177,7 @@ const handleAddCartaaaa = () =>{
                     <Plus />
                   </button>
                 </div>
-                <Button onClick={()=> handleAddCart(product._id)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
+                <Button onClick={() => handleAddCart(product._id)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
               </div>) : (<div className="flex gap-8">
                 <div className="flex">
                   <button
@@ -232,8 +232,7 @@ const handleAddCartaaaa = () =>{
           </div>
         </div>) : (<p>loading...</p>)
       }
-
-
+      <BackTop />
     </div >
   )
 }

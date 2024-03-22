@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react";
-import { Form, Input, Button, message } from "antd";
+import { Form, Input, Button, message, BackTop } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -36,7 +36,7 @@ const SignIn = () => {
         },
       });
 
-      if (customer.data.status === false) {
+      if (customer.data.status === true) {
         message.error("Tài khoản của bạn đã bị khóa.");
       } else {
         localStorage.setItem("token", token);
@@ -137,6 +137,7 @@ const SignIn = () => {
           </Link>
         </div>
       </Form>
+      <BackTop/>
     </div>
   );
 };

@@ -264,7 +264,7 @@ function ManageStock() {
               },
             }}
             onOk={() => updateForm.submit()}
-            title="Sửa danh mục"
+            title="Sửa Size & Số lượng"
             className="text-center"
           >
             <Form
