@@ -313,7 +313,7 @@ function Products({ products, categories }) {
                 <img
                   src={`${API_URL}/${item.imageUrl}`}
                   alt={`slide-${item.id}`}
-                  className="hover:-translate-y-1 hover:scale-105  duration-300 sm:w-full sm:block flex items-center w-[7.5rem] object-contain"
+                  className="hover:-translate-y-1 hover:scale-125  duration-300 sm:w-full sm:block flex items-center w-[7.5rem] object-contain"
                 />
               </Link>
             </div>
