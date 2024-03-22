@@ -18,10 +18,6 @@ function Products({ products, categories }) {
 
   const totalProducts = products.length;
 
-  const handleAddCart = (productId) => {
-    addToCart(productId);
-  };
-
   const handleShowMore = () => {
     const newVisibleProducts = visibleProducts + 20;
     const nextVisibleProducts = Math.min(newVisibleProducts, totalProducts);
