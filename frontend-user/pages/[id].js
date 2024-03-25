@@ -1,29 +1,26 @@
 import React, { memo } from "react";
 import { API_URL } from "@/constants";
 import numeral from "numeral";
-import { BackTop, Button, Popover } from 'antd';
+import { useRouter } from "next/router";
+import { Button, Popover } from 'antd';
+import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 import { Minus, Plus, RefreshCcw, Truck } from "lucide-react";
 
 import axiosClient from "@/libraries/axiosClient";
 import useCartStore from "@/store/CartStore";
 
-function ProductDetails({ product }) {
+function ProductDetails({ product, review }) {
+  const [customerId, setCustomerId] = React.useState(null);
+
+
+  const router = useRouter();
 
   const [quantity, setQuantity] = React.useState(1);
 
-  const handleQuantityChange = (action) => {
-    if (action === "increase") {
-      if (quantity + 1 <= product.stock) {
-        setQuantity(quantity + 1);
-      }
-    } else if (action === "decrease") {
-      if (quantity - 1 >= 1) {
-        setQuantity(quantity - 1);
-      }
-    }
-  };
   const [selectedSize, setSelectedSize] = React.useState(null);
   const [stock, setStock] = React.useState(0);
+
 
   const handleSizeChange = (item) => {
     setSelectedSize(item);
@@ -36,11 +33,64 @@ function ProductDetails({ product }) {
     }
   };
 
+
   const { addToCart } = useCartStore();
-  const handleAddCart = (productId) => {
-    addToCart(productId);
-    console.log('aaaa', productId);
+
+  const handleQuantityChange = (action) => {
+    if (action === "increase") {
+      if (quantity + 1 <= product.stock) {
+        setQuantity(quantity + 1);
+      }
+    } else if (action === "decrease") {
+      if (quantity - 1 >= 1) {
+        setQuantity(quantity - 1);
+      }
+    }
   };
+
+  const handleQuantityChange2 = (action) => {
+    if (action === "increase") {
+      console.log('roduct.size.sizes._id', product.size)
+      if (quantity + 1 <= product.size) {
+        setQuantity(quantity + 1);
+      }
+    }
+    else if (action === "decrease") {
+      console.log("--");
+      if (quantity - 1 >= 1) {
+        setQuantity(quantity - 1);
+      }
+    }
+  }
+
+  React.useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded = jwtDecode(token);
+      setCustomerId(decoded._id);
+    }
+  }, []);
+  
+  
+
+
+
+  const handleAddCart = (productId, quantity) => {
+    console.log('productId',productId);
+    console.log('quantity',quantity);
+    if (!customerId) {
+      toast.warning("Bạn chưa đăng nhập!", 1.5);
+      router.push("/sign-in");
+      return;
+    }
+    try {
+      addToCart(customerId, productId, quantity);
+      toast.success("Add to cart successfully", 1.5);
+    } catch (error) {
+      toast.warning("Add to cart failed!!", 1.5);
+    }
+  };
+  
 
   const handleAddCartaaaa = () => {
     console.log("add cart");
@@ -78,8 +128,9 @@ function ProductDetails({ product }) {
 
     </div>
   );
+
   return (
-    <div className="container flex mt-[50px] md:mb-[200px] mb-[50px] justify-center" >
+    <div className="container flex flex-col mt-[50px] md:mb-[200px] mb-[50px] justify-center" >
       {product ? (
         <div key={product._id} className="md:flex items-center lg:gap-[100px] gap-[50px] ">
           <div>
@@ -108,10 +159,12 @@ function ProductDetails({ product }) {
             {
               product.discount > 0 && (<div className="flex font-roboto text-md justify-between"><p>Giảm giá :</p> <p className="font-bold text-lg">{product.discount}%</p></div>)
             }
-            {product.stock > 0 && <div className="flex justify-between font-roboto text-md">
+            {/* {product.stock > 0 ? ( */}
+            <div className="flex justify-between font-roboto text-md">
               <p>
                 Số lượng còn : </p>
-              {product.stock} sản phẩm</div>}
+              {product.stock} sản phẩm</div>
+            {/* ) : (<div>Hết hàng</div>)} */}
 
             <div className="flex justify-between">
               <div className="font-roboto text-md text-primry">Chọn kích cỡ :</div>
@@ -162,7 +215,6 @@ function ProductDetails({ product }) {
                   </button>
                   <input
                     className="border border-solid border-inherit lg:max-w-[75px] max-w-[50px] min-h-[44px] font-roboto text-xl font-medium leading-7 lg:px-[25px] px-[15px]"
-                    // type="number"
                     min="1"
                     max={product.stock}
                     value={quantity}
@@ -176,13 +228,13 @@ function ProductDetails({ product }) {
                     <Plus />
                   </button>
                 </div>
-                <Button onClick={() => handleAddCart(product._id)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
+                <Button onClick={() => handleAddCart(product._id, quantity)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
               </div>) : (<div className="flex gap-8">
                 <div className="flex">
                   <button
                     type="button"
                     className="border border-solid border-inherit px-[8px] py-[10px] hover:bg-pink hover:text-text-1 rounded-l-md"
-                    onClick={() => handleQuantityChange("decrease")}
+                    onClick={() => handleQuantityChange2("decrease")}
                   >
                     <Minus size={24} />
                   </button>
@@ -197,7 +249,7 @@ function ProductDetails({ product }) {
                   <button
                     type="button"
                     className="border border-solid border-inherit lg:px-[8px] px-0 py-[10px]  hover:bg-pink hover:text-text-1  rounded-r-md"
-                    onClick={() => handleQuantityChange("increase")}
+                    onClick={() => handleQuantityChange2("increase")}
                   >
                     <Plus />
                   </button>
@@ -231,7 +283,8 @@ function ProductDetails({ product }) {
           </div>
         </div>) : (<p>loading...</p>)
       }
-      <BackTop />
+      {review ? (<div></div>) : (<p>hello</p>)}
+
     </div >
   )
 }
@@ -249,9 +302,11 @@ export async function getStaticProps(req) {
   try {
     const { params } = req;
     const response = await axiosClient.get(`/products/${params.id}`);
+    const responeReview = await axiosClient.get(`/reviews/${params.id}`)
     return {
       props: {
         product: response.data.result,
+        review: responeReview.data,
       },
       revalidate: 10,
     };

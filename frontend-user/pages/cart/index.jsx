@@ -3,247 +3,177 @@ import {
   Minus,
   Plus,
   AlertCircle,
+  ChevronDown,
+  ChevronUp,
   CircleDollarSign,
   Trash2,
   Undo,
 } from "lucide-react";
-import { BackTop, Button, message, Popconfirm } from "antd";
+import { message, Popconfirm } from "antd";
 import Link from "next/link";
-import axiosClient from "@/libraries/axiosClient";
 import numeral from "numeral";
-import { jwtDecode } from "jwt-decode";
-import { useRouter } from "next/router";
 import { API_URL } from "@/constants";
+import useCartStore from "@/store/CartStore";
+import UseCart from "../productDetails/index";
+import { jwtDecode } from "jwt-decode";
 
 
 function Carts() {
-  const router = useRouter();
-  const [carts, setCarts] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [customerId, setCustomerId] = React.useState([]);
 
-  useEffect(() => {
-    const calculateTotalPrice = () => {
-      let total = 0;
-
-      if (carts && Array.isArray(carts)) {
-        carts.forEach((item) => {
-          if (item.cartDetails && Array.isArray(item.cartDetails)) {
-            item.cartDetails.forEach((product) => {
-              if (
-                product.product &&
-                product.product.price &&
-                product.quantity
-              ) {
-                total +=
-                  ((product.product.price * (100 - product.product.discount)) /
-                    100) *
-                  product.quantity;
-              }
-            });
-          }
-        });
-      }
-      setTotalPrice(total);
-    };
-    calculateTotalPrice();
-  }, [carts]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const decoded = jwtDecode(token);
-        const customerId = decoded._id;
-
-        const response = await axiosClient.get(
-          `http://localhost:9000/carts/${customerId}`
-        );
-        const data = response.data;
-        setCarts(data.payload.results);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchData();
-  }, [router]);
-
-  const handleQuantityChange = async (productId, newQuantity) => {
-    try {
-      const token = localStorage.getItem("token");
+  React.useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
       const decoded = jwtDecode(token);
-      const customerId = decoded._id;
+      setCustomerId(decoded._id);
+    }
+  }, []);
+  
 
-      await axiosClient.patch(
-        `http://localhost:9000/carts/${customerId}/${productId}`,
-        {
-          quantity: newQuantity,
-        }
+  const { getCartItems, updateCartItemQuantity, removeFromCart } =
+    useCartStore();
+
+  const cartItems = getCartItems(customerId);
+  console.log('cartItems', cartItems);
+
+
+  const HandleDeleteCart = (productId) => {
+    removeFromCart(productId);
+  };
+
+
+  const HandleIncrease = (index) => {
+    const updatedCart = [...cartItems];
+    updatedCart[index].quantity += 1;
+    updateCartItemQuantity(updatedCart[index].id, updatedCart[index].quantity);
+  };
+
+  const HandleDecrease = (index) => {
+    const updatedCart = [...cartItems];
+    if (updatedCart[index].quantity > 1) {
+      updatedCart[index].quantity -= 1;
+      updateCartItemQuantity(
+        updatedCart[index].id,
+        updatedCart[index].quantity,
       );
-
-      const updatedCarts = carts.map((item) => {
-        if (item.cartDetails) {
-          item.cartDetails.forEach((product) => {
-            if (product.productId === productId) {
-              if (newQuantity > product.product.stock || newQuantity < 0) {
-                message.warning("Số lượng trong giỏ hàng không hợp lệ");
-                return;
-              }
-              product.quantity = newQuantity;
-            }
-          });
-        }
-        return item;
-      });
-
-      setCarts(updatedCarts.filter((item) => item));
-    } catch (err) {
-      console.error("Error updating quantity:", err);
     }
   };
 
-  const handleQuantityMinus = async (productId, product) => {
-    try {
-      const updatedQuantity = product.quantity - 1;
-      await handleQuantityChange(productId, updatedQuantity);
-    } catch (error) {
-      console.error("Error updating quantity:", error);
-    }
-  };
+  let total = 0;
 
-  const handleQuantityPlus = async (productId, product) => {
-    try {
-      const updatedQuantity = product.quantity + 1;
-      if (updatedQuantity <= product.product.stock) {
-        await handleQuantityChange(productId, updatedQuantity);
-      } else {
-        message.warning("Số lượng sản phẩm vượt quá số lượng tồn kho");
-      }
-    } catch (error) {
-      console.error("Error updating quantity:", error);
-    }
-  };
-
-  const handleRemoveCart = async (productId) => {
-    try {
-      const token = localStorage.getItem("token");
-      const decoded = jwtDecode(token);
-      const customerId = decoded._id;
-
-      await axiosClient.delete(
-        `http://localhost:9000/carts/${customerId}/${productId}`
-      );
-
-      const updatedCarts = carts.map((item) => {
-        if (item.cartDetails) {
-          item.cartDetails = item.cartDetails.filter(
-            (product) => product.productId !== productId
-          );
-        }
-        return item;
-      });
-
-      setCarts(updatedCarts.filter((item) => item));
-    } catch (err) {
-      console.error("Error removing product from cart:", err);
-      message.error("Đã xảy ra lỗi khi xóa sản phẩm khỏi giỏ hàng!");
-    }
-  };
+  // cartItems.forEach((item) => {
+  //   const CartId = UseCart(item.productId);
+  //   if (CartId) {
+  //     total += (CartId?.price *
+  //       (100 - CartId?.discount)) /
+  //       100 * item.quantity;
+  //   }
+  // });
 
   const text = "Bạn có muốn xóa sản phẩm ?";
+
+  const getProductDetails = UseCart();
 
   return (
     <div>
       <img src="https://file.hstatic.net/1000381168/file/baner-thanh-toan_78c520df795d4667b36605c554655bb1_master.png" />
-      <div className="container mt-10">
-        {carts &&
-        carts.length > 0 &&
-        carts.some(
-          (item) => item.cartDetails && item.cartDetails.length > 0
-        ) ? (
-          <>
-            <table className="w-full mb-10">
-              <thead className="bg-black text-white font-roboto space-x-4">
-                <tr>
-                  <th className="border w-1/2 py-3">SẢN PHẨM</th>
-                  <th className="border w-1/12 py-3">SỐ LƯỢNG</th>
-                  <th className="border w-1/6 py-3">ĐƠN GIÁ</th>
-                  <th className="border w-1/6 py-3">THÀNH TIỀN</th>
-                  <th className="border w-1/12 py-3">
-                    <div className="flex justify-center items-center">
-                      <AlertCircle />
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="border-b border-slate-400">
-                {carts.map((item) =>
-                  item.cartDetails.map((product) => (
-                    <tr key={product._id}>
+      <table className="w-full mb-10">
+        <thead className="bg-black text-white font-roboto space-x-4">
+          <tr>
+            <th className="border w-1/2 py-3">SẢN PHẨM</th>
+            <th className="border w-1/12 py-3">SỐ LƯỢNG</th>
+            <th className="border w-1/6 py-3">ĐƠN GIÁ</th>
+            <th className="border w-1/6 py-3">THÀNH TIỀN</th>
+            <th className="border w-1/12 py-3">
+              <div className="flex justify-center items-center">
+                <AlertCircle />
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {cartItems.length > 0 && cartItems.map((item) => {
+              // const CartId = getProductDetails(item.productId);
+              // console.log('CartId',CartId);
+              return(
+                <p>{item.productId}
+                </p>
+              )
+             
+          }
+          
+          //  <p>{item.quantity}</p>
+          )}
+          {/* {
+            cartItems.length > 0 && cartItems.map((item, index) => {
+              const CartId = UseCart(item.productId);
+              return (
+                <>
+                  {
+                    CartId ? (<tr key={item._id} className="container mt-10 border-b border-slate-400">
                       <td className="flex items-center  justify-start">
-                        <div className="mr-4 my-5">
+                        <p className="mr-4 my-5">
                           <img
                             className="w-[150px] bg-pink"
-                            src={`${API_URL}/${product.product?.imageUrl}`}
+                            src={`${API_URL}/${CartId?.imageUrl}`}
                             alt="Product Image"
                           />
-                        </div>
-                        <div>
+                        </p>
+                        <p>
                           <p className="font-elle font-light">
-                            {product.product?.productName}
+                            {CartId?.productName}
                           </p>
-                          {product.size && (
+                          {CartId?.size && (
                             <p>
                               <strong>Size:</strong>
-                              <span className="ml-3">{product.size}</span>
+                              <span className="ml-3">{CartId?.size}</span>
                             </p>
                           )}
-                        </div>
+                        </p>
                       </td>
                       <td>
-                        <div className="flex justify-center items-center">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              handleQuantityMinus(product.productId, product)
-                            }
-                            disabled={product.quantity === 1}
-                          >
-                            <Minus size={15} strokeWidth={1.5} />
-                          </button>
-                          <div className="w-10 flex justify-center items-center">
-                            {product.quantity}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              handleQuantityPlus(product.productId, product)
-                            }
-                          >
-                            <Plus size={15} strokeWidth={1.5} />
-                          </button>
-                        </div>
+                        <span className="lg:max-w-[72px] max-w-[50px] max-h-[35px] flex lg:max-h-[44px] relative ">
+                          <input
+                            style={{ width: "80%" }}
+                            // type="number"
+                            value={item.quantity}
+                            min="1"
+                            max={CartId?.stock}
+                            className=
+                            "lg:py-1 py-0 px-2 flex border"
+                          />
+                          <p className="absolute top-1 right-6 cursor-pointer items-center">
+                            <ChevronUp
+                              className="lg:w-[16px] lg:h-[16px] h-[14px] w-[14px]"
+                              onClick={() => HandleIncrease(index)}
+                            />
+                            <ChevronDown
+                              className="lg:w-[16px] lg:h-[16px] h-[14px] w-[14px]"
+                              onClick={() => HandleDecrease(index)}
+                            />
+                          </p>
+                        </span>
                       </td>
-
                       <td>
-                        <div className="flex justify-center items-center">
+                        <p className="flex justify-center items-center">
                           {numeral(
-                            (product.product.price *
-                              (100 - product.product.discount)) /
-                              100
+                            (CartId?.price *
+                              (100 - CartId?.discount)) /
+                            100
                           ).format("0,0")}
                           đ
-                        </div>
+                        </p>
                       </td>
                       <td>
-                        <div className="flex justify-center items-center font-bold">
+                        <p className="flex justify-center items-center font-bold">
                           {numeral(
-                            ((product.product.price *
-                              (100 - product.product.discount)) /
+                            ((CartId.price *
+                              (100 - CartId.discount)) /
                               100) *
-                              product.quantity
+                            item.quantity
                           ).format("0,0")}
                           đ
-                        </div>
+                        </p>
                       </td>
                       <td>
                         <div className="flex justify-center items-center">
@@ -251,7 +181,7 @@ function Carts() {
                             placement="top"
                             title={text}
                             onConfirm={() => {
-                              handleRemoveCart(product.productId);
+                              HandleDeleteCart(token,item?.productId);
                               message.success("Delete successfully!");
                             }}
                             okText="Có"
@@ -269,71 +199,55 @@ function Carts() {
                           </Popconfirm>
                         </div>
                       </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-            <div className="my-10 flex justify-end">
-              <div className="my-3">
-                <div className="flex justify-end">
-                  <div className="flex">
-                    <CircleDollarSign size={24} strokeWidth={1} />
-                    <p className="ml-2 font-roboto font-bold text-xl">
-                      TỔNG TIỀN (tạm tính)
-                    </p>
-                  </div>
-                  <div className="ml-10">
-                    <span className="font-roboto font-bold text-lg">
-                      {numeral(totalPrice).format("0,0")}đ
-                    </span>
-                  </div>
-                </div>
-                <div className="my-3 flex justify-end">
-                  <span className="font-roboto w-3/4">
-                    Thời gian nhận hàng từ 7 - 15 ngày (trường hợp sớm hơn chúng
-                    tôi sẽ thông báo trước cho Quý khách!)
-                  </span>
-                </div>
-                <div className="my-3 flex justify-end">
-                  <div className="mr-3">
-                    <Link href="/products">
-                      <button className="flex border py-3 px-6 bg-gray hover:bg-white text-white hover:text-black font-elle">
-                        <Undo className="mr-3" size={24} strokeWidth={1} /> CHỌN
-                        THÊM SẢN PHẨM KHÁC
-                      </button>
-                    </Link>
-                  </div>
-                  <div className="ml-3">
-                    <button className="flex border py-3 px-20 bg-black hover:bg-white text-white hover:text-black font-elle">
-                      THANH TOÁN
-                    </button>
-                  </div>
-                </div>
-              </div>
+
+
+                    </tr>) : (<p>Loadding...</p>)
+                  }
+                </>
+
+              )
+            })
+          } */}
+        </tbody>
+      </table>
+      {/* <div className="my-10 flex justify-end container">
+        <div className="my-3">
+          <div className="flex justify-end">
+            <div className="flex">
+              <CircleDollarSign size={24} strokeWidth={1} />
+              <p className="ml-2 font-roboto font-bold text-xl">
+                TỔNG TIỀN (tạm tính)
+              </p>
             </div>
-          </>
-        ) : (
-          <div>
-            <p className="font-roboto font-black text-xl flex justify-center">
-              Không có sản phẩm nào trong giỏ hàng của bạn.
-            </p>
-            <div className="flex justify-center items-center my-10">
-              <Button
-                type="submit"
-                key="console"
-                className="bg-black text-white flex items-center"
-              >
-                <Link href="/products" className="flex items-center">
-                  <Undo className="mr-3" size={24} strokeWidth={1} />
-                  Tiếp tục mua hàng.
-                </Link>
-              </Button>
+            <div className="ml-10">
+              <span className="font-roboto font-bold text-lg">
+                {numeral(total).format("0,0")}đ
+              </span>
             </div>
           </div>
-        )}
-      </div>
-      <BackTop/>
+          <div className="my-3 flex justify-end">
+            <span className="font-roboto w-3/4">
+              Thời gian nhận hàng từ 7 - 15 ngày (trường hợp sớm hơn chúng
+              tôi sẽ thông báo trước cho Quý khách!)
+            </span>
+          </div>
+          <div className="my-3 flex justify-end">
+            <div className="mr-3">
+              <Link href="/products">
+                <button className="flex border py-3 px-6 bg-gray hover:bg-white text-white hover:text-black font-elle">
+                  <Undo className="mr-3" size={24} strokeWidth={1} /> CHỌN
+                  THÊM SẢN PHẨM KHÁC
+                </button>
+              </Link>
+            </div>
+            <div className="ml-3">
+              <button className="flex border py-3 px-20 bg-black hover:bg-white text-white hover:text-black font-elle">
+                THANH TOÁN
+              </button>
+            </div>
+          </div>
+        </div>
+      </div> */}
     </div>
   );
 }

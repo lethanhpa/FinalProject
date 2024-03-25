@@ -51,13 +51,6 @@ const customerSchema = new Schema(
   }
 );
 
-// customerSchema.virtual('customerAvatar', {
-//     ref: 'Media',
-//     localField: 'avatarUrl',
-//     foreignField: '_id',
-//     justOne: true,
-// });
-
 customerSchema.virtual("fullName").get(function () {
   return this.firstName + " " + this.lastName;
 });

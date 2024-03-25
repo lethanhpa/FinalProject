@@ -7,6 +7,7 @@ import numeral from "numeral";
 import { API_URL } from "@/constants";
 import { Button, Divider } from "antd";
 import router from "next/router";
+import Rated from "../../../components/App/AppRating/Rated";
 
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -128,8 +129,9 @@ function SellingProduct({ products }) {
                         )}
                       </div>
                       <div className="flex justify-center gap-2">
-                        <p>Đã bán : </p>
-                        <p>{item.stockQuantity} cái</p>
+                        {/* <p>Đã bán : </p>
+                        <p>{item.stockQuantity} cái</p> */}
+                         <Rated data={{ rate: 3.5 }} />
                       </div>
                       <Divider>
                         <Button

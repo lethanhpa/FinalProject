@@ -28,6 +28,8 @@ router.get('/', function (req, res, next) {
     }
 });
 
+
+
 //GET id
 router.get('/:id', async function (req, res, next) {
     // Validate

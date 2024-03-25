@@ -44,6 +44,44 @@ router.post(
   }
 );
 
+// router.post(
+//   "/login",
+//   validateSchema(loginSchema),
+//   // passport.authenticate("local", { session: false }),
+//   async (req, res, next) => {
+//     const { email, password } = req.body;
+
+//     const customer = await Customer.findOne({ email });
+
+// console.log('customer',customer);
+
+//     const isComparePassWord = await bcrypt.compare(password, customer.password);
+
+//     console.log('isComparePassWord',isComparePassWord);
+
+//     if (isComparePassWord) {
+//       console.log("true");
+//       if (!customer) return res.status(404).send({ message: "Not found" });
+
+//       const { _id, email: empEmail, firstName, lastName } = customer;
+
+//       const token = encodeToken(_id, empEmail, firstName, lastName);
+
+//       res
+//         .status(200)
+
+//         .json({
+//           token,
+//           payload: customer,
+//         });
+//     } else {
+//       res.status(401).json({
+//         statusCode: 401,
+//         message: "Unauthorized",
+//       });
+//     }
+//   }
+// );
 
 router.get(
   '/profile',

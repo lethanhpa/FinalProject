@@ -16,6 +16,7 @@ import { UserAddOutlined, LoginOutlined } from "@ant-design/icons";
 import { jwtDecode } from "jwt-decode";
 import axios from "../../../libraries/axiosClient";
 import { message } from "antd";
+import useCartStore from "@/store/CartStore";
 ("../navigation/index");
 
 function TopHeader() {
@@ -49,23 +50,6 @@ function TopHeader() {
     };
     document.addEventListener("mousedown", handleDocumentClick);
   }, [isShowAccount, setIsShowAccount]);
-
-  // useEffect(() => {
-  //   const fetchCart = async () => {
-  //     try {
-  //       const token = localStorage.getItem("token");
-
-  //       const decoded = jwt_decode(token);
-
-  //       const customerId = decoded._id;
-
-  //       await axios.get(`/cart/${customerId}`);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   fetchCart();
-  // }, [router]);
 
   useEffect(() => {
     fetchCustomers();
@@ -102,24 +86,32 @@ function TopHeader() {
   };
 
   const [open, setOpen] = React.useState(false);
+
   const showDrawer = () => {
     setOpen(true);
   };
+
   const onClose = () => {
     setOpen(false);
   };
+
+  const [customerId, setCustomerId] = React.useState("");
+  React.useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded = jwtDecode(token);
+      setCustomerId(decoded._id);
+    }
+  }, []);
+    
+  const { getCartItems } =
+    useCartStore();
+
+  const cartItems = getCartItems(customerId);
+  console.log('cartItems',cartItems);
+
   return (
     <div className="flex justify-between container pt-[0.625rem]">
-      {/* <div className="sm:flex hidden justify-center items-center gap-[0.25rem] text-center ">
-        <Phone className="text-primry" />
-        <Link
-          href="tel:+190028979"
-          aria-label="phone"
-          className="text-xl font-roboto font-medium leading-7 text-primry"
-        >
-          190028979
-        </Link>
-      </div> */}
       <Link href="/" className="flex justify-end">
         <img
           src="/img/logo.png"
@@ -194,11 +186,11 @@ function TopHeader() {
               <Link href="/cart" aria-label="cart">
                 <div className="relative">
                   <ShoppingCart className="md:w-[1.75rem] md:h-[1.75rem] w-[1.5rem] h-[1.5rem]" />
-                  {/* {cartItems.length >= 0 && ( */}
+                  {cartItems.length >= 0 && (
                   <span className="top-[-8px] right-[-6px] absolute rounded-full bg-red text-white text-xs font-normal leading-[1.125rem] shrink-0 w-[1.25rem] h-[1.25rem] flex justify-center">
-                    {/* {cartItems.length} */} 0
+                    {cartItems.length}
                   </span>
-                  {/* )} */}
+                  )} 
                 </div>
               </Link>
               <span className="text-sm text-black leading-7 font-normal sm:block hidden font-roboto">

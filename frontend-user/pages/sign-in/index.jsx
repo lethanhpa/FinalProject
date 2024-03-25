@@ -36,10 +36,11 @@ const SignIn = () => {
         },
       });
 
-      if (customer.data.status === true) {
+      if (customer.data.status) {
         message.error("Tài khoản của bạn đã bị khóa.");
       } else {
         localStorage.setItem("token", token);
+        console.log('tokenDN', token);
 
         axios.defaults.headers.Authorization = `Bearer ${token}`;
 
