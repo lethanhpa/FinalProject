@@ -37,11 +37,11 @@ function PurchaseHistory() {
                     <span className="font-roboto">Size : </span> {order.size}
                   </p>
                   <p className="text-sm  ">
-                    <span className="font-roboto">Quality :</span>{" "}
+                    <span className="font-roboto">Quality :</span>
                     {order.quality}
                   </p>
                   <p className="text-sm  ">
-                    <span className="font-roboto">Price :</span>{" "}
+                    <span className="font-roboto">Price :</span>
                     {numeral(order.price).format("0,0")}đ
                   </p>
                 </div>

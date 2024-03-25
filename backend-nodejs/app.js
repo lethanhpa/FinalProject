@@ -4,6 +4,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require('passport');
+const cors = require('cors');
+
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -27,6 +29,7 @@ const productsRouter = require('./routes/products');
 const customersRouter = require('./routes/customers');
 const employeesRouter = require('./routes/employees');
 const ordersRouter = require('./routes/orders');
+const cartsRouter = require('./routes/carts');
 
 const app = express();
 
@@ -34,22 +37,23 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-const cors = require('cors');
-const corsOptions = {
-  origin: 'http://localhost:3000',
-  credentials: true,
-  optionSuccessStatus: 200
-}
-app.use(cors(corsOptions));
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+// Add CORS here
+app.use(
+  cors({
+    origin: '*',
+  }),
+);
 
 // MONGOOSE
 mongoose.set('strictQuery', false);
@@ -75,6 +79,7 @@ app.use('/products', productsRouter);
 app.use('/customers', customersRouter);
 app.use('/employees', employeesRouter);
 app.use('/orders', ordersRouter);
+app.use('/carts', cartsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

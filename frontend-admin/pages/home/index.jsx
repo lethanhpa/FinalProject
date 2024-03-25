@@ -3,23 +3,17 @@ import { Menu } from "antd";
 import {
   Users,
   User,
-  Home,
   PackageOpen,
   BookOpen,
   ShoppingCart,
   Boxes,
   MessageSquareQuote,
+  AreaChart,
 } from "lucide-react";
 import Link from "next/link";
 
 function HomePage() {
   const items = [
-    {
-      label: "Trang Chủ",
-      key: "home",
-      icon: <Home size={20} strokeWidth={1} />,
-      path: "/",
-    },
     {
       label: "Quản Lý Nhân Viên",
       key: "manageEmployees",
@@ -61,6 +55,12 @@ function HomePage() {
       key: "manageOrders",
       icon: <ShoppingCart size={20} strokeWidth={1} />,
       path: "orders ",
+    },
+    {
+      label: "Thống Kê",
+      key: "manageStatistical",
+      icon: <AreaChart size={20} strokeWidth={1} />,
+      path: "statistical ",
     },
   ];
 
