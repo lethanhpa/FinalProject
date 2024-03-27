@@ -22,21 +22,37 @@ import useCartStore from "@/store/CartStore";
 function TopHeader() {
   const router = useRouter();
   const dropdownRef = useRef(null);
+
   const HandleDropAccount = () => {
     setIsShowAccount(!isShowAccount);
   };
   const [isShowAccount, setIsShowAccount] = React.useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [customers, setCustomers] = useState([]);
+  const [customerId, setCustomerId] = React.useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (token) {
       setIsLogin(true);
+      const decoded = jwtDecode(token);
+      setCustomerId(decoded._id);
     }
   }, [router]);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLogin(false);
+
+    router.push("/");
+    message.success("Đăng xuất thành công");
+  };
+    
+  const { getCartItems } =
+    useCartStore();
+
+  const cartItems = getCartItems(customerId);
 
   const handleClickOutside = (e) => {
     if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -50,10 +66,6 @@ function TopHeader() {
     };
     document.addEventListener("mousedown", handleDocumentClick);
   }, [isShowAccount, setIsShowAccount]);
-
-  useEffect(() => {
-    fetchCustomers();
-  }, []);
 
   const fetchCustomers = async () => {
     try {
@@ -71,19 +83,12 @@ function TopHeader() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      setIsLogin(true);
+    if (customerId) { // Check if customerId exists
+      fetchCustomers(); // Fetch customer data for the current customerId
     }
-  }, [router]);
+  }, [customerId]); // useEffect will run again whenever customerId changes
+  
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLogin(false);
-    router.push("/");
-    message.success("Đăng xuất thành công");
-  };
 
   const [open, setOpen] = React.useState(false);
 
@@ -95,20 +100,7 @@ function TopHeader() {
     setOpen(false);
   };
 
-  const [customerId, setCustomerId] = React.useState("");
-  React.useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const decoded = jwtDecode(token);
-      setCustomerId(decoded._id);
-    }
-  }, []);
-    
-  const { getCartItems } =
-    useCartStore();
 
-  const cartItems = getCartItems(customerId);
-  console.log('cartItems',cartItems);
 
   return (
     <div className="flex justify-between container pt-[0.625rem]">
@@ -117,7 +109,7 @@ function TopHeader() {
           src="/img/logo.png"
           alt="user"
           title="wiicamp-logo"
-          className="md:w-[6rem] md:h-[4rem] w-[2.5rem] h-[2.5rem]"
+          className="md:w-[5rem] md:h-[4rem] w-[2.5rem] h-[2.5rem]"
         />
         <span className="items-center flex text-primry text-xl font-normal leading-7 font-roboto">
           JEWELLERY
