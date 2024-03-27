@@ -70,27 +70,29 @@ function ProductDetails({ product, review }) {
       setCustomerId(decoded._id);
     }
   }, []);
-  
-  
 
-
-
-  const handleAddCart = (productId, quantity) => {
-    console.log('productId',productId);
-    console.log('quantity',quantity);
+  const handleAddCart = (productId, quantity, productName, imageUrl, price, discount, stock) => {
+    console.log('productId', productId);
+    console.log('quantity', quantity);
+    console.log('productName', productName);
+    console.log('imageUrl', imageUrl);
+    console.log('price', price);
+    console.log('discount', discount);
+    console.log('stock', stock);
     if (!customerId) {
       toast.warning("Bạn chưa đăng nhập!", 1.5);
       router.push("/sign-in");
       return;
     }
     try {
-      addToCart(customerId, productId, quantity);
-      toast.success("Add to cart successfully", 1.5);
+      addToCart(customerId, productId, quantity, productName, imageUrl, price, discount, stock);
+      toast.success("Thêm vào giỏ hàng thành công", 1.5);
     } catch (error) {
-      toast.warning("Add to cart failed!!", 1.5);
+      toast.warning("Thêm vào giỏ hàng thất bại!", 1.5);
     }
   };
-  
+
+
 
   const handleAddCartaaaa = () => {
     console.log("add cart");
@@ -228,7 +230,7 @@ function ProductDetails({ product, review }) {
                     <Plus />
                   </button>
                 </div>
-                <Button onClick={() => handleAddCart(product._id, quantity)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
+                <Button onClick={() => handleAddCart(product._id, quantity, product.productName, product.imageUrl, product.price, product.discount, product.stock)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
               </div>) : (<div className="flex gap-8">
                 <div className="flex">
                   <button

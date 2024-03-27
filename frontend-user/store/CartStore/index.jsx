@@ -77,9 +77,7 @@
 //   )
 // );
 
-
 // export default useCartStore;
-
 
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
@@ -88,11 +86,19 @@ const useCartStore = create(
   devtools(
     persist(
       (set, get) => ({
-        // Sử dụng một đối tượng để lưu trữ giỏ hàng của từng khách hàng
         carts: {},
 
-        addToCart: (customerId, productId, quantity) => {
-          console.log('customerId',customerId);
+        addToCart: (
+          customerId,
+          productId,
+          quantity,
+          productName,
+          imageUrl,
+          price,
+          discount,
+          stock
+        ) => {
+          console.log("customerId", customerId);
           set((state) => {
             const customerCart = state.carts[customerId] || [];
             const existingProductIndex = customerCart.findIndex(
@@ -101,7 +107,15 @@ const useCartStore = create(
             if (existingProductIndex !== -1) {
               customerCart[existingProductIndex].quantity += quantity;
             } else {
-              customerCart.push({ productId, quantity });
+              customerCart.push({
+                productId,
+                quantity,
+                productName,
+                imageUrl,
+                price,
+                discount,
+                stock,
+              });
             }
             return {
               carts: {
@@ -123,7 +137,7 @@ const useCartStore = create(
               if (item.productId === productId) {
                 return {
                   ...item,
-                  quantity,
+                  quantity: quantity,
                 };
               }
               return item;
