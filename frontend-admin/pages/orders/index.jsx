@@ -27,7 +27,6 @@ function ManageOrder() {
   const [updateForm] = Form.useForm();
   const [refresh, setRefresh] = useState(0);
   const [employees, setEmployees] = useState([]);
-  const [products, setProducts] = useState([]);
   const [openOrderDetail, setOpenOrderDetail] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
 
@@ -49,18 +48,6 @@ function ManageOrder() {
       .then((response) => {
         const { data } = response;
         setEmployees(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [refresh]);
-
-  useEffect(() => {
-    axiosClient
-      .get("/products")
-      .then((response) => {
-        const { data } = response;
-        setProducts(data);
       })
       .catch((err) => {
         console.error(err);
