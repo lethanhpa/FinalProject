@@ -1,15 +1,17 @@
 import React, { memo, useEffect, useState } from "react";
 import numeral from "numeral";
-import { BackTop } from "antd";
+import { BackTop, Modal, Input } from "antd";
 import axiosClient from "@/libraries/axiosClient";
 import { API_URL } from "@/constants";
 import Moment from "moment";
 import { useRouter } from "next/router";
 import { jwtDecode } from "jwt-decode";
+const { TextArea } = Input;
 
 function PurchaseHistory() {
   const router = useRouter();
   const [orders, setOrders] = useState([]);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
   useEffect(() => {
     fetchCustomers();
@@ -30,12 +32,27 @@ function PurchaseHistory() {
     }
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = (productId) => { // Chỉnh sửa để nhận productId
+    setSelectedProductId(productId); // Cập nhật productId
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   const getOrderAction = (status, orderDetails) => {
     if (status === "COMPLETE") {
       return (
         <button
           className="bg-primry text-white font-bold w-[150px] h-[40px] rounded-full hover:bg-white hover:text-primry hover:border-primry hover:border mr-5"
-          onClick={() => handleComment(orderDetails)}
+          onClick={() => showModal(orderDetails.productId)}
         >
           Đánh giá
         </button>
@@ -53,12 +70,6 @@ function PurchaseHistory() {
     return null;
   };
 
-  const handleComment = (orderDetails) => {
-    const productId = orderDetails.productId;
-    console.log('productId',productId);
-    router.push(`/${productId._id}`);
-  };
-
   const handleCancelOrder = () => {
     console.log("cancel order");
   };
@@ -71,7 +82,7 @@ function PurchaseHistory() {
         </h1>
       </div>
       <div className="flex flex-col mt-[20px]">
-        {orders.map((order) => (
+        {orders && orders.map((order) => (
           <div key={order._id}>
             {order.orderDetails.map((detail, index) => (
               <div key={index} className="flex shadow-xl">
@@ -113,6 +124,25 @@ function PurchaseHistory() {
                       {Moment(`${order.createdDate}`).format("DD/MM/YYYY")}
                     </p>
                     {getOrderAction(order.status, detail)}
+                    <Modal title="Đánh giá sản phẩm" visible={isModalOpen} onOk={handleOk} onCancel={handleCancel} className="font-roboto text-sm">
+                      <div className="flex">
+                        <div className="max-w-[100px]">
+                          <img
+                            src={`${API_URL}${detail.imageUrl}`}
+                            alt={`Image-${detail._id}`}
+                            className="object-contain"
+                          />
+                        </div>
+                        <h3 className="font-roboto flex items-center justify-center">
+                          {detail.productName}
+                        </h3>
+                      </div>
+                      <div className="flex gap-8">
+                        <p className="font-roboto mb-4">Chất lượng sản phẩm</p>
+                        <p>hiện sao</p>
+                        </div>
+                      <TextArea placeholder="Hãy chia sẽ những điều bạn thích về sản phẩm này với người mua khác nhé!" allowClear />
+                    </Modal>
                   </div>
                 </div>
               </div>

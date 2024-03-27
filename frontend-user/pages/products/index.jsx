@@ -378,14 +378,12 @@ function Products({ products, categories, reviews }) {
                 )}
               </div>
             </div>
-            <div className="font-roboto text-xs ml-2 mt-2">
-              {/* <StarFilled className="text-yellow" />
-              {calculateAverageRating(item.id, reviews)} */}
+            <div className="flex justify-center gap-2 mt-2">
               <Rate
                 allowHalf
                 disabled
                 defaultValue={calculateAverageRating(item.id, reviews)}
-                style={{ fontSize: "14px" }} // Đặt kích thước font chữ cho Rate
+                style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
               />
             </div>
             <Divider className="h-4">
