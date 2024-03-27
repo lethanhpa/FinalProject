@@ -55,7 +55,7 @@ function PurchaseHistory() {
 
   const handleComment = (orderDetails) => {
     const productId = orderDetails.productId;
-    router.push(`/${productId}`);
+    router.push(`/${productId._id}`);
   };
 
   const handleCancelOrder = () => {
