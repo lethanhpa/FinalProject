@@ -283,7 +283,7 @@ function Products({ products, categories, reviews }) {
                 }
               </span>
               <button
-                className="ml-1 text-red-500 ml-3 pb-0.5"
+                className="ml-1 text-red-500  pb-0.5"
                 onClick={() => setSelectedCategory("")}
               >
                 x
@@ -295,7 +295,7 @@ function Products({ products, categories, reviews }) {
             <div className="flex items-center mr-2 border px-1 py-0.1 mt-3 bg-pink">
               <span>{selectedDisplayValue}</span>
               <button
-                className="ml-1 text-red-500 ml-3 pb-0.5"
+                className="ml-1 text-red-500 pb-0.5"
                 onClick={() => setSelectedPrice("")}
               >
                 x
@@ -307,7 +307,7 @@ function Products({ products, categories, reviews }) {
             <div className="flex items-center mr-2 border px-1 py-0.1 mt-3 bg-pink">
               <span>{selectedMaterial}</span>
               <button
-                className="ml-1 text-red-500 ml-3 pb-0.5"
+                className="ml-1 text-red-500 pb-0.5"
                 onClick={() => setSelectedMaterial("")}
               >
                 x
@@ -319,7 +319,7 @@ function Products({ products, categories, reviews }) {
             <div className="flex items-center mr-2 border px-1 py-0.1 mt-3 bg-pink">
               <span>{selectedStone}</span>
               <button
-                className="ml-1 text-red-500 ml-3 pb-0.5"
+                className="ml-1 text-red-500 pb-0.5"
                 onClick={() => setSelectedStone("")}
               >
                 x
