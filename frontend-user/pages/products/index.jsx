@@ -1,13 +1,13 @@
 import router from "next/router";
 import React, { useState, memo } from "react";
 import { Search } from "lucide-react";
-import { BackTop, Button, Divider } from "antd";
+import { BackTop, Button, Divider, Rate } from "antd";
 import numeral from "numeral";
 import Link from "next/link";
 import axiosClient from "@/libraries/axiosClient";
 import { API_URL } from "@/constants";
 
-function Products({ products, categories }) {
+function Products({ products, categories, reviews }) {
   const [visibleProducts, setVisibleProducts] = useState(20);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -122,6 +122,39 @@ function Products({ products, categories }) {
       return price <= parseInt(maxPrice);
     }
   };
+
+  // const calculateAverageRating = (productId, reviews) => {
+  //   const productReviews = reviews.filter(
+  //     (review) => review.productId === productId
+  //   );
+  //   const totalReviews = productReviews.length;
+  //   if (totalReviews === 0) return "0";
+  //   const totalRating = productReviews.reduce(
+  //     (sum, review) => sum + review.ratingRate,
+  //     0
+  //   );
+  //   const averageRating = totalRating / totalReviews;
+  //   return `${
+  //     averageRating % 1 === 0
+  //       ? averageRating.toFixed(0)
+  //       : averageRating.toFixed(1)
+  //   } (${totalReviews})`;
+  // };
+
+  const calculateAverageRating = (productId, reviews) => {
+    const productReviews = reviews.filter(
+      (review) => review.productId === productId
+    );
+    const totalReviews = productReviews.length;
+    if (totalReviews === 0) return "0";
+    const totalRating = productReviews.reduce(
+      (sum, review) => sum + review.ratingRate,
+      0
+    );
+    const averageRating = totalRating / totalReviews;
+    return averageRating;
+  };
+
   const selectedDisplayValue = formatSelectedValue(selectedPrice);
   const filteredProducts = filterProducts();
 
@@ -299,7 +332,7 @@ function Products({ products, categories }) {
         {filteredProducts.slice(0, visibleProducts).map((item) => (
           <div
             key={item._id}
-            className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[100px] min-h-[100px] shadow-md rounded hover:bg-second-3 flex flex-col justify-center items-center"
+            className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[100px] min-h-[100px] shadow-md rounded hover:bg-second-3"
             style={{
               background: "-webkit-linear-gradient(top,#fff 0%,#f7f7f7 100%)",
             }}
@@ -312,19 +345,19 @@ function Products({ products, categories }) {
                   className="hover:-translate-y-1 hover:scale-125  duration-300 sm:w-full sm:block flex items-center w-[7.5rem] object-contain"
                 />
               </Link>
+              {item.discount > 0 && (
+                <div className="!absolute top-0 right-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
+                  -{item.discount}%
+                </div>
+              )}
             </div>
-            {item.discount > 0 && (
-              <span className="!absolute top-0 left-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
-                -{item.discount}%
-              </span>
-            )}
-            <div className="flex flex-col gap-[6px]">
-              <p className="font-roboto text-sm font-normal flex justify-center xxl:truncate text-center">
+            <div className="relative flex flex-col gap-[6px]">
+              <p className="font-roboto text-sm font-normal h-10 flex justify-center xxl:truncate text-center">
                 {item.productName}
               </p>
-              <span className="font-roboto text-sm font-normal flex justify-center">
+              <p className="font-roboto text-sm font-normal text-center">
                 {item.code}
-              </span>
+              </p>
               <div className="flex justify-around">
                 {item.discount ? (
                   <>
@@ -344,24 +377,27 @@ function Products({ products, categories }) {
                   </p>
                 )}
               </div>
-              <Divider>
-                <Button
-                  className="bg-black text-white hover:bg-white font-light"
-                  onClick={() => {
-                    router.push(`/${item.id}`);
-                  }}
-                >
-                  Chi tiết
-                </Button>
-              </Divider>
-              {/* <div className="flex justify-between px-[0.5rem]">
-                  <div className="font-roboto text-sm opacity-50 font-normal flex gap-[4px]">
-                      <p>{item.rating.rate}</p>
-                      <p>({item.rating.count})</p>
-                  </div>
-                  <p className="font-roboto text-sm opacity-50 font-normal">{item.sell} <span>đã bán</span></p>
-              </div> */}
             </div>
+            <div className="font-roboto text-xs ml-2 mt-2">
+              {/* <StarFilled className="text-yellow" />
+              {calculateAverageRating(item.id, reviews)} */}
+              <Rate
+                allowHalf
+                disabled
+                defaultValue={calculateAverageRating(item.id, reviews)}
+                style={{ fontSize: "14px" }} // Đặt kích thước font chữ cho Rate
+              />
+            </div>
+            <Divider className="h-4">
+              <Button
+                className="bg-black text-white hover:bg-white font-light"
+                onClick={() => {
+                  router.push(`/${item.id}`);
+                }}
+              >
+                Chi tiết
+              </Button>
+            </Divider>
           </div>
         ))}
       </div>
@@ -385,15 +421,18 @@ export default memo(Products);
 
 export async function getStaticProps() {
   try {
-    const [productsResponse, categoriesResponse] = await Promise.all([
-      axiosClient.get("/products"),
-      axiosClient.get("/categories"),
-    ]);
+    const [productsResponse, categoriesResponse, reviewsResponse] =
+      await Promise.all([
+        axiosClient.get("/products"),
+        axiosClient.get("/categories"),
+        axiosClient.get("/reviews"), // Assuming this endpoint fetches all reviews
+      ]);
 
     return {
       props: {
         products: productsResponse.data,
         categories: categoriesResponse.data,
+        reviews: reviewsResponse.data, // Pass reviews data as props
       },
     };
   } catch (error) {

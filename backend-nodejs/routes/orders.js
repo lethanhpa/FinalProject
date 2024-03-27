@@ -24,14 +24,80 @@ router.get('/count', async (req, res, next) => {
 
 router.get('/', async (req, res, next) => {
     try {
-        let results = await Order.find().populate('customer').populate('employee').populate('shippingAddress').lean({ virtuals: true });
+        let orders = await Order.find().populate('customer').populate('employee').populate('shippingAddress').lean({ virtuals: true });
 
-        res.json(results);
+        // Bổ sung thông tin về giá sản phẩm trong mỗi đơn hàng
+        orders = await Promise.all(orders.map(async (order) => {
+            order.orderDetails = await Promise.all(order.orderDetails.map(async (detail) => {
+                const product = await Product.findById(detail.productId);
+                return {
+                    ...detail,
+                    price: product.price // Thêm thông tin giá sản phẩm vào mỗi mục trong orderDetails
+                };
+            }));
+            return order;
+        }));
+
+        res.json(orders);
     } catch (error) {
         res.status(500).json({ ok: false, error });
     }
 });
 
+router.get('/status', async (req, res) => {
+    try {
+        const statusCounts = await Order.aggregate([
+            { $group: { _id: "$status", count: { $sum: 1 } } }
+        ]);
+        const formattedData = statusCounts.reduce((acc, { _id, count }) => {
+            acc[_id] = count;
+            return acc;
+        }, {});
+        res.json(formattedData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+router.get('/revenue', async (req, res, next) => {
+    try {
+        const orders = await Order.find({ status: 'COMPLETE' }); // Chỉ lấy các đơn hàng có status là 'COMPLETE'
+        const monthlyRevenue = calculateMonthlyRevenue(orders);
+        res.status(200).json(monthlyRevenue);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+// Hàm tính toán doanh thu theo tháng và năm từ danh sách đơn hàng
+const calculateMonthlyRevenue = (orders) => {
+    const monthlyRevenue = {};
+    orders.forEach((order) => {
+        if (order.status === 'COMPLETE') { // Chỉ tính toán doanh thu cho các đơn hàng có status là 'COMPLETE'
+            const year = new Date(order.createdAt).getFullYear(); // Lấy năm từ createdAt
+            const month = new Date(order.createdAt).getMonth() + 1; // Lấy tháng từ createdAt
+            const revenue = order.orderDetails.reduce((total, item) => total + (((item.price * (100 - item.discount)) /
+                100) *
+                item.quantity), 0); // Tính doanh thu từ orderDetails
+            if (!monthlyRevenue[year]) {
+                monthlyRevenue[year] = {};
+            }
+            monthlyRevenue[year][month] = (monthlyRevenue[year][month] || 0) + revenue; // Thêm doanh thu vào tháng và năm tương ứng hoặc mặc định là 0 nếu không có doanh số
+        }
+    });
+
+    // Đảm bảo rằng cả các tháng không có doanh số cũng được đưa vào đối tượng monthlyRevenue
+    for (const year in monthlyRevenue) {
+        for (let i = 1; i <= 12; i++) {
+            if (!monthlyRevenue[year][i]) {
+                monthlyRevenue[year][i] = 0;
+            }
+        }
+    }
+
+    return monthlyRevenue;
+};
 
 router.get("/:id", async function (req, res, next) {
     try {
