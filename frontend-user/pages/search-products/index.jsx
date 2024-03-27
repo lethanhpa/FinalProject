@@ -4,9 +4,24 @@ import { API_URL } from "@/constants";
 import axiosClient from "@/libraries/axiosClient";
 import Link from "next/link";
 import numeral from "numeral";
-import { BackTop, Divider, Button } from "antd";
+import { BackTop, Divider, Button, Rate } from "antd";
 
-function SearchProduct({ products }) {
+function SearchProduct({ products, reviews }) {
+
+  const calculateAverageRating = (productId, reviews) => {
+    const productReviews = reviews.filter(
+      (review) => review.productId === productId
+    );
+    const totalReviews = productReviews.length;
+    if (totalReviews === 0) return "0";
+    const totalRating = productReviews.reduce(
+      (sum, review) => sum + review.ratingRate,
+      0
+    );
+    const averageRating = totalRating / totalReviews;
+    return averageRating;
+  };
+
   return (
     <div className="container">
       <div className="grid lg:grid-cols-4 gap-10 md:grid-cols-3 sm:grid-cols-2 mx-2.5">
@@ -60,6 +75,14 @@ function SearchProduct({ products }) {
                       </p>
                     )}
                   </div>
+                  <div className="flex justify-center gap-2">
+                    <Rate
+                      allowHalf
+                      disabled
+                      defaultValue={calculateAverageRating(item.id, reviews)}
+                      style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                    />
+                  </div>
                   <Divider>
                     <Button
                       className="bg-black text-white hover:bg-white font-light"
@@ -93,6 +116,7 @@ export async function getServerSideProps({ query }) {
   const searchQuery = query.q || "";
 
   const response = await axiosClient.get("/products");
+  const reviewsResponse = await axiosClient.get("/reviews");
 
   const product = response.data;
 
@@ -103,6 +127,7 @@ export async function getServerSideProps({ query }) {
   return {
     props: {
       products: filteredProducts,
+      reviews: reviewsResponse.data,
     },
   };
 }

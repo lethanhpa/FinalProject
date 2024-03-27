@@ -117,10 +117,10 @@ function TopHeader() {
           src="/img/logo.png"
           alt="user"
           title="wiicamp-logo"
-          className="md:w-[3.375rem] md:h-[3.375rem] w-[2.5rem] h-[2.5rem]"
+          className="md:w-[6rem] md:h-[4rem] w-[2.5rem] h-[2.5rem]"
         />
         <span className="items-center flex text-primry text-xl font-normal leading-7 font-roboto">
-          Jewellery
+          JEWELLERY
         </span>
       </Link>
 

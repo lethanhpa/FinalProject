@@ -1,12 +1,12 @@
 import React, { useState, memo } from "react";
 import { Search } from "lucide-react";
-import { Divider, BackTop, Button } from "antd";
+import { Divider, BackTop, Button, Rate } from "antd";
 import numeral from "numeral";
 import Link from "next/link";
 import axiosClient from "@/libraries/axiosClient";
 import { API_URL } from "@/constants";
 
-function WeddingJewelry({ products }) {
+function WeddingJewelry({ products, reviews }) {
   const [visibleProducts, setVisibleProducts] = useState(8);
   const [selectedPrice, setSelectedPrice] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -108,6 +108,20 @@ function WeddingJewelry({ products }) {
   };
   const selectedDisplayValue = formatSelectedValue(selectedPrice);
   const filteredProducts = filterProducts();
+
+  const calculateAverageRating = (productId, reviews) => {
+    const productReviews = reviews.filter(
+      (review) => review.productId === productId
+    );
+    const totalReviews = productReviews.length;
+    if (totalReviews === 0) return "0";
+    const totalRating = productReviews.reduce(
+      (sum, review) => sum + review.ratingRate,
+      0
+    );
+    const averageRating = totalRating / totalReviews;
+    return averageRating;
+  };
 
   return (
     <>
@@ -307,6 +321,14 @@ function WeddingJewelry({ products }) {
                       </p>
                     )}
                   </div>
+                  <div className="flex justify-center gap-2">
+                    <Rate
+                      allowHalf
+                      disabled
+                      defaultValue={calculateAverageRating(item.id, reviews)}
+                      style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                    />
+                  </div>
                   <Divider>
                     <Button
                       className="bg-black text-white hover:bg-white font-light"
@@ -339,13 +361,13 @@ function WeddingJewelry({ products }) {
         {filteredProducts.filter(
           (item) => item.categoryId === "65d72854f159c29036e3b592"
         ).length > visibleProducts && (
-          <button
-            className=" block mx-auto py-3 px-5 mb-10 border border-primry text-black bg-white hover:bg-primry hover:text-white transition-colors duration-300"
-            onClick={handleShowMore}
-          >
-            XEM THÊM SẢN PHẨM
-          </button>
-        )}
+            <button
+              className=" block mx-auto py-3 px-5 mb-10 border border-primry text-black bg-white hover:bg-primry hover:text-white transition-colors duration-300"
+              onClick={handleShowMore}
+            >
+              XEM THÊM SẢN PHẨM
+            </button>
+          )}
       </div>
 
       <div className="flex justify-center item-center mb-5">
@@ -419,6 +441,14 @@ function WeddingJewelry({ products }) {
                       </p>
                     )}
                   </div>
+                  <div className="flex justify-center gap-2">
+                      <Rate
+                        allowHalf
+                        disabled
+                        defaultValue={calculateAverageRating(item.id, reviews)}
+                        style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                      />
+                    </div>
                   <Divider>
                     <Button
                       className="bg-black text-white hover:bg-white font-light"
@@ -451,13 +481,13 @@ function WeddingJewelry({ products }) {
         {filteredProducts.filter(
           (item) => item.categoryId === "65f12a3743051681d5a2c8bd"
         ).length > visibleProducts && (
-          <button
-            className=" block mx-auto py-3 px-5 mb-10 border border-primry text-black bg-white hover:bg-primry hover:text-white transition-colors duration-300"
-            onClick={handleShowMore}
-          >
-            XEM THÊM SẢN PHẨM
-          </button>
-        )}
+            <button
+              className=" block mx-auto py-3 px-5 mb-10 border border-primry text-black bg-white hover:bg-primry hover:text-white transition-colors duration-300"
+              onClick={handleShowMore}
+            >
+              XEM THÊM SẢN PHẨM
+            </button>
+          )}
         <BackTop />
       </div>
     </>
@@ -467,15 +497,17 @@ export default memo(WeddingJewelry);
 
 export async function getStaticProps() {
   try {
-    const [productsResponse, categoriesResponse] = await Promise.all([
+    const [productsResponse, categoriesResponse, reviewsResponse] = await Promise.all([
       axiosClient.get("/products"),
       axiosClient.get("/categories"),
+      axiosClient.get("/reviews"),
     ]);
 
     return {
       props: {
         products: productsResponse.data,
         categories: categoriesResponse.data,
+        reviews: reviewsResponse.data,
       },
     };
   } catch (error) {

@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { ChevronsRight } from "lucide-react";
 import numeral from "numeral";
 import { API_URL } from "@/constants";
-import { Button, Divider } from "antd";
+import { Button, Divider, Rate } from "antd";
 
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -13,7 +13,8 @@ import "swiper/css/scrollbar";
 
 import "swiper/css";
 
-function NewProduct({ products }) {
+function NewProduct({ products, reviews }) {
+
   const swiperRef = useRef();
 
   const [autoplayConfig, setAutoplayConfig] = React.useState({
@@ -21,6 +22,21 @@ function NewProduct({ products }) {
     disableOnInteraction: false,
     reverseDirection: true,
   });
+
+  const calculateAverageRating = (productId, reviews) => {
+    const productReviews = reviews.filter(
+      (review) => review.productId === productId
+    );
+    const totalReviews = productReviews.length;
+    if (totalReviews === 0) return "0";
+    const totalRating = productReviews.reduce(
+      (sum, review) => sum + review.ratingRate,
+      0
+    );
+    const averageRating = totalRating / totalReviews;
+    return averageRating;
+  };
+
   return (
     <div className="pt-[2.5rem]">
       <div className="flex justify-between">
@@ -122,7 +138,7 @@ function NewProduct({ products }) {
                             <span className="font-roboto text-sm flex justify-center text-primry font-semibold">
                               {numeral(
                                 item.price -
-                                  (item.price * item.discount * 1) / 100
+                                (item.price * item.discount * 1) / 100
                               ).format("0,0")}
                               đ
                             </span>
@@ -135,6 +151,14 @@ function NewProduct({ products }) {
                             {numeral(item.price).format("0,0")}đ
                           </p>
                         )}
+                      </div>
+                      <div className="flex justify-center gap-2">
+                        <Rate
+                          allowHalf
+                          disabled
+                          defaultValue={calculateAverageRating(item.id, reviews)}
+                          style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                        />
                       </div>
                       <Divider>
                         <Button

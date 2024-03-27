@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react";
-import { BackTop, Button, Divider } from "antd";
+import { BackTop, Button, Divider, Rate } from "antd";
 import { Search } from "lucide-react";
 import { API_URL } from "@/constants";
 import Link from "next/link";
@@ -7,7 +7,7 @@ import numeral from "numeral";
 import router from "next/router";
 import axiosClient from "@/libraries/axiosClient";
 
-function productsNew({ products, categories }) {
+function productsNew({ products, categories, reviews }) {
   const [visibleProducts, setVisibleProducts] = useState(20);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -122,8 +122,23 @@ function productsNew({ products, categories }) {
       return price <= parseInt(maxPrice);
     }
   };
+
   const selectedDisplayValue = formatSelectedValue(selectedPrice);
   const filteredProducts = filterProducts();
+
+  const calculateAverageRating = (productId, reviews) => {
+    const productReviews = reviews.filter(
+      (review) => review.productId === productId
+    );
+    const totalReviews = productReviews.length;
+    if (totalReviews === 0) return "0";
+    const totalRating = productReviews.reduce(
+      (sum, review) => sum + review.ratingRate,
+      0
+    );
+    const averageRating = totalRating / totalReviews;
+    return averageRating;
+  };
 
   return (
     <div className="container my-5">
@@ -344,6 +359,14 @@ function productsNew({ products, categories }) {
                       </p>
                     )}
                   </div>
+                  <div className="flex justify-center gap-2">
+                    <Rate
+                      allowHalf
+                      disabled
+                      defaultValue={calculateAverageRating(item.id, reviews)}
+                      style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                    />
+                  </div>
                   <Divider>
                     <Button
                       className="bg-black text-white hover:bg-white font-light"
@@ -354,13 +377,6 @@ function productsNew({ products, categories }) {
                       Chi tiết
                     </Button>
                   </Divider>
-                  {/* <div className="flex justify-between px-[0.5rem]">
-                  <div className="font-roboto text-sm opacity-50 font-normal flex gap-[4px]">
-                      <p>{item.rating.rate}</p>
-                      <p>({item.rating.count})</p>
-                  </div>
-                  <p className="font-roboto text-sm opacity-50 font-normal">{item.sell} <span>đã bán</span></p>
-              </div> */}
                 </div>
               </div>
             );
@@ -374,7 +390,7 @@ function productsNew({ products, categories }) {
           XEM THÊM SẢN PHẨM
         </button>
       )}
-      <BackTop/>
+      <BackTop />
     </div>
   );
 }
@@ -383,15 +399,17 @@ export default memo(productsNew);
 
 export async function getStaticProps() {
   try {
-    const [productsResponse, categoriesResponse] = await Promise.all([
+    const [productsResponse, categoriesResponse, reviewsResponse] = await Promise.all([
       axiosClient.get("/products"),
       axiosClient.get("/categories"),
+      axiosClient.get("/reviews"),
     ]);
 
     return {
       props: {
         products: productsResponse.data,
         categories: categoriesResponse.data,
+        reviews: reviewsResponse.data,
       },
     };
   } catch (error) {

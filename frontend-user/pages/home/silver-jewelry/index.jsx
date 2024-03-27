@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useRouter } from "next/router";
 import numeral from "numeral";
 import { API_URL } from "@/constants";
-import { Button, Divider } from "antd";
+import { Button, Divider, Rate } from "antd";
 
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -13,7 +13,8 @@ import "swiper/css/scrollbar";
 
 import "swiper/css";
 
-function SliverJewelry({ products }) {
+function SliverJewelry({ products, reviews }) {
+
   const router = useRouter();
 
   const handleLink = () => {
@@ -27,6 +28,20 @@ function SliverJewelry({ products }) {
   });
 
   const swiperRef = useRef();
+
+  const calculateAverageRating = (productId, reviews) => {
+    const productReviews = reviews.filter(
+      (review) => review.productId === productId
+    );
+    const totalReviews = productReviews.length;
+    if (totalReviews === 0) return "0";
+    const totalRating = productReviews.reduce(
+      (sum, review) => sum + review.ratingRate,
+      0
+    );
+    const averageRating = totalRating / totalReviews;
+    return averageRating;
+  };
 
   return (
     <div>
@@ -131,7 +146,7 @@ function SliverJewelry({ products }) {
                               <span className="font-roboto text-sm flex justify-center text-primry font-semibold">
                                 {numeral(
                                   item.price -
-                                    (item.price * item.discount * 1) / 100
+                                  (item.price * item.discount * 1) / 100
                                 ).format("0,0")}
                                 đ
                               </span>
@@ -144,6 +159,14 @@ function SliverJewelry({ products }) {
                               {numeral(item.price).format("0,0")}đ
                             </p>
                           )}
+                        </div>
+                        <div className="flex justify-center gap-2">
+                          <Rate
+                            allowHalf
+                            disabled
+                            defaultValue={calculateAverageRating(item.id, reviews)}
+                            style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                          />
                         </div>
                         <Divider>
                           <Button

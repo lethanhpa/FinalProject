@@ -4,10 +4,10 @@ import { API_URL } from "@/constants";
 import Link from "next/link";
 import numeral from "numeral";
 import { Search } from "lucide-react";
-import { BackTop, Button, Divider } from "antd";
+import { BackTop, Button, Divider, Rate } from "antd";
 import axiosClient from "@/libraries/axiosClient";
 
-function ProductDiamond({ products, categories }) {
+function ProductDiamond({ products, categories , reviews}) {
   const [visibleProducts, setVisibleProducts] = useState(20);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -100,6 +100,20 @@ function ProductDiamond({ products, categories }) {
   };
   const selectedDisplayValue = formatSelectedValue(selectedPrice);
   const filteredProducts = filterProducts();
+
+  const calculateAverageRating = (productId, reviews) => {
+    const productReviews = reviews.filter(
+      (review) => review.productId === productId
+    );
+    const totalReviews = productReviews.length;
+    if (totalReviews === 0) return "0";
+    const totalRating = productReviews.reduce(
+      (sum, review) => sum + review.ratingRate,
+      0
+    );
+    const averageRating = totalRating / totalReviews;
+    return averageRating;
+  };
 
   return (
     <div className="container my-5">
@@ -272,6 +286,14 @@ function ProductDiamond({ products, categories }) {
                         </p>
                       )}
                     </div>
+                    <div className="flex justify-center gap-2">
+                    <Rate
+                      allowHalf
+                      disabled
+                      defaultValue={calculateAverageRating(item.id, reviews)}
+                      style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                    />
+                  </div>
                     <Divider>
                       <Button
                         className="bg-black text-white hover:bg-white font-light"
@@ -311,15 +333,17 @@ export default memo(ProductDiamond);
 
 export async function getStaticProps() {
   try {
-    const [productsResponse, categoriesResponse] = await Promise.all([
+    const [productsResponse, categoriesResponse, reviewsResponse] = await Promise.all([
       axiosClient.get("/products"),
       axiosClient.get("/categories"),
+      axiosClient.get("/reviews"),
     ]);
 
     return {
       props: {
         products: productsResponse.data,
         categories: categoriesResponse.data,
+        reviews: reviewsResponse.data,
       },
     };
   } catch (error) {

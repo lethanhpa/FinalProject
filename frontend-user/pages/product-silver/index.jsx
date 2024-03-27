@@ -4,10 +4,10 @@ import { API_URL } from "@/constants";
 import Link from "next/link";
 import numeral from "numeral";
 import { Search } from "lucide-react";
-import { BackTop, Button, Divider } from "antd";
+import { BackTop, Button, Divider, Rate } from "antd";
 import axiosClient from "@/libraries/axiosClient";
 
-function ProductSilver({ products, categories }) {
+function ProductSilver({ products, categories, reviews }) {
   const [visibleProducts, setVisibleProducts] = useState(20);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -100,6 +100,21 @@ function ProductSilver({ products, categories }) {
   };
   const selectedDisplayValue = formatSelectedValue(selectedPrice);
   const filteredProducts = filterProducts();
+
+  const calculateAverageRating = (productId, reviews) => {
+    const productReviews = reviews.filter(
+      (review) => review.productId === productId
+    );
+    const totalReviews = productReviews.length;
+    if (totalReviews === 0) return "0";
+    const totalRating = productReviews.reduce(
+      (sum, review) => sum + review.ratingRate,
+      0
+    );
+    const averageRating = totalRating / totalReviews;
+    return averageRating;
+  };
+
 
   return (
     <div className="container my-5">
@@ -217,7 +232,7 @@ function ProductSilver({ products, categories }) {
       <div className="grid lg:grid-cols-4 gap-10 md:grid-cols-3 sm:grid-cols-2 mx-2.5">
         {filteredProducts &&
           filteredProducts
-            .slice(0, visibleProducts)
+            // .slice(0, visibleProducts)
             .filter((product) =>
               product.productName.toLowerCase().includes("bạc")
             )
@@ -258,7 +273,7 @@ function ProductSilver({ products, categories }) {
                           <span className="font-roboto text-sm flex justify-center text-primry font-semibold">
                             {numeral(
                               item.price -
-                                (item.price * item.discount * 1) / 100
+                              (item.price * item.discount * 1) / 100
                             ).format("0,0")}
                             đ
                           </span>
@@ -271,6 +286,14 @@ function ProductSilver({ products, categories }) {
                           {numeral(item.price).format("0,0")}đ
                         </p>
                       )}
+                    </div>
+                    <div className="flex justify-center gap-2">
+                      <Rate
+                        allowHalf
+                        disabled
+                        defaultValue={calculateAverageRating(item.id, reviews)}
+                        style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                      />
                     </div>
                     <Divider>
                       <Button
@@ -302,7 +325,7 @@ function ProductSilver({ products, categories }) {
           XEM THÊM SẢN PHẨM
         </button>
       )}
-      <BackTop/>
+      <BackTop />
     </div>
   );
 }
@@ -311,15 +334,17 @@ export default memo(ProductSilver);
 
 export async function getStaticProps() {
   try {
-    const [productsResponse, categoriesResponse] = await Promise.all([
+    const [productsResponse, categoriesResponse, reviewsResponse] = await Promise.all([
       axiosClient.get("/products"),
       axiosClient.get("/categories"),
+      axiosClient.get("/reviews"),
     ]);
 
     return {
       props: {
         products: productsResponse.data,
         categories: categoriesResponse.data,
+        reviews: reviewsResponse.data,
       },
     };
   } catch (error) {
