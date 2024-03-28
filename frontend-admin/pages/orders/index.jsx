@@ -132,10 +132,10 @@ function ManageOrder() {
         />
         <Column
           title="Địa chỉ giao"
-          dataIndex="shippingAddressId"
-          key="shippingAddressId"
+          dataIndex="shippingAddress"
+          key="shippingAddress"
           render={(text, record) => {
-            return <span>{`${record.shippingAddress.shippingAddress}`}</span>;
+            return <span>{`${record.shippingAddress}`}</span>;
           }}
         />
         <Column title="Phương thức" dataIndex="paymentType" key="paymentType" />
@@ -239,7 +239,7 @@ function ManageOrder() {
             <Select style={{ width: "80%" }}>
               <Select.Option value="WAITING">WAITING</Select.Option>
               <Select.Option value="COMPLETE">COMPLETE</Select.Option>
-              <Select.Option value="CANCEL">CANCEL</Select.Option>
+              <Select.Option value="CANCELED">CANCELED</Select.Option>
             </Select>
           </Form.Item>
         </Form>

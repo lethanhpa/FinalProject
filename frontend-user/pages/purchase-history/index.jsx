@@ -4,20 +4,18 @@ import { BackTop, Modal, Input } from "antd";
 import axiosClient from "@/libraries/axiosClient";
 import { API_URL } from "@/constants";
 import Moment from "moment";
-import { useRouter } from "next/router";
 import { jwtDecode } from "jwt-decode";
 const { TextArea } = Input;
 
 function PurchaseHistory() {
-  const router = useRouter();
   const [orders, setOrders] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   useEffect(() => {
-    fetchCustomers();
+    fetchOrders();
   }, []);
 
-  const fetchCustomers = async () => {
+  const fetchOrders = async () => {
     try {
       const token = localStorage.getItem("token");
       const decoded = jwtDecode(token);
@@ -34,8 +32,8 @@ function PurchaseHistory() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const showModal = (productId) => { // Chỉnh sửa để nhận productId
-    setSelectedProductId(productId); // Cập nhật productId
+  const showModal = (productId) => {
+    setSelectedProductId(productId);
     setIsModalOpen(true);
   };
 
@@ -47,7 +45,7 @@ function PurchaseHistory() {
     setIsModalOpen(false);
   };
 
-  const getOrderAction = (status, orderDetails) => {
+  const getOrderAction = (status, orderDetails, orderId) => {
     if (status === "COMPLETE") {
       return (
         <button
@@ -61,7 +59,7 @@ function PurchaseHistory() {
       return (
         <button
           className="mr-5 bg-primry text-white font-bold w-[150px] h-[40px] rounded-full hover:bg-white hover:text-primry hover:border-primry hover:border"
-          onClick={handleCancelOrder}
+          onClick={() => handleCancelOrder(orderId)}
         >
           Hủy đơn hàng
         </button>
@@ -70,8 +68,20 @@ function PurchaseHistory() {
     return null;
   };
 
-  const handleCancelOrder = () => {
-    console.log("cancel order");
+  const handleCancelOrder = async (orderId) => {
+    try {
+      const response = await axiosClient.patch(`/orders/${orderId}`, {
+        status: "CANCELED",
+      });
+
+      if (response.status === 200) {
+        fetchOrders();
+      } else {
+        console.error("Có lỗi xảy ra khi hủy đơn hàng");
+      }
+    } catch (error) {
+      console.error("Có lỗi xảy ra khi gửi yêu cầu hủy đơn hàng", error);
+    }
   };
 
   return (
@@ -82,73 +92,171 @@ function PurchaseHistory() {
         </h1>
       </div>
       <div className="flex flex-col mt-[20px]">
-        {orders && orders.map((order) => (
-          <div key={order._id}>
-            {order.orderDetails.map((detail, index) => (
-              <div key={index} className="flex shadow-xl">
-                <div className="max-w-[250px]">
-                  <img
-                    src={`${API_URL}${detail.imageUrl}`}
-                    alt={`Image-${detail._id}`}
-                    className="object-contain"
-                  />
-                </div>
-                <div className="flex items-center gap-[30px]">
-                  <div className="w-full flex flex-col justify-center items-center md:items-start gap-[16px] ">
-                    <h3 className="font-bold font-roboto w-[300px]">
-                      {detail.productName}
-                    </h3>
-                    <div className="flex justify-start items-start flex-col gap-[8px] max-w-[400px]">
-                      {/* <p className="text-sm">
+        {orders &&
+          orders
+            .filter((order) => order.status !== "CANCELED")
+            .map((order) => (
+              <div key={order._id}>
+                {order.orderDetails.map((detail, index) => (
+                  <div key={index} className="flex shadow-xl">
+                    <div className="max-w-[250px]">
+                      <img
+                        src={`${API_URL}${detail.imageUrl}`}
+                        alt={`Image-${detail._id}`}
+                        className="object-contain"
+                      />
+                    </div>
+                    <div className="flex items-center gap-[30px]">
+                      <div className="w-full flex flex-col justify-center items-center md:items-start gap-[16px] ">
+                        <h3 className="font-bold font-roboto w-[300px]">
+                          {detail.productName}
+                        </h3>
+                        <div className="flex justify-start items-start flex-col gap-[8px] max-w-[400px]">
+                          {/* <p className="text-sm">
                         <span className="font-roboto">Mã : </span> {detail.ma}
                       </p>
                       <p className="text-sm  ">
                         <span className="font-roboto">Size : </span>
                         {detail.size}
                       </p> */}
-                      <p className="text-sm font-roboto">
-                        <span>Số lượng: </span>
-                        {detail.quantity}
-                      </p>
-                      <p className="text-sm font-roboto">
-                        <span>Giá: </span>
-                        {numeral(detail.price).format("0,0")}đ
-                      </p>
+                          <p className="text-sm font-roboto">
+                            <span>Số lượng: </span>
+                            {detail.quantity}
+                          </p>
+                          <p className="text-sm font-roboto">
+                            <span>Giá: </span>
+                            {numeral(detail.price).format("0,0")}đ
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex xl:gap-[180px] lg:gap-[100px]">
+                        <p className="text-lg flex justify-center items-center font-roboto font-medium">
+                          {order.status}
+                        </p>
+                        <p className="text-lg flex justify-center items-center font-roboto ">
+                          {Moment(`${order.createdDate}`).format("DD/MM/YYYY")}
+                        </p>
+                        {getOrderAction(order.status, detail, order._id)}
+
+                        <Modal
+                          title="Đánh giá sản phẩm"
+                          visible={isModalOpen}
+                          onOk={handleOk}
+                          onCancel={handleCancel}
+                          className="font-roboto text-sm"
+                        >
+                          <div className="flex">
+                            <div className="max-w-[100px]">
+                              <img
+                                src={`${API_URL}${detail.imageUrl}`}
+                                alt={`Image-${detail._id}`}
+                                className="object-contain"
+                              />
+                            </div>
+                            <h3 className="font-roboto flex items-center justify-center">
+                              {detail.productName}
+                            </h3>
+                          </div>
+                          <div className="flex gap-8">
+                            <p className="font-roboto mb-4">
+                              Chất lượng sản phẩm
+                            </p>
+                            <p>hiện sao</p>
+                          </div>
+                          <TextArea
+                            placeholder="Hãy chia sẽ những điều bạn thích về sản phẩm này với người mua khác nhé!"
+                            allowClear
+                          />
+                        </Modal>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex xl:gap-[180px] lg:gap-[100px]">
-                    <p className="text-lg flex justify-center items-center font-roboto font-medium">
-                      {order.status}
-                    </p>
-                    <p className="text-lg flex justify-center items-center font-roboto ">
-                      {Moment(`${order.createdDate}`).format("DD/MM/YYYY")}
-                    </p>
-                    {getOrderAction(order.status, detail)}
-                    <Modal title="Đánh giá sản phẩm" visible={isModalOpen} onOk={handleOk} onCancel={handleCancel} className="font-roboto text-sm">
-                      <div className="flex">
-                        <div className="max-w-[100px]">
-                          <img
-                            src={`${API_URL}${detail.imageUrl}`}
-                            alt={`Image-${detail._id}`}
-                            className="object-contain"
-                          />
-                        </div>
-                        <h3 className="font-roboto flex items-center justify-center">
-                          {detail.productName}
-                        </h3>
-                      </div>
-                      <div className="flex gap-8">
-                        <p className="font-roboto mb-4">Chất lượng sản phẩm</p>
-                        <p>hiện sao</p>
-                        </div>
-                      <TextArea placeholder="Hãy chia sẽ những điều bạn thích về sản phẩm này với người mua khác nhé!" allowClear />
-                    </Modal>
-                  </div>
-                </div>
+                ))}
               </div>
             ))}
-          </div>
-        ))}
+        {orders &&
+          orders
+            .filter((order) => order.status === "CANCELED")
+            .map((order) => (
+              <div key={order._id}>
+                {order.orderDetails.map((detail, index) => (
+                  <div key={index} className="flex shadow-xl">
+                    <div className="max-w-[250px]">
+                      <img
+                        src={`${API_URL}${detail.imageUrl}`}
+                        alt={`Image-${detail._id}`}
+                        style={{ width: 200 }}
+                        className="object-contain"
+                      />
+                    </div>
+                    <div className="flex items-center gap-[30px]">
+                      <div className="w-full flex flex-col justify-center items-center md:items-start gap-[16px] ">
+                        <h3 className="font-bold font-roboto w-[300px]">
+                          {detail.productName}
+                        </h3>
+                        <div className="flex justify-start items-start flex-col gap-[8px] max-w-[400px]">
+                          {/* <p className="text-sm">
+                        <span className="font-roboto">Mã : </span> {detail.ma}
+                      </p>
+                      <p className="text-sm  ">
+                        <span className="font-roboto">Size : </span>
+                        {detail.size}
+                      </p> */}
+                          <p className="text-sm font-roboto">
+                            <span>Số lượng: </span>
+                            {detail.quantity}
+                          </p>
+                          <p className="text-sm font-roboto">
+                            <span>Giá: </span>
+                            {numeral(detail.price).format("0,0")}đ
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex xl:gap-[180px] lg:gap-[100px]">
+                        <p className="text-lg flex justify-center items-center font-roboto font-medium">
+                          {order.status}
+                        </p>
+                        <p className="text-lg flex justify-center items-center font-roboto ">
+                          {Moment(`${order.createdDate}`).format("DD/MM/YYYY")}
+                        </p>
+                        {getOrderAction(order.status, detail, order._id)}
+
+                        <Modal
+                          title="Đánh giá sản phẩm"
+                          visible={isModalOpen}
+                          onOk={handleOk}
+                          onCancel={handleCancel}
+                          className="font-roboto text-sm"
+                        >
+                          <div className="flex">
+                            <div className="max-w-[100px]">
+                              <img
+                                src={`${API_URL}${detail.imageUrl}`}
+                                alt={`Image-${detail._id}`}
+                                className="object-contain"
+                              />
+                            </div>
+                            <h3 className="font-roboto flex items-center justify-center">
+                              {detail.productName}
+                            </h3>
+                          </div>
+                          <div className="flex gap-8">
+                            <p className="font-roboto mb-4">
+                              Chất lượng sản phẩm
+                            </p>
+                            <p>hiện sao</p>
+                          </div>
+                          <TextArea
+                            placeholder="Hãy chia sẽ những điều bạn thích về sản phẩm này với người mua khác nhé!"
+                            allowClear
+                          />
+                        </Modal>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
       </div>
       <BackTop />
     </div>

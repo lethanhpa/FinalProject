@@ -24,6 +24,7 @@ import {
 } from "@ant-design/icons";
 import { jwtDecode } from "jwt-decode";
 import ImgCrop from "antd-img-crop";
+import { Info } from "lucide-react";
 
 const apiName = "/customers";
 
@@ -441,7 +442,10 @@ function Account() {
           )}
         </div>
       ) : (
-        <div>no data</div>
+        <div className="my-20 mx-60  flex justify-center font-bold">
+          <Info />
+          <p className="ml-3">Không có thông tin dữ liệu</p>
+        </div>
       )}
       <BackTop />
     </>

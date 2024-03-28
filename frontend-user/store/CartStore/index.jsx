@@ -15,7 +15,8 @@ const useCartStore = create(
           imageUrl,
           price,
           discount,
-          stock
+          stock,
+          code
         ) => {
           console.log("customerId", customerId);
           set((state) => {
@@ -34,6 +35,7 @@ const useCartStore = create(
                 price,
                 discount,
                 stock,
+                code,
               });
             }
             return {

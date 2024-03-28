@@ -72,14 +72,14 @@ function ProductDetails({ product, review }) {
     }
   }, []);
 
-  const handleAddCart = (productId, quantity, productName, imageUrl, price, discount, stock) => {
+  const handleAddCart = (productId, quantity, productName, imageUrl, price, discount, stock, code) => {
     if (!customerId) {
       toast.warning("Bạn chưa đăng nhập!", 1.5);
       router.push("/sign-in");
       return;
     }
     try {
-      addToCart(customerId, productId, quantity, productName, imageUrl, price, discount, stock);
+      addToCart(customerId, productId, quantity, productName, imageUrl, price, discount, stock, code);
       toast.success("Thêm vào giỏ hàng thành công", 1.5);
     } catch (error) {
       toast.warning("Thêm vào giỏ hàng thất bại!", 1.5);
@@ -225,7 +225,7 @@ function ProductDetails({ product, review }) {
                       <Plus />
                     </button>
                   </div>
-                  <Button onClick={() => handleAddCart(product._id, quantity, product.productName, product.imageUrl, product.price, product.discount, product.stock)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
+                  <Button onClick={() => handleAddCart(product._id, quantity, product.productName, product.imageUrl, product.price, product.discount, product.stock, product.code)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
                 </div>) : (<div className="flex gap-8">
                   <div className="flex">
                     <button

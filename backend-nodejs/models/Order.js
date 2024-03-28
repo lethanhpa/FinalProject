@@ -100,7 +100,7 @@ const orderSchema = new Schema({
         },
     },
 
-    shippingAddressId: { type: Schema.Types.ObjectId, ref: 'ShippingAddress', required: false },
+    shippingAddress: { type: String, required: true },
     customerId: { type: Schema.Types.ObjectId, ref: 'Customer', required: false },
     employeeId: { type: Schema.Types.ObjectId, ref: 'Employee' },
 
@@ -115,13 +115,6 @@ const orderSchema = new Schema({
 orderSchema.virtual('customer', {
     ref: 'Customer',
     localField: 'customerId',
-    foreignField: '_id',
-    justOne: true,
-});
-
-orderSchema.virtual('shippingAddress', {
-    ref: 'ShippingAddress',
-    localField: 'shippingAddressId',
     foreignField: '_id',
     justOne: true,
 });

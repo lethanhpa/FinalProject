@@ -213,11 +213,11 @@ function Carts() {
                       </button>
                     </Link>
                   </div>
-                  <div className="ml-3">
+                  <Link href="/check-out" className="ml-3">
                     <button className="flex border py-3 px-20 bg-black hover:bg-white text-white hover:text-black font-elle">
                       THANH TOÁN
                     </button>
-                  </div>
+                  </Link>
                 </div>
               </div>
             </div>
