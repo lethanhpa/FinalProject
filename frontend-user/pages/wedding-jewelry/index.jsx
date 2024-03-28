@@ -289,12 +289,13 @@ function WeddingJewelry({ products, reviews }) {
                       className="hover:-translate-y-1 hover:scale-125  duration-300 sm:w-full sm:block flex items-center w-[7.5rem] object-contain"
                     />
                   </Link>
+                  {item.discount > 0 && (
+                    <span className="!absolute top-0 right-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
+                      -{item.discount}%
+                    </span>
+                  )}
                 </div>
-                {item.discount > 0 && (
-                  <span className="!absolute top-0 left-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
-                    -{item.discount}%
-                  </span>
-                )}
+
                 <div className="flex flex-col gap-[6px]">
                   <p className="font-roboto mx-4 text-sm font-normal flex justify-center xxl:truncate text-center">
                     {item.productName}
@@ -361,13 +362,13 @@ function WeddingJewelry({ products, reviews }) {
         {filteredProducts.filter(
           (item) => item.categoryId === "65d72854f159c29036e3b592"
         ).length > visibleProducts && (
-            <button
-              className=" block mx-auto py-3 px-5 mb-10 border border-primry text-black bg-white hover:bg-primry hover:text-white transition-colors duration-300"
-              onClick={handleShowMore}
-            >
-              XEM THÊM SẢN PHẨM
-            </button>
-          )}
+          <button
+            className=" block mx-auto py-3 px-5 mb-10 border border-primry text-black bg-white hover:bg-primry hover:text-white transition-colors duration-300"
+            onClick={handleShowMore}
+          >
+            XEM THÊM SẢN PHẨM
+          </button>
+        )}
       </div>
 
       <div className="flex justify-center item-center mb-5">
@@ -442,13 +443,13 @@ function WeddingJewelry({ products, reviews }) {
                     )}
                   </div>
                   <div className="flex justify-center gap-2">
-                      <Rate
-                        allowHalf
-                        disabled
-                        defaultValue={calculateAverageRating(item.id, reviews)}
-                        style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
-                      />
-                    </div>
+                    <Rate
+                      allowHalf
+                      disabled
+                      defaultValue={calculateAverageRating(item.id, reviews)}
+                      style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                    />
+                  </div>
                   <Divider>
                     <Button
                       className="bg-black text-white hover:bg-white font-light"
@@ -481,13 +482,13 @@ function WeddingJewelry({ products, reviews }) {
         {filteredProducts.filter(
           (item) => item.categoryId === "65f12a3743051681d5a2c8bd"
         ).length > visibleProducts && (
-            <button
-              className=" block mx-auto py-3 px-5 mb-10 border border-primry text-black bg-white hover:bg-primry hover:text-white transition-colors duration-300"
-              onClick={handleShowMore}
-            >
-              XEM THÊM SẢN PHẨM
-            </button>
-          )}
+          <button
+            className=" block mx-auto py-3 px-5 mb-10 border border-primry text-black bg-white hover:bg-primry hover:text-white transition-colors duration-300"
+            onClick={handleShowMore}
+          >
+            XEM THÊM SẢN PHẨM
+          </button>
+        )}
         <BackTop />
       </div>
     </>
@@ -497,11 +498,12 @@ export default memo(WeddingJewelry);
 
 export async function getStaticProps() {
   try {
-    const [productsResponse, categoriesResponse, reviewsResponse] = await Promise.all([
-      axiosClient.get("/products"),
-      axiosClient.get("/categories"),
-      axiosClient.get("/reviews"),
-    ]);
+    const [productsResponse, categoriesResponse, reviewsResponse] =
+      await Promise.all([
+        axiosClient.get("/products"),
+        axiosClient.get("/categories"),
+        axiosClient.get("/reviews"),
+      ]);
 
     return {
       props: {

@@ -7,7 +7,6 @@ import numeral from "numeral";
 import { BackTop, Divider, Button, Rate } from "antd";
 
 function SearchProduct({ products, reviews }) {
-
   const calculateAverageRating = (productId, reviews) => {
     const productReviews = reviews.filter(
       (review) => review.productId === productId
@@ -43,12 +42,12 @@ function SearchProduct({ products, reviews }) {
                       className="hover:-translate-y-1 hover:scale-125  duration-300 sm:w-full sm:block flex items-center w-[7.5rem] object-contain"
                     />
                   </Link>
+                  {item.discount > 0 && (
+                    <span className="!absolute top-0 right-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
+                      -{item.discount}%
+                    </span>
+                  )}
                 </div>
-                {item.discount > 0 && (
-                  <span className="!absolute top-0 left-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
-                    -{item.discount}%
-                  </span>
-                )}
                 <div className="flex flex-col gap-[6px]">
                   <p className="font-roboto text-sm font-normal flex justify-center xxl:truncate text-center">
                     {item.productName}
