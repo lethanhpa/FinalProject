@@ -138,18 +138,64 @@ function ManageOrder() {
             return <span>{`${record.shippingAddress}`}</span>;
           }}
         />
-        <Column title="Phương thức" dataIndex="paymentType" key="paymentType" />
-        <Column title="Trạng thái" dataIndex="status" key="status" />
         <Column
-          title="Nhân viên"
-          dataIndex="employeesName"
-          key="employees.name"
-          render={(text, record) => {
-            return (
-              <span>{`${record.employee?.firstName} ${record.employee?.lastName}`}</span>
-            );
+          title="Phương thức"
+          dataIndex="paymentType"
+          key="paymentType"
+          render={(text) => {
+            let paymentText = "";
+            switch (text) {
+              case "CASH":
+                paymentText = "Tiền mặt";
+                break;
+              case "CREDIT CARD":
+                paymentText = "Chuyển khoản";
+                break;
+              default:
+                paymentText = text;
+                break;
+            }
+            return <span>{paymentText}</span>;
           }}
         />
+        <Column
+          title="Trạng thái"
+          dataIndex="status"
+          key="status"
+          render={(text) => {
+            let statusText = "";
+            switch (text) {
+              case "COMPLETE":
+                statusText = "Đã mua";
+                break;
+              case "CANCELED":
+                statusText = "Đã hủy";
+                break;
+              case "WAITING":
+                statusText = "Đang đợi duyệt";
+                break;
+              default:
+                statusText = text;
+                break;
+            }
+            return <span>{statusText}</span>;
+          }}
+        />
+        <Column
+          title="Nhân viên"
+          dataIndex="employee"
+          key="employee"
+          render={(employee, record) => {
+            if (employee) {
+              return (
+                <span>{`${employee.firstName} ${employee.lastName}`}</span>
+              );
+            } else {
+              return <span>Chưa có nhân viên</span>;
+            }
+          }}
+        />
+
         <Column title="Ghi chú" dataIndex="description" key="description" />
         <Column
           title="Hành động"

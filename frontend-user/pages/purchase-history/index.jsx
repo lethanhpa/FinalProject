@@ -24,6 +24,8 @@ function PurchaseHistory() {
       const response = await axiosClient.get(`/orders/${customerId}`);
       const data = response.data.results;
 
+      data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+
       setOrders(data);
     } catch (error) {
       console.error(error);
@@ -75,6 +77,7 @@ function PurchaseHistory() {
       });
 
       if (response.status === 200) {
+        await axiosClient.patch(`/orders/return-stock/${orderId}`);
         fetchOrders();
       } else {
         console.error("Có lỗi xảy ra khi hủy đơn hàng");
@@ -82,6 +85,15 @@ function PurchaseHistory() {
     } catch (error) {
       console.error("Có lỗi xảy ra khi gửi yêu cầu hủy đơn hàng", error);
     }
+  };
+
+  const getStatusText = (status) => {
+    if (status === "COMPLETE") {
+      return "Đã mua";
+    } else if (status === "WAITING") {
+      return "Đang đợi duyệt";
+    } else status === "CANCELED";
+    return "Đã hủy";
   };
 
   return (
@@ -98,7 +110,7 @@ function PurchaseHistory() {
             .map((order) => (
               <div key={order._id}>
                 {order.orderDetails.map((detail, index) => (
-                  <div key={index} className="flex shadow-xl">
+                  <div key={index} className="flex shadow-xl border-b">
                     <div className="max-w-[250px]">
                       <img
                         src={`${API_URL}${detail.imageUrl}`}
@@ -129,15 +141,14 @@ function PurchaseHistory() {
                           </p>
                         </div>
                       </div>
+                      <p className="text-lg flex justify-center items-center font-roboto font-medium w-full">
+                        {getStatusText(order.status)}
+                      </p>
                       <div className="flex xl:gap-[180px] lg:gap-[100px]">
-                        <p className="text-lg flex justify-center items-center font-roboto font-medium">
-                          {order.status}
-                        </p>
                         <p className="text-lg flex justify-center items-center font-roboto ">
                           {Moment(`${order.createdDate}`).format("DD/MM/YYYY")}
                         </p>
                         {getOrderAction(order.status, detail, order._id)}
-
                         <Modal
                           title="Đánh giá sản phẩm"
                           visible={isModalOpen}
@@ -180,7 +191,7 @@ function PurchaseHistory() {
             .map((order) => (
               <div key={order._id}>
                 {order.orderDetails.map((detail, index) => (
-                  <div key={index} className="flex shadow-xl">
+                  <div key={index} className="flex shadow-xl border-b">
                     <div className="max-w-[250px]">
                       <img
                         src={`${API_URL}${detail.imageUrl}`}
@@ -212,10 +223,10 @@ function PurchaseHistory() {
                           </p>
                         </div>
                       </div>
+                      <p className="text-lg flex justify-center items-center font-roboto font-medium w-full">
+                        {getStatusText(order.status)}
+                      </p>
                       <div className="flex xl:gap-[180px] lg:gap-[100px]">
-                        <p className="text-lg flex justify-center items-center font-roboto font-medium">
-                          {order.status}
-                        </p>
                         <p className="text-lg flex justify-center items-center font-roboto ">
                           {Moment(`${order.createdDate}`).format("DD/MM/YYYY")}
                         </p>

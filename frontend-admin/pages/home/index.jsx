@@ -68,7 +68,7 @@ function HomePage() {
     <>
       <Menu
         mode="horizontal"
-        className="w-auto flex justify-center"
+        className="w-auto flex justify-center sticky top-0 z-40"
         style={{
           boxShadow: "0 5px 10px rgba(0,0,0,0.1)",
         }}

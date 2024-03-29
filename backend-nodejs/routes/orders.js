@@ -212,4 +212,36 @@ router.patch("/:id", async function (req, res, next) {
     }
 });
 
+router.patch("/return-stock/:orderId", async (req, res, next) => {
+    try {
+        const orderId = req.params.orderId;
+
+        // Lấy thông tin đơn hàng được hủy từ orderId
+        const cancelledOrder = await Order.findById(orderId);
+
+        // Kiểm tra xem đơn hàng có tồn tại hay không
+        if (!cancelledOrder) {
+            return res.status(404).json({ message: "Đơn hàng không tồn tại" });
+        }
+
+        // Trả lại số lượng sản phẩm cho mỗi product trong orderDetails
+        for (const orderDetail of cancelledOrder.orderDetails) {
+            const productId = orderDetail.productId;
+            const quantity = orderDetail.quantity;
+
+            await Product.updateOne(
+                { _id: productId },
+                { $inc: { stock: quantity } }
+            );
+        }
+
+        res.status(200).json({ message: "Đã hoàn trả số lượng sản phẩm thành công" });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+
 module.exports = router;

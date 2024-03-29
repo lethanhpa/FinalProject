@@ -199,7 +199,7 @@ function Checkout() {
         )}
         <p className="pt-5 pb-5">Vui lòng nhập địa chỉ vận chuyển của bạn</p>
         <div className="space-y-2 border border-black p-4 rounded-lg-lg">
-          <div className="space-x-3 flex">
+          <div className="space-x-3 flex flex-col lg:flex-row">
             <div>
               <p>Chọn tỉnh/thành phố:</p>
               <Select
@@ -296,7 +296,7 @@ function Checkout() {
           <select
             value={paymentType}
             onChange={(e) => setPaymentType(e.target.value)}
-            className="h-full  rounded-lg-md border py-0 pl-2 pr-7 text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+            className="border rounded-md py-2 pl-1 w-full"
           >
             <option value="CASH">Tiền mặt</option>
             <option value="TRANSFER">Chuyển khoản</option>
@@ -381,11 +381,11 @@ function Checkout() {
                   </div>
                 </div>
               ))}
-
               <div>
                 <button
                   onClick={handleAddOrder}
-                  className="bg-primry text-white font-bold py-2 px-4 rounded-lg-full mx-auto flex mb-6"
+                  className="border rounded-md bg-black text-white hover:bg-white hover:text-black transition duration-300 ease-in-out transform hover:-translate-y-1 active:translate-y-0 py-2 px-4 mx-auto flex mb-6"
+
                 >
                   Mua hàng
                 </button>
