@@ -1,9 +1,10 @@
 import React, { memo } from "react";
 import HomePage from "./home";
+
 function Home() {
   return (
     <>
-      <HomePage />
+      <HomePage/>
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, {useState, useEffect } from "react";
 import {
   Table,
   message,
@@ -23,7 +23,7 @@ const { Column } = Table;
 
 const apiName = "/employees";
 
-function ManageEmployees() {
+export default function ManageEmployees() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [updateId, setUpdateId] = useState(0);
@@ -429,5 +429,3 @@ function ManageEmployees() {
     </div>
   );
 }
-
-export default memo(ManageEmployees);

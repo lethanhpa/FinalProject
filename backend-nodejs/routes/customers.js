@@ -18,15 +18,18 @@ const router = express.Router();
 router.post(
   "/login",
   validateSchema(loginSchema),
-  // passport.authenticate('local', { session: false }),
   async (req, res, next) => {
-    try {
-      const { email } = req.body;
+  try {
+    const { email, password } = req.body;
 
-      const customer = await Customer.findOne({ email });
+    const customer = await Customer.findOne({ email });
 
-      if (!customer) return res.status(404).send({ message: "Not found" });
+    if (!customer) return res.status(404).send({ message: "Not found" });
 
+    // Compare password using bcrypt
+    const isComparePassWord = await bcrypt.compare(password, customer.password);
+
+    if (isComparePassWord) {
       const { _id, email: cusEmail, firstName, lastName } = customer;
 
       const token = encodeToken(_id, cusEmail, firstName, lastName);
@@ -35,13 +38,16 @@ router.post(
         token,
         payload: customer,
       });
-    } catch (err) {
+    } else {
       res.status(401).json({
-        statusCode: 401,
-        message: "Unauthorized",
+        message: "Mật khẩu không chính xác", // Informative error message in Vietnamese
       });
     }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
   }
+}
 );
 
 

@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   message,
@@ -22,7 +22,7 @@ const { Column } = Table;
 
 const apiName = "/categories";
 
-function ManageCategories() {
+export default function ManageCategories() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [updateId, setUpdateId] = useState(0);
@@ -226,5 +226,3 @@ function ManageCategories() {
     </div>
   );
 }
-
-export default memo(ManageCategories);

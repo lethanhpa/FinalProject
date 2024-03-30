@@ -1,5 +1,6 @@
 const passport = require('passport');
 const express = require('express');
+const bcrypt = require('bcrypt');
 
 const { CONNECTION_STRING } = require('../constants/dbSettings');
 const { default: mongoose } = require('mongoose');
@@ -8,6 +9,11 @@ const {
     validateSchema,
     loginSchema
 } = require('../validation/employee');
+
+// const {
+//     passportConfigLocal,
+//   } = require("../middlewares/passport");
+
 const encodeToken = require('../helpers/jwtHelper');
 
 // MONGOOSE
@@ -16,62 +22,58 @@ mongoose.connect(CONNECTION_STRING);
 
 const router = express.Router();
 
-
 router.post(
-    '/login',
+    "/login",
     validateSchema(loginSchema),
-    //passport.authenticate('local', { session: false }),
+    // passport.authenticate(passportConfigLocal(Employee), { session: false }),
     async (req, res, next) => {
-        try {
-            const { email } = req.body;
-            const employee = await Employee.findOne({ email });
-
-            if (!employee) return res.status(404).send({ message: 'Not found' });
-
-            const { _id, email: empEmail, firstName, lastName } = employee;
-
-            const token = encodeToken(_id, empEmail, firstName, lastName);
-
-            res.status(200).json({
-                token,
-                payload: employee,
-            });
-        } catch (err) {
-            res.status(401).json({
-                statusCode: 401,
-                message: 'Unauthorized',
-            });
-        }
-    },
-);
-
-router.get(
+      const { email, password } = req.body;
+  
+      const employee = await Employee.findOne({ email });
+  
+      if (!employee) {
+        return res.status(404).json({ message: "Email không tồn tại" });
+      }
+  
+      // So sánh mật khẩu using bcrypt
+      const isComparePassWord = await bcrypt.compare(password, employee.password);
+  
+      if (isComparePassWord) {
+        const { _id, email: empEmail, firstName, lastName, role } = employee;
+  
+        const token = encodeToken(_id, empEmail, firstName, lastName, role);
+  
+        res
+          .status(200)
+          .json({
+            token,
+            payload: employee,
+          });
+      } else {
+        res.status(401).json({
+          message: "Mật khẩu không chính xác",
+        });
+      }
+    }
+  );
+  
+  
+  router.get(
     '/profile',
     passport.authenticate('jwt', { session: false }),
-    async (req, res, next) => {
-        try {
-            const employee = await Employee.findById(req.user._id);
-
-            if (!employee) return res.status(404).send({ message: 'Not found' });
-
-            res.status(200).json(employee);
-        } catch (err) {
-            res.sendStatus(500);
-        }
-    },
-);
-
-router.route('/profile').get(passport.authenticate('jwt', { session: false }), async (req, res, next) => {
-    try {
+    async (req, res) => {
+      try {
+  
         const employee = await Employee.findById(req.user._id);
-
+  
         if (!employee) return res.status(404).send({ message: 'Not found' });
-
+  
         res.status(200).json(employee);
-    } catch (err) {
+      } catch (err) {
         res.sendStatus(500);
-    }
-},);
+      }
+    },
+  );
 
 router.get('/count', async (req, res, next) => {
     try {

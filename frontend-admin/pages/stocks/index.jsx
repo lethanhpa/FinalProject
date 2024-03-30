@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   message,
@@ -23,7 +23,7 @@ const { Column } = Table;
 
 const apiName = "/sizes";
 
-function ManageStock() {
+export default function ManageStock() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [updateId, setUpdateId] = useState(0);
@@ -332,5 +332,3 @@ function ManageStock() {
     </div>
   );
 }
-
-export default memo(ManageStock);

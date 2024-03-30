@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Table, Space, Rate } from "antd";
 import { LockIcon, UnlockIcon } from "lucide-react";
 import axiosClient from "@/libraries/axiosClient";
@@ -9,7 +9,7 @@ const { Column } = Table;
 
 const apiName = "/reviews";
 
-function ManageReview() {
+export default function ManageReview() {
   const [data, setData] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [products, setProducts] = useState([]);
@@ -112,5 +112,3 @@ function ManageReview() {
     </div>
   );
 }
-
-export default memo(ManageReview);

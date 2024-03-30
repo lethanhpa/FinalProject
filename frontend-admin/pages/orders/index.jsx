@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   message,
@@ -20,7 +20,7 @@ const { Column } = Table;
 
 const apiName = "/orders";
 
-function ManageOrder() {
+export default function ManageOrder() {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [updateId, setUpdateId] = useState(0);
@@ -336,5 +336,3 @@ function ManageOrder() {
     </div>
   );
 }
-
-export default memo(ManageOrder);

@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react";
-import { Form, Input, Button, message, BackTop } from "antd";
+import { Form, Input, Button, message, FloatButton } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -55,7 +55,7 @@ const SignIn = () => {
 
   return (
     <div className="py-9 flex items-center justify-center">
-      <Form className="p-4 sm:p-8 shadow-2xl w-full sm:w-7/12 ">
+      <Form onSubmit={handleSubmit} className="p-4 sm:p-8 shadow-2xl w-full sm:w-7/12 ">
         <h2 className="mt-2 font-bold text-3xl text-center">
           Chào mừng trở lại
         </h2>
@@ -137,7 +137,7 @@ const SignIn = () => {
           </Link>
         </div>
       </Form>
-      <BackTop/>
+      <FloatButton.BackTop/>
     </div>
   );
 };

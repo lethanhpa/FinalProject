@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Table, message, Space } from "antd";
 import { LockIcon, UnlockIcon } from "lucide-react";
 import axiosClient from "@/libraries/axiosClient";
@@ -9,7 +9,7 @@ const { Column } = Table;
 
 const apiName = "/customers";
 
-function ManageCustomers() {
+export default function ManageCustomers() {
   const [data, setData] = useState([]);
   const [refresh, setRefresh] = useState(0);
 
@@ -138,5 +138,3 @@ function ManageCustomers() {
     </div>
   );
 }
-
-export default memo(ManageCustomers);
