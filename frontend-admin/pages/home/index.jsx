@@ -13,7 +13,6 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import SigIn from "../sign-in";
-import axios from "@/libraries/axiosClient" 
 import { jwtDecode } from "jwt-decode";
 
 const itemAdmin = [
@@ -109,25 +108,21 @@ const itemEmployee = [
 function HomePage() {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(false);
-  const [employees, setEmployees] = useState([]);
+  const [role, setRole] = useState([]);
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const token = localStorage.getItem("token");
         const decoded = jwtDecode(token);
-        const employeeId = decoded._id;
-
-        const response = await axios.get(`/employees/${employeeId}`);
-        const data = response.data;
-
-        setEmployees(data);
+        setIsLogin(true);
+        setRole(decoded.role)
       } catch (error) {
         console.error(error);
       }
     };
     fetchEmployees();
-  },[]);
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -139,7 +134,6 @@ function HomePage() {
       }
     }
   }, [router.pathname]);
-  
 
   return (
     <>
@@ -150,7 +144,7 @@ function HomePage() {
             className="w-auto flex justify-center"
             style={{ boxShadow: "0 5px 10px rgba(0,0,0,0.1)" }}
           >
-            {employees && employees.role === "Admin"
+            {role === "Admin"
               ? itemAdmin.map((item) => (
                   <Menu.Item key={item.key} icon={item.icon}>
                     <Link href={item.path}>{item.label}</Link>
