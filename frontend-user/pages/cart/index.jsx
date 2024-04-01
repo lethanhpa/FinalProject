@@ -7,12 +7,13 @@ import {
   Trash2,
   Undo,
 } from "lucide-react";
-import { Button, message, Popconfirm } from "antd";
+import { Button, Popconfirm } from "antd";
 import Link from "next/link";
 import numeral from "numeral";
 import { API_URL } from "@/constants";
 import useCartStore from "@/store/CartStore";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 function Carts() {
   const [customerId, setCustomerId] = useState([]);
@@ -161,7 +162,7 @@ function Carts() {
                               title={text}
                               onConfirm={() => {
                                 handleDeleteCart(item.productId);
-                                message.success("Xóa thành công");
+                                toast.success("Xóa thành công");
                               }}
                               okText="Có"
                               cancelText="Không"

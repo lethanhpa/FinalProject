@@ -1,6 +1,7 @@
 const passport = require('passport');
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
 const { CONNECTION_STRING } = require('../constants/dbSettings');
 const { default: mongoose } = require('mongoose');
 const { Customer } = require("../models");
@@ -9,6 +10,8 @@ const {
   loginSchema
 } = require('../validation/customer');
 const encodeToken = require('../helpers/jwtHelper');
+const JWT = require('jsonwebtoken');
+const jwtSettings = require('../constants/jwtSettings');
 
 mongoose.set('strictQuery', false);
 mongoose.connect(CONNECTION_STRING);
@@ -43,6 +46,80 @@ router.post(
     }
   }
 );
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "nguyenthanhtung03082001@gmail.com",
+    pass: "gljwkgvrunamtzrl",
+  },
+});
+
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const customer = await Customer.findOne({ email });
+
+    if (!customer) {
+      return res.status(404).send({ message: "Không tìm thấy khách hàng" });
+    }
+
+    const { _id, firstName, lastName } = customer; // Lấy thông tin từ customer
+    const resetToken = encodeToken(_id, email, firstName, lastName); // Sử dụng thông tin để tạo token
+    console.log('««««« resetToken »»»»»', resetToken);
+    await Customer.findByIdAndUpdate(_id, { resetToken });
+
+    const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
+    const mailOptions = {
+      from: "nguyenthanhtung03082001@gmail.com",
+      to: email,
+      subject: "[JEWELLERY] - Đổi mật khẩu",
+      html: `<p>Chào bạn,</p>
+             <p>Bạn nhận được email này vì bạn (hoặc ai đó) đã yêu cầu đặt lại mật khẩu cho tài khoản của bạn.</p>
+             <p>Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.</p>
+             <p>Nếu bạn muốn đặt lại mật khẩu, vui lòng click vào đường link sau: <a href="${resetLink}">Đổi mật khẩu</a></p>
+             <p>Xin cảm ơn,</p>
+             <p></p>`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error sending email:", error);
+        return res.status(500).json({ message: "Đã xảy ra lỗi khi gửi email" });
+      }
+      console.log("Email sent:", info.response);
+      res.status(200).json({ message: "Email đã được gửi thành công" });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Đã xảy ra lỗi khi xử lý yêu cầu" });
+  }
+});
+
+router.patch("/reset-password/:token", async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const decodedToken = JWT.verify(token, jwtSettings.SECRET);
+    const { _id } = decodedToken;
+
+    const customer = await Customer.findById(_id);
+
+    if (!customer) {
+      return res.status(404).json({ message: "Không tìm thấy khách hàng" });
+    }
+
+    customer.password = password;
+    await customer.save();
+
+    res.status(200).json({ message: "Mật khẩu đã được cập nhật thành công" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Đã xảy ra lỗi khi xử lý yêu cầu" });
+  }
+});
+
 
 // router.post(
 //   "/login",
@@ -263,10 +340,19 @@ router.post('/:id/unlock', async (req, res) => {
 });
 
 //PATCH
-router.patch('/:id', function (req, res, next) {
+router.patch('/:id', async function (req, res, next) {
   try {
     const { id } = req.params;
     const data = req.body;
+
+    // Kiểm tra nếu có mật khẩu mới
+    if (data.password) {
+      // Mã hóa mật khẩu mới
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(data.password, salt);
+      // Thay đổi mật khẩu trong dữ liệu cập nhật
+      data.password = hashedPassword;
+    }
 
     Customer.findByIdAndUpdate(id, data, {
       new: true,
@@ -281,5 +367,6 @@ router.patch('/:id', function (req, res, next) {
     res.sendStatus(500);
   }
 });
+
 
 module.exports = router;
