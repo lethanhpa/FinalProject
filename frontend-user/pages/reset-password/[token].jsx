@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { useRouter } from "next/router";
 import axiosClient from "@/libraries/axiosClient";
 import { Button, Form, Input } from "antd";
 import { toast } from "react-toastify";
 import { LockKeyhole } from "lucide-react";
 
-const ResetPasswordPage = () => {
+function ResetPasswordPage() {
   const router = useRouter();
   const { token } = router.query;
   const [password, setPassword] = useState("");
@@ -90,6 +90,6 @@ const ResetPasswordPage = () => {
       </Form>
     </div>
   );
-};
+}
 
-export default ResetPasswordPage;
+export default memo(ResetPasswordPage);

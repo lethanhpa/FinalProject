@@ -21,14 +21,19 @@ const router = express.Router();
 router.post(
   "/login",
   validateSchema(loginSchema),
-  // passport.authenticate('local', { session: false }),
   async (req, res, next) => {
     try {
-      const { email } = req.body;
+      const { email, password } = req.body;
 
       const customer = await Customer.findOne({ email });
 
       if (!customer) return res.status(404).send({ message: "Not found" });
+
+      const isValidPassword = await bcrypt.compare(password, customer.password);
+
+      if (!isValidPassword) {
+        return res.status(401).json({ message: "Incorrect password" });
+      }
 
       const { _id, email: cusEmail, firstName, lastName } = customer;
 
@@ -64,14 +69,13 @@ router.post("/forgot-password", async (req, res) => {
       return res.status(404).send({ message: "Không tìm thấy khách hàng" });
     }
 
-    const { _id, firstName, lastName } = customer; // Lấy thông tin từ customer
-    const resetToken = encodeToken(_id, email, firstName, lastName); // Sử dụng thông tin để tạo token
-    console.log('««««« resetToken »»»»»', resetToken);
+    const { _id, firstName, lastName } = customer;
+    const resetToken = encodeToken(_id, email, firstName, lastName);
     await Customer.findByIdAndUpdate(_id, { resetToken });
 
     const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
     const mailOptions = {
-      from: "nguyenthanhtung03082001@gmail.com",
+      from: "Jewellery <nguyenthanhtung03082001@gmail.com>",
       to: email,
       subject: "[JEWELLERY] - Đổi mật khẩu",
       html: `<p>Chào bạn,</p>
@@ -79,7 +83,7 @@ router.post("/forgot-password", async (req, res) => {
              <p>Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.</p>
              <p>Nếu bạn muốn đặt lại mật khẩu, vui lòng click vào đường link sau: <a href="${resetLink}">Đổi mật khẩu</a></p>
              <p>Xin cảm ơn,</p>
-             <p></p>`,
+             <p>Jewellery</p>`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -119,46 +123,6 @@ router.patch("/reset-password/:token", async (req, res) => {
     res.status(500).json({ message: "Đã xảy ra lỗi khi xử lý yêu cầu" });
   }
 });
-
-
-// router.post(
-//   "/login",
-//   validateSchema(loginSchema),
-//   // passport.authenticate("local", { session: false }),
-//   async (req, res, next) => {
-//     const { email, password } = req.body;
-
-//     const customer = await Customer.findOne({ email });
-
-// console.log('customer',customer);
-
-//     const isComparePassWord = await bcrypt.compare(password, customer.password);
-
-//     console.log('isComparePassWord',isComparePassWord);
-
-//     if (isComparePassWord) {
-//       console.log("true");
-//       if (!customer) return res.status(404).send({ message: "Not found" });
-
-//       const { _id, email: empEmail, firstName, lastName } = customer;
-
-//       const token = encodeToken(_id, empEmail, firstName, lastName);
-
-//       res
-//         .status(200)
-
-//         .json({
-//           token,
-//           payload: customer,
-//         });
-//     } else {
-//       res.status(401).json({
-//         statusCode: 401,
-//         message: "Unauthorized",
-//       });
-//     }
-//   }
-// );
 
 router.get(
   '/profile',
@@ -241,38 +205,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// //POST ảnh đại diện cho khách hàng
-// router.post('/:id/avatar', async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-
-//     const customer = await Customer.findById(id);
-
-//     if (!customer) {
-//       return res.status(404).json({ message: 'Không tìm thấy khách hàng' });
-//     }
-
-//     upload(req, res, async (err) => {
-//       if (err instanceof multer.MulterError) {
-//         res.status(500).json({ type: 'MulterError', err: err });
-//       } else if (err) {
-//         res.status(500).json({ type: 'UnknownError', err: err });
-//       } else {
-//         customer.avatarUrl = `/uploads/customers/${id}/${req.file.filename}`;
-//         await customer.save();
-
-//         const publicUrl = `${req.protocol}://${req.get('host')}/uploads/customers/${id}/${req.file.filename}`;
-//         res.status(200).json({ message: 'Ảnh đại diện đã được cập nhật thành công', avatarUrl: publicUrl });
-//       }
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: 'Đã xảy ra lỗi khi cập nhật ảnh đại diện' });
-//   }
-// });
-
-
-
 //DELETE
 router.delete('/:id', function (req, res, next) {
   try {
@@ -294,17 +226,14 @@ router.post('/:id/lock', async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Tìm khách hàng theo ID
     const customer = await Customer.findById(id);
 
     if (!customer) {
       return res.status(404).json({ message: 'Không tìm thấy khách hàng' });
     }
 
-    // Đặt trạng thái.status của khách hàng thành true
     customer.status = true;
 
-    // Lưu thay đổi
     await customer.save();
 
     res.status(200).json({ message: 'Tài khoản đã bị khóa thành công' });
@@ -319,17 +248,14 @@ router.post('/:id/unlock', async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Tìm khách hàng theo ID
     const customer = await Customer.findById(id);
 
     if (!customer) {
       return res.status(404).json({ message: 'Không tìm thấy khách hàng' });
     }
 
-    // Đặt trạng thái.status của khách hàng thành false
     customer.status = false;
 
-    // Lưu thay đổi
     await customer.save();
 
     res.status(200).json({ message: 'Tài khoản đã được mở khóa thành công' });
@@ -345,12 +271,9 @@ router.patch('/:id', async function (req, res, next) {
     const { id } = req.params;
     const data = req.body;
 
-    // Kiểm tra nếu có mật khẩu mới
     if (data.password) {
-      // Mã hóa mật khẩu mới
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(data.password, salt);
-      // Thay đổi mật khẩu trong dữ liệu cập nhật
       data.password = hashedPassword;
     }
 
@@ -368,5 +291,34 @@ router.patch('/:id', async function (req, res, next) {
   }
 });
 
+router.post('/change-password', async (req, res) => {
+  try {
+    const { email, oldPassword, newPassword } = req.body;
+    const customer = await Customer.findOne({ email });
+
+    if (!customer) {
+      return res.status(404).json({ message: 'Không tìm thấy khách hàng' });
+    }
+
+    const isValidOldPassword = await customer.isValidPass(oldPassword);
+
+    if (!isValidOldPassword) {
+      return res.status(401).json({ message: 'Mật khẩu cũ không chính xác' });
+    }
+
+    if (oldPassword === newPassword) {
+      res.status(400).json({ message: 'Mật khẩu mới không được giống mật khẩu cũ' });
+    }
+
+    customer.password = newPassword;
+    await customer.save();
+
+    res.status(200).json({ message: 'Mật khẩu đã được thay đổi thành công' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Đã xảy ra lỗi khi thay đổi mật khẩu' });
+  }
+});
 
 module.exports = router;

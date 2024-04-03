@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Form, Input, Button } from "antd";
 import axiosClient from "@/libraries/axiosClient";
 import Link from "next/link";
@@ -16,7 +16,7 @@ function ForgotPassword() {
       toast.success("Hãy xác nhận Email", 1);
     } catch (error) {
       console.error(error);
-      toast.error("Đã xảy ra lỗi khi gửi email", 1);
+      toast.error("Email không tồn tại", 1);
     }
   };
 
@@ -49,7 +49,7 @@ function ForgotPassword() {
             onChange={(e) => setEmail(e.target.value)}
             className="h-12"
             prefix={<MailSearch className="mr-2 text-lg text-primry" />}
-            placeholder="Email"
+            placeholder="Vui lòng nhập email của bạn"
           />
         </Form.Item>
 
@@ -74,4 +74,4 @@ function ForgotPassword() {
   );
 }
 
-export default ForgotPassword;
+export default memo(ForgotPassword);

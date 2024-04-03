@@ -21,7 +21,7 @@ import axios from "../../libraries/axiosClient";
 import { toast } from "react-toastify";
 const apiName = "customers";
 
-const SignUp = () => {
+function SignUp() {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
@@ -336,6 +336,6 @@ const SignUp = () => {
       <BackTop />
     </div>
   );
-};
+}
 
 export default memo(SignUp);

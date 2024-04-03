@@ -6,7 +6,7 @@ import Link from "next/link";
 import axios from "../../libraries/axiosClient";
 import { toast } from "react-toastify";
 
-const SignIn = () => {
+function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -142,6 +142,6 @@ const SignIn = () => {
       <BackTop />
     </div>
   );
-};
+}
 
 export default memo(SignIn);
