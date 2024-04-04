@@ -262,8 +262,13 @@ function ProductDetails({ product, review }) {
                         className="border border-solid border-inherit lg:max-w-[75px] max-w-[50px] min-h-[44px] font-roboto text-xl font-medium leading-7 lg:px-[25px] px-[15px]"
                         min="1"
                         max={stock}
-                        value={quantity}
-                        onChange={(e) => setQuantity(parseInt(e.target.value))}
+                        value={quantity > stock ? stock : quantity}
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value);
+                          if (!isNaN(value) && value >= 1) {
+                            setQuantity(value);
+                          }
+                        }}
                       />
                       <button
                         type="button"

@@ -315,7 +315,7 @@ function PurchaseHistory() {
                       <p className="text-lg flex justify-center items-center font-roboto font-medium w-full">
                         {getStatusText(order.status)}
                       </p>
-                      <div className="flex xl:gap-[180px] lg:gap-[100px]">
+                      {/* <div className="flex xl:gap-[180px] lg:gap-[100px]">
                         <p className="text-lg flex justify-center items-center font-roboto ">
                           {Moment(`${order.createdDate}`).format("DD/MM/YYYY")}
                         </p>
@@ -344,14 +344,55 @@ function PurchaseHistory() {
                             <p className="font-roboto mb-4">
                               Chất lượng sản phẩm
                             </p>
-                            <p>hiện sao</p>
+                            <Rate allowHalf defaultValue={0} onChange={handleRatingChange} />
                           </div>
                           <TextArea
                             placeholder="Hãy chia sẽ những điều bạn thích về sản phẩm này với người mua khác nhé!"
                             allowClear
                           />
                         </Modal>
-                      </div>
+                      </div> */}
+                      <div className="flex xl:gap-[180px] lg:gap-[100px]">
+                          <p className="text-lg flex justify-center items-center font-roboto ">
+                            {Moment(`${order.createdDate}`).format("DD/MM/YYYY")}
+                          </p>
+                          {getOrderAction(order.status, detail.productId, order._id)}
+                          <Modal
+                            title={"Đánh giá sản phẩm"}
+                            visible={isModalOpen}
+                            onOk={handleOk}
+                            onCancel={handleCancel}
+                            className="font-roboto text-sm"
+                          >
+                            {selectedProductId && orders && orders.map(order => (
+                              order.orderDetails.map((detail, index) => {
+                                if (detail.productId === selectedProductId) {
+                                  return (
+                                    <div key={index}>
+                                      <div className="flex">
+                                        <div className="max-w-[100px]">
+                                          <img
+                                            src={`${API_URL}${detail.imageUrl}`}
+                                            alt={`Image-${detail._id}`}
+                                            className="object-contain"
+                                          />
+                                        </div>
+                                        <h3 className="font-roboto flex items-center justify-center">
+                                          {detail.productName}
+                                        </h3>
+                                      </div>
+                                      <div className="flex gap-8">
+                                        <p className="font-roboto mb-4">Chất lượng sản phẩm</p>
+                                        <Rate allowHalf defaultValue={0} onChange={handleRatingChange} />
+                                      </div>
+                                      <TextArea placeholder="Hãy chia sẻ những điều bạn thích về sản phẩm này với người mua khác nhé!" allowClear value={comment} onChange={handleCommentChange} />
+                                    </div>
+                                  );
+                                }
+                              })
+                            ))}
+                          </Modal>
+                        </div>
                     </div>
                   </div>
                 ))}
