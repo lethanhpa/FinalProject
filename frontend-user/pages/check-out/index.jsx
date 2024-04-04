@@ -116,23 +116,47 @@ function Checkout() {
   }, []);
 
   const cartItems = getCartItems(customerId);
-  console.log("««««« cartItems »»»»»", cartItems);
+
+  console.log('cartItems', cartItems);
 
   const handleAddOrder = async () => {
     const token = localStorage.getItem("token");
     const decoded = jwtDecode(token);
     const customerId = decoded._id;
 
-    const orderDetails = cartItems.map((item) => {
-      return {
-        productId: item.productId,
-        productName: item.productName,
-        imageUrl: item.imageUrl,
-        quantity: item.quantity,
-        price: item.price - (item.price * item.discount) / 100,
-        discount: item.discount,
-      };
-    });
+    const itemsWithSizeId = cartItems.filter((item) => item.size);
+    const itemsWithoutSizeId = cartItems.filter((item) => !item.size);
+
+    const orderDetailsWithSizeId = itemsWithSizeId.map((item) => ({
+      productId: item.productId,
+      productName: item.productName,
+      imageUrl: item.imageUrl,
+      quantity: item.quantity,
+      price: item.price - (item.price * item.discount) / 100,
+      discount: item.discount,
+      size: item.size,
+      stock: item.stock
+    }));
+
+    const orderDetailsWithoutSizeId = itemsWithoutSizeId.map((item) => ({
+      productId: item.productId,
+      productName: item.productName,
+      imageUrl: item.imageUrl,
+      quantity: item.quantity,
+      price: item.price - (item.price * item.discount) / 100,
+      discount: item.discount,
+    }));
+
+    console.log('orderDetailsWithoutSizeId', orderDetailsWithoutSizeId);
+
+    // Tạo danh sách chi tiết đơn hàng cho sản phẩm có thuộc tính sizeId
+   
+
+    console.log('orderDetailsWithSizeId', orderDetailsWithSizeId);
+
+    const orderDetails = [...orderDetailsWithSizeId,...orderDetailsWithoutSizeId];
+
+    console.log('orderDetails', orderDetails);
 
     const createdDate = new Date();
     const shippedDate = new Date(createdDate);
@@ -344,7 +368,7 @@ function Checkout() {
                       (total, item) =>
                         total +
                         ((item.price * (100 - item.discount)) / 100) *
-                          item.quantity,
+                        item.quantity,
                       0
                     )
                   ).format("0,0")}
@@ -367,16 +391,25 @@ function Checkout() {
                     <p className="text-sm">
                       <span className="font-roboto">Mã: </span> {item.code}
                     </p>
-                    {/* <p className="text-sm  ">
-                <span className="font-roboto">Size: </span> {item.size}
-              </p> */}
+                    {item.size && <p className="text-sm  ">
+                      <span className="font-roboto">Size: </span> {item.size}
+                    </p>}
                     <p className="text-sm">
                       <span className="font-roboto">Số lượng: </span>
                       {item.quantity}
                     </p>
                     <p className="text-sm">
                       <span className="font-roboto">Giá: </span>
-                      {numeral(item.price).format("0,0")}đ
+                      {numeral(
+                        cartItems.reduce(
+                          (total, item) =>
+                            total +
+                            ((item.price * (100 - item.discount)) / 100) *
+                            item.quantity,
+                          0
+                        )
+                      ).format("0,0")}
+                      đ
                     </p>
                   </div>
                 </div>

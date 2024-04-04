@@ -1,7 +1,7 @@
 const yup = require("yup");
 const express = require("express");
 const router = express.Router();
-const { Order, Product } = require("../models");
+const { Order, Product, Size } = require("../models");
 
 const ObjectId = require("mongodb").ObjectId;
 
@@ -156,9 +156,26 @@ async function updateProductStock(order) {
         const productId = orderDetail.productId;
         const quantity = orderDetail.quantity;
 
-        await Product.updateOne({ _id: productId }, { $inc: { stock: -quantity } });
+        if (orderDetail.size) {
+            const product = await Product.findOne({ _id: productId }).populate("sizeId")
+
+            const sizeIndex = product.sizeId.sizes.findIndex(size => size.size === orderDetail.size);
+            
+            if (sizeIndex >= 0) {
+              
+                product.sizeId.sizes[sizeIndex].stock -= quantity;
+               
+                await product.sizeId.save();
+            } else {
+                console.log(`Không tìm thấy kích thước ${orderDetail.size} cho sản phẩm ${productId}`);
+            }
+        } else {
+            await Product.updateOne({ _id: productId }, { $inc: { stock: -quantity } });
+        }
     }
 }
+
+
 
 
 router.delete("/:id", function (req, res, next) {

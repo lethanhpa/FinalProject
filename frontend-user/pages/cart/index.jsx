@@ -108,12 +108,12 @@ function Carts() {
                             <p className="font-elle font-light">
                               {item.productName}
                             </p>
-                            {/* {product.size && (
+                            {item.size && (
                             <p>
                               <strong>Size:</strong>
                               <span className="ml-3">{item.size}</span>
                             </p>
-                          )} */}
+                          )}
                           </div>
                         </td>
                         <td>

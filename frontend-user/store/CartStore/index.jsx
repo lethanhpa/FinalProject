@@ -24,18 +24,79 @@ const useCartStore = create(
             const existingProductIndex = customerCart.findIndex(
               (item) => item.productId === productId
             );
+            
+            const maxQuantity = Math.min(quantity, stock);
+            
+            // Kiểm tra xem có vượt quá tồn kho hay không
+            const totalQuantity = existingProductIndex !== -1
+              ? customerCart[existingProductIndex].quantity + maxQuantity
+              : maxQuantity;
+        
+            if (totalQuantity > stock) {
+              // Hiển thị thông báo cảnh báo cho người dùng
+              toast.warning("Thêm vào giỏ hàng thất bại!", 1.5);
+              alert(`Bạn không thể thêm nhiều hơn ${stock} sản phẩm vào giỏ hàng.`);
+            } else {
+              if (existingProductIndex !== -1) {
+                customerCart[existingProductIndex].quantity += maxQuantity;
+              } else {
+                customerCart.push({
+                  productId,
+                  quantity: maxQuantity,
+                  productName,
+                  imageUrl,
+                  price,
+                  discount,
+                  stock,
+                  code,
+                });
+              }
+            }
+            return {
+              carts: {
+                ...state.carts,
+                [customerId]: customerCart,
+              },
+            };
+          });
+        },
+        
+        
+
+        addToCartSize: (
+          customerId,
+          productId,
+          quantity,
+          productName,
+          imageUrl,
+          price,
+          discount,
+          stock,
+          code,
+          size,
+        ) => {
+          console.log("customerId", customerId);
+          set((state) => {
+            const customerCart = state.carts[customerId] || [];
+            const existingProductIndex = customerCart.findIndex(
+              (item) => item.productId === productId && item.size === size
+            );
+
+            const maxQuantity = Math.min(quantity, stock); 
+
             if (existingProductIndex !== -1) {
               customerCart[existingProductIndex].quantity += quantity;
             } else {
               customerCart.push({
                 productId,
-                quantity,
+                quantity : maxQuantity,
                 productName,
                 imageUrl,
                 price,
                 discount,
                 stock,
                 code,
+                size,
               });
             }
             return {
@@ -46,6 +107,7 @@ const useCartStore = create(
             };
           });
         },
+        
 
         getCartItems: (customerId) => {
           return get().carts[customerId] || [];

@@ -3,7 +3,7 @@ import { API_URL } from "@/constants";
 import numeral from "numeral";
 import { useRouter } from "next/router";
 import Moment from "moment";
-import { Button, Popover, Rate } from 'antd';
+import { Button, Popover, Rate, } from 'antd';
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import { Minus, Plus, RefreshCcw, Truck } from "lucide-react";
@@ -22,6 +22,8 @@ function ProductDetails({ product, review }) {
   const [selectedSize, setSelectedSize] = React.useState(null);
   const [stock, setStock] = React.useState(0);
 
+  const [showSizeWarning, setShowSizeWarning] = React.useState(false);
+
 
   const handleSizeChange = (item) => {
     setSelectedSize(item);
@@ -35,7 +37,7 @@ function ProductDetails({ product, review }) {
   };
 
 
-  const { addToCart } = useCartStore();
+  const { addToCart, addToCartSize } = useCartStore();
 
   const handleQuantityChange = (action) => {
     if (action === "increase") {
@@ -51,18 +53,15 @@ function ProductDetails({ product, review }) {
 
   const handleQuantityChange2 = (action) => {
     if (action === "increase") {
-      console.log('roduct.size.sizes._id', product.size)
-      if (quantity + 1 <= product.size) {
+      if (quantity + 1 <= stock) {
         setQuantity(quantity + 1);
       }
-    }
-    else if (action === "decrease") {
-      console.log("--");
+    } else if (action === "decrease") {
       if (quantity - 1 >= 1) {
         setQuantity(quantity - 1);
       }
     }
-  }
+  };
 
   React.useEffect(() => {
     const token = localStorage.getItem("token");
@@ -86,10 +85,27 @@ function ProductDetails({ product, review }) {
     }
   };
 
-
-
-  const handleAddCartaaaa = () => {
-    console.log("add cart");
+  const handleAddCartSize = (productId, quantity, productName, imageUrl, price, discount, stock, code, size) => {
+    console.log('productId', productId);
+    console.log('quantity', quantity);
+    console.log('stock', stock);
+    console.log('size', size);
+    if (!selectedSize) {
+      setShowSizeWarning(true);
+      toast.warning('Vui lòng chọn kích cỡ trước khi thêm vào giỏ hàng.');
+      return;
+    }
+    if (!customerId) {
+      toast.warning("Bạn chưa đăng nhập!", 1.5);
+      router.push("/sign-in");
+      return;
+    }
+    try {
+      addToCartSize(customerId, productId, quantity, productName, imageUrl, price, discount, stock, code, size);
+      toast.success("Thêm vào giỏ hàng thành công", 1.5);
+    } catch (error) {
+      toast.warning("Thêm vào giỏ hàng thất bại!", 1.5);
+    }
   }
 
   const content = (
@@ -156,20 +172,23 @@ function ProductDetails({ product, review }) {
               {
                 product.discount > 0 && (<div className="flex font-roboto text-md justify-between"><p>Giảm giá :</p> <p className="font-bold text-lg">{product.discount}%</p></div>)
               }
-              {/* {product.stock > 0 ? ( */}
-              <div className="flex justify-between font-roboto text-md">
-                <p>
-                  Số lượng còn : </p>
-                {product.stock} sản phẩm</div>
-              {/* ) : (<div>Hết hàng</div>)} */}
+              {product.stock > 0 && product.stock ? (
+                <>
+                  <div className="flex justify-between font-roboto text-md">
+                    <p>
+                      Số lượng còn : </p>
+                    {product.stock} sản phẩm</div>
 
-              <div className="flex justify-between">
+                </>
+              ) : (<div className="flex justify-between">
                 <div className="font-roboto text-md text-primry">Chọn kích cỡ :</div>
 
                 <Popover content={content} title="Cách đo size">
                   <i className="underline font-roboto text-md text-primry">Cách đo size nhẫn - vòng tay</i>
                 </Popover>
-              </div>
+              </div>)}
+
+
               <div className="flex gap-4">
                 {product.size && product.size.sizes.map((item) => (
                   <label
@@ -192,16 +211,74 @@ function ProductDetails({ product, review }) {
                   </label>
                 ))}
               </div>
-              {stock > 0 ? (
-                <div className="flex justify-between font-roboto text-md">
-                  <p>
-                    Số lượng còn : </p>
-                  {stock} sản phẩm</div>
-              ) : (<p className="hidden">hello</p>)}
+
+              {(stock <= 0 && product.stock === 0) && (
+                <div className="flex gap-8">
+                  <div className="flex">
+                    <button
+                      type="button"
+                      className="border border-solid border-inherit px-[8px] py-[10px] hover:bg-pink hover:text-text-1 rounded-l-md"
+                      onClick={() => handleQuantityChange2("decrease")}
+                    >
+                      <Minus size={24} />
+                    </button>
+                    <input
+                      className="border border-solid border-inherit lg:max-w-[75px] max-w-[50px] min-h-[44px] font-roboto text-xl font-medium leading-7 lg:px-[25px] px-[15px]"
+                      min="1"
+                      max={stock}
+                      value={quantity}
+                      onChange={(e) => setQuantity(parseInt(e.target.value))}
+                    />
+                    <button
+                      type="button"
+                      className="border border-solid border-inherit lg:px-[8px] px-0 py-[10px]  hover:bg-pink hover:text-text-1  rounded-r-md"
+                      onClick={() => handleQuantityChange2("increase")}
+                    >
+                      <Plus />
+                    </button>
+                  </div>
+                  <Button onClick={handleAddCartSize} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
+                </div>
+              )}
 
 
-              {
-                product.stock > 0 ? (<div className="flex gap-8">
+              {selectedSize && stock > 0 && (
+                <>
+                  <div className="flex justify-between font-roboto text-md">
+                    <p>Số lượng còn :</p>
+                    {stock} sản phẩm
+                  </div>
+
+                  <div className="flex gap-8">
+                    <div className="flex">
+                      <button
+                        type="button"
+                        className="border border-solid border-inherit px-[8px] py-[10px] hover:bg-pink hover:text-text-1 rounded-l-md"
+                        onClick={() => handleQuantityChange2("decrease")}
+                      >
+                        <Minus size={24} />
+                      </button>
+                      <input
+                        className="border border-solid border-inherit lg:max-w-[75px] max-w-[50px] min-h-[44px] font-roboto text-xl font-medium leading-7 lg:px-[25px] px-[15px]"
+                        min="1"
+                        max={stock}
+                        value={quantity}
+                        onChange={(e) => setQuantity(parseInt(e.target.value))}
+                      />
+                      <button
+                        type="button"
+                        className="border border-solid border-inherit lg:px-[8px] px-0 py-[10px]  hover:bg-pink hover:text-text-1  rounded-r-md"
+                        onClick={() => handleQuantityChange2("increase")}
+                      >
+                        <Plus />
+                      </button>
+                    </div>
+                    <Button onClick={() => handleAddCartSize(product._id, quantity, product.productName, product.imageUrl, product.price, product.discount, stock, product.code, selectedSize.size)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
+                  </div>
+                </>
+              )}
+              {product.stock > 0 && (
+                <div className="flex gap-8">
                   <div className="flex">
                     <button
                       type="button"
@@ -214,9 +291,15 @@ function ProductDetails({ product, review }) {
                       className="border border-solid border-inherit lg:max-w-[75px] max-w-[50px] min-h-[44px] font-roboto text-xl font-medium leading-7 lg:px-[25px] px-[15px]"
                       min="1"
                       max={product.stock}
-                      value={quantity}
-                      onChange={(e) => setQuantity(parseInt(e.target.value))}
+                      value={quantity > product.stock ? product.stock : quantity}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value);
+                        if (!isNaN(value) && value >= 1) {
+                          setQuantity(value);
+                        }
+                      }}
                     />
+
                     <button
                       type="button"
                       className="border border-solid border-inherit lg:px-[8px] px-0 py-[10px]  hover:bg-pink hover:text-text-1  rounded-r-md"
@@ -226,34 +309,8 @@ function ProductDetails({ product, review }) {
                     </button>
                   </div>
                   <Button onClick={() => handleAddCart(product._id, quantity, product.productName, product.imageUrl, product.price, product.discount, product.stock, product.code)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
-                </div>) : (<div className="flex gap-8">
-                  <div className="flex">
-                    <button
-                      type="button"
-                      className="border border-solid border-inherit px-[8px] py-[10px] hover:bg-pink hover:text-text-1 rounded-l-md"
-                      onClick={() => handleQuantityChange2("decrease")}
-                    >
-                      <Minus size={24} />
-                    </button>
-                    <input
-                      className="border border-solid border-inherit lg:max-w-[75px] max-w-[50px] min-h-[44px] font-roboto text-xl font-medium leading-7 lg:px-[25px] px-[15px]"
-                      // type="number"
-                      min="1"
-                      max={product.size.sizes.stock}
-                      value={quantity}
-                      onChange={(e) => setQuantity(parseInt(e.target.value))}
-                    />
-                    <button
-                      type="button"
-                      className="border border-solid border-inherit lg:px-[8px] px-0 py-[10px]  hover:bg-pink hover:text-text-1  rounded-r-md"
-                      onClick={() => handleQuantityChange2("increase")}
-                    >
-                      <Plus />
-                    </button>
-                  </div>
-                  <Button onClick={handleAddCartaaaa} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
-                </div>)
-              }
+                </div>
+              )}
 
               <div className="max-w-[400px] h-[140px] border rounded flex flex-col gap-[16px]">
                 <div className="ml-[16px] mt-[12px] flex gap-[16px] items-center">
