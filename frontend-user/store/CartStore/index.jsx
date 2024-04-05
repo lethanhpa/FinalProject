@@ -28,14 +28,17 @@ const useCartStore = create(
             const maxQuantity = Math.min(quantity, stock);
             
             // Kiểm tra xem có vượt quá tồn kho hay không
-            const totalQuantity = existingProductIndex !== -1
-              ? customerCart[existingProductIndex].quantity + maxQuantity
-              : maxQuantity;
-        
+            const totalQuantity =
+              existingProductIndex !== -1
+                ? customerCart[existingProductIndex].quantity + maxQuantity
+                : maxQuantity;
+
             if (totalQuantity > stock) {
               // Hiển thị thông báo cảnh báo cho người dùng
               toast.warning("Thêm vào giỏ hàng thất bại!", 1.5);
-              alert(`Bạn không thể thêm nhiều hơn ${stock} sản phẩm vào giỏ hàng.`);
+              alert(
+                `Bạn không thể thêm nhiều hơn ${stock} sản phẩm vào giỏ hàng.`
+              );
             } else {
               if (existingProductIndex !== -1) {
                 customerCart[existingProductIndex].quantity += maxQuantity;
@@ -60,8 +63,6 @@ const useCartStore = create(
             };
           });
         },
-        
-        
 
         addToCartSize: (
           customerId,
@@ -72,8 +73,9 @@ const useCartStore = create(
           price,
           discount,
           stock,
+          sizeId,
           code,
-          size,
+          size
         ) => {
           console.log("customerId", customerId);
           set((state) => {
@@ -82,19 +84,20 @@ const useCartStore = create(
               (item) => item.productId === productId && item.size === size
             );
 
-            const maxQuantity = Math.min(quantity, stock); 
+            const maxQuantity = Math.min(quantity, stock);
 
             if (existingProductIndex !== -1) {
               customerCart[existingProductIndex].quantity += quantity;
             } else {
               customerCart.push({
                 productId,
-                quantity : maxQuantity,
+                quantity: maxQuantity,
                 productName,
                 imageUrl,
                 price,
                 discount,
                 stock,
+                sizeId,
                 code,
                 size,
               });
@@ -107,7 +110,6 @@ const useCartStore = create(
             };
           });
         },
-        
 
         getCartItems: (customerId) => {
           return get().carts[customerId] || [];

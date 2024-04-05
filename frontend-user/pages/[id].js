@@ -91,11 +91,12 @@ function ProductDetails({ product, review }) {
     }
   };
 
-  const handleAddCartSize = (productId, quantity, productName, imageUrl, price, discount, stock, code, size) => {
+  const handleAddCartSize = (productId, quantity, productName, imageUrl, price, discount, stock, sizeId, code, size) => {
     console.log('productId', productId);
     console.log('quantity', quantity);
     console.log('stock', stock);
     console.log('size', size);
+    console.log('sizeId', sizeId);
     if (!selectedSize) {
       setShowSizeWarning(true);
       toast.warning('Vui lòng chọn kích cỡ trước khi thêm vào giỏ hàng.');
@@ -107,7 +108,7 @@ function ProductDetails({ product, review }) {
       return;
     }
     try {
-      addToCartSize(customerId, productId, quantity, productName, imageUrl, price, discount, stock, code, size);
+      addToCartSize(customerId, productId, quantity, productName, imageUrl, price, discount, stock, sizeId, code, size);
       toast.success("Thêm vào giỏ hàng thành công", 1.5);
     } catch (error) {
       toast.warning("Thêm vào giỏ hàng thất bại!", 1.5);
@@ -293,7 +294,7 @@ function ProductDetails({ product, review }) {
                         <Plus />
                       </button>
                     </div>
-                    <Button onClick={() => handleAddCartSize(product._id, quantity, product.productName, product.imageUrl, product.price, product.discount, stock, product.code, selectedSize.size)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
+                    <Button onClick={() => handleAddCartSize(product._id, quantity, product.productName, product.imageUrl, product.price, product.discount, stock, product.sizeId, product.code, selectedSize.size)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
                   </div>
                 </>
               )}

@@ -134,8 +134,9 @@ function Checkout() {
       quantity: item.quantity,
       price: item.price - (item.price * item.discount) / 100,
       discount: item.discount,
+      sizeId: item.sizeId,
       size: item.size,
-      stock: item.stock
+      stock: item.stock,
     }));
 
     const orderDetailsWithoutSizeId = itemsWithoutSizeId.map((item) => ({
@@ -147,16 +148,18 @@ function Checkout() {
       discount: item.discount,
     }));
 
-    console.log('orderDetailsWithoutSizeId', orderDetailsWithoutSizeId);
+    console.log("orderDetailsWithoutSizeId", orderDetailsWithoutSizeId);
 
     // Tạo danh sách chi tiết đơn hàng cho sản phẩm có thuộc tính sizeId
-   
 
-    console.log('orderDetailsWithSizeId', orderDetailsWithSizeId);
+    console.log("orderDetailsWithSizeId", orderDetailsWithSizeId);
 
-    const orderDetails = [...orderDetailsWithSizeId,...orderDetailsWithoutSizeId];
+    const orderDetails = [
+      ...orderDetailsWithSizeId,
+      ...orderDetailsWithoutSizeId,
+    ];
 
-    console.log('orderDetails', orderDetails);
+    console.log("orderDetails", orderDetails);
 
     const createdDate = new Date();
     const shippedDate = new Date(createdDate);
@@ -330,6 +333,49 @@ function Checkout() {
       {cartItems.length > 0 && (
         <div className="flex-1">
           <div className="flex justify-center flex-col w-full">
+            {cartItems.map((item) => (
+              <div
+                key={item.id}
+                className="flex justify-start items-center space-x-10"
+              >
+                <div className="pb-4 md:pb-8 block w-[110px] md:w-40 drop-shadow-2xl">
+                  <img
+                    src={`${API_URL}/${item.imageUrl}`}
+                    alt="Product Image"
+                  />
+                </div>
+                <div className="flex flex-col justify-start items-start">
+                  <p className="font-roboto font-bold">{item.productName}</p>
+                  <p className="text-sm">
+                    <span className="font-roboto">Mã: </span> {item.code}
+                  </p>
+                  {item.size && (
+                    <p className="text-sm  ">
+                      <span className="font-roboto">Size: </span> {item.size}
+                    </p>
+                  )}
+                  <p className="text-sm">
+                    <span className="font-roboto">Số lượng: </span>
+                    {item.quantity}
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-roboto">Giá gốc: </span>
+                    {numeral(item.price).format("0,0")}đ
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-roboto">Giảm giá: </span>
+                    {item.discount}%
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-roboto">Giá đã giảm: </span>
+                    {numeral((item.price * (100 - item.discount)) / 100).format(
+                      "0,0"
+                    )}
+                    đ
+                  </p>
+                </div>
+              </div>
+            ))}
             <div className="flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full space-y-6">
               <h3 className="text-xl font-semibold leading-5">Tóm tắt</h3>
               <div className="flex justify-center items-center w-full space-y-4 flex-col border-b pb-4">
@@ -338,21 +384,14 @@ function Checkout() {
                   <p className="text-base leading-4">
                     {numeral(
                       cartItems.reduce(
-                        (total, item) => total + item.price * item.quantity,
+                        (total, item) =>
+                          total +
+                          ((item.price * (100 - item.discount)) / 100) *
+                            item.quantity,
                         0
                       )
                     ).format("0,0")}
                     đ
-                  </p>
-                </div>
-                <div className="flex justify-between items-center w-full">
-                  <p className="text-base leading-4">Giảm giá</p>
-                  <p className="text-base leading-4">
-                    {cartItems.reduce(
-                      (totalDiscount, item) => totalDiscount + item.discount,
-                      0
-                    )}
-                    %
                   </p>
                 </div>
                 <div className="flex justify-between items-center w-full">
@@ -368,57 +407,17 @@ function Checkout() {
                       (total, item) =>
                         total +
                         ((item.price * (100 - item.discount)) / 100) *
-                        item.quantity,
+                          item.quantity,
                       0
                     )
                   ).format("0,0")}
                   đ
                 </p>
               </div>
-              {cartItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex justify-start items-center space-x-10"
-                >
-                  <div className="pb-4 md:pb-8 block w-[110px] md:w-40 drop-shadow-2xl">
-                    <img
-                      src={`${API_URL}/${item.imageUrl}`}
-                      alt="Product Image"
-                    />
-                  </div>
-                  <div className="flex flex-col justify-start items-start">
-                    <p className="font-roboto font-bold">{item.productName}</p>
-                    <p className="text-sm">
-                      <span className="font-roboto">Mã: </span> {item.code}
-                    </p>
-                    {item.size && <p className="text-sm  ">
-                      <span className="font-roboto">Size: </span> {item.size}
-                    </p>}
-                    <p className="text-sm">
-                      <span className="font-roboto">Số lượng: </span>
-                      {item.quantity}
-                    </p>
-                    <p className="text-sm">
-                      <span className="font-roboto">Giá: </span>
-                      {numeral(
-                        cartItems.reduce(
-                          (total, item) =>
-                            total +
-                            ((item.price * (100 - item.discount)) / 100) *
-                            item.quantity,
-                          0
-                        )
-                      ).format("0,0")}
-                      đ
-                    </p>
-                  </div>
-                </div>
-              ))}
               <div>
                 <button
                   onClick={handleAddOrder}
                   className="border rounded-md bg-black text-white hover:bg-white hover:text-black transition duration-300 ease-in-out transform hover:-translate-y-1 active:translate-y-0 py-2 px-4 mx-auto flex mb-6"
-
                 >
                   Mua hàng
                 </button>
@@ -427,7 +426,6 @@ function Checkout() {
           </div>
         </div>
       )}
-
       <BackTop />
     </div>
   );

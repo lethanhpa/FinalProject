@@ -8,6 +8,7 @@ const orderDetailSchema = new Schema({
     quantity: { type: Number, require: true, min: 0 },
     price: { type: Number, required: true, min: 0, default: 0 },
     discount: { type: Number, min: 0, max: 75, default: 0 },
+    sizeId: { type: Schema.Types.ObjectId, ref: 'Size' },
     size: { type: String },
     stock: { type: Number },
 });

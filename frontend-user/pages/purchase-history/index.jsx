@@ -23,7 +23,7 @@ function PurchaseHistory() {
   useEffect(() => {
     if (orders.length > 0) {
       const updatedReviewedProducts = orders.reduce((acc, order) => {
-        order.orderDetails.forEach(detail => {
+        order.orderDetails.forEach((detail) => {
           if (reviewedProducts[detail.productId._id]) {
             acc[detail.productId._id] = true;
           }
@@ -35,7 +35,9 @@ function PurchaseHistory() {
   }, [orders]);
 
   useEffect(() => {
-    const reviewedProductsFromStorage = JSON.parse(localStorage.getItem("reviewedProducts"));
+    const reviewedProductsFromStorage = JSON.parse(
+      localStorage.getItem("reviewedProducts")
+    );
     if (reviewedProductsFromStorage) {
       setReviewedProducts(reviewedProductsFromStorage);
     }
@@ -53,6 +55,7 @@ function PurchaseHistory() {
       data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
 
       setOrders(data);
+      console.log("««««« set »»»»»", setOrders);
     } catch (error) {
       console.error(error);
     }
@@ -60,7 +63,7 @@ function PurchaseHistory() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
 
   const handleRatingChange = (value) => {
     setRating(value);
@@ -91,10 +94,10 @@ function PurchaseHistory() {
         productId: selectedProductId._id,
         ratingRate: rating,
         comment: comment,
-        reviewDate: new Date()
+        reviewDate: new Date(),
       };
 
-      const response = await axiosClient.post('/reviews', reviewData);
+      const response = await axiosClient.post("/reviews", reviewData);
 
       toast.success("Bạn đã đánh giá thành công!");
 
@@ -103,11 +106,14 @@ function PurchaseHistory() {
         [selectedProductId._id]: true,
       };
       setReviewedProducts(updatedReviewedProducts);
-      localStorage.setItem("reviewedProducts", JSON.stringify(updatedReviewedProducts));
+      localStorage.setItem(
+        "reviewedProducts",
+        JSON.stringify(updatedReviewedProducts)
+      );
 
       setIsModalOpen(false);
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       toast.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
     }
   };
@@ -134,11 +140,12 @@ function PurchaseHistory() {
   };
 
   const getOrderAction = (status, productId, order) => {
-    console.log('order', order);
+    console.log("order", order);
     const isReviewed = reviewedProducts[productId._id];
 
     if (status === "COMPLETE") {
-      if (!isReviewed) { // Nếu sản phẩm chưa được đánh giá
+      if (!isReviewed) {
+        // Nếu sản phẩm chưa được đánh giá
         return (
           <button
             className="bg-primry text-white font-bold w-[150px] h-[40px] rounded-full hover:bg-white hover:text-primry hover:border-primry hover:border mr-5"
@@ -172,7 +179,7 @@ function PurchaseHistory() {
 
   const HandleMuaLai = (productId) => {
     router.push(`/${productId._id}`);
-  }
+  };
 
   const getStatusText = (status) => {
     if (status === "COMPLETE") {
@@ -191,9 +198,12 @@ function PurchaseHistory() {
           LỊCH SỬ MUA HÀNG
         </h1>
       </div>
-      <div className="flex flex-col mt-[20px]" style={{
-        background: "-webkit-linear-gradient(top,#fff 0%,#f7f7f7 100%)",
-      }}>
+      <div
+        className="flex flex-col mt-[20px]"
+        style={{
+          background: "-webkit-linear-gradient(top,#fff 0%,#f7f7f7 100%)",
+        }}
+      >
         {orders &&
           orders
             .filter((order) => order.status !== "CANCELED")
@@ -231,9 +241,15 @@ function PurchaseHistory() {
                         </p>
                         <div className="flex xl:gap-[180px] lg:gap-[100px]">
                           <p className="text-lg flex justify-center items-center font-roboto ">
-                            {Moment(`${order.createdDate}`).format("DD/MM/YYYY")}
+                            {Moment(`${order.createdDate}`).format(
+                              "DD/MM/YYYY"
+                            )}
                           </p>
-                          {getOrderAction(order.status, detail.productId, order._id)}
+                          {getOrderAction(
+                            order.status,
+                            detail.productId,
+                            order._id
+                          )}
                           <Modal
                             title={"Đánh giá sản phẩm"}
                             visible={isModalOpen}
@@ -241,37 +257,51 @@ function PurchaseHistory() {
                             onCancel={handleCancel}
                             className="font-roboto text-sm"
                           >
-                            {selectedProductId && orders && orders.map(order => (
-                              order.orderDetails.map((detail, index) => {
-                                if (detail.productId === selectedProductId) {
-                                  return (
-                                    <div key={index}>
-                                      <div className="flex">
-                                        <div className="max-w-[100px]">
-                                          <img
-                                            src={`${API_URL}${detail.imageUrl}`}
-                                            alt={`Image-${detail._id}`}
-                                            className="object-contain"
+                            {selectedProductId &&
+                              orders &&
+                              orders.map((order) =>
+                                order.orderDetails.map((detail, index) => {
+                                  if (detail.productId === selectedProductId) {
+                                    return (
+                                      <div key={index}>
+                                        <div className="flex">
+                                          <div className="max-w-[100px]">
+                                            <img
+                                              src={`${API_URL}${detail.imageUrl}`}
+                                              alt={`Image-${detail._id}`}
+                                              className="object-contain"
+                                            />
+                                          </div>
+                                          <h3 className="font-roboto flex items-center justify-center">
+                                            {detail.productName}
+                                          </h3>
+                                        </div>
+                                        <div className="flex gap-8">
+                                          <p className="font-roboto mb-4">
+                                            Chất lượng sản phẩm
+                                          </p>
+                                          <Rate
+                                            allowHalf
+                                            defaultValue={0}
+                                            onChange={handleRatingChange}
                                           />
                                         </div>
-                                        <h3 className="font-roboto flex items-center justify-center">
-                                          {detail.productName}
-                                        </h3>
+                                        <TextArea
+                                          placeholder="Hãy chia sẻ những điều bạn thích về sản phẩm này với người mua khác nhé!"
+                                          allowClear
+                                          value={comment}
+                                          onChange={handleCommentChange}
+                                        />
                                       </div>
-                                      <div className="flex gap-8">
-                                        <p className="font-roboto mb-4">Chất lượng sản phẩm</p>
-                                        <Rate allowHalf defaultValue={0} onChange={handleRatingChange} />
-                                      </div>
-                                      <TextArea placeholder="Hãy chia sẻ những điều bạn thích về sản phẩm này với người mua khác nhé!" allowClear value={comment} onChange={handleCommentChange} />
-                                    </div>
-                                  );
-                                }
-                              })
-                            ))}
+                                    );
+                                  }
+                                })
+                              )}
                           </Modal>
                         </div>
                       </div>
-                    </div>);
+                    </div>
+                  );
                 })}
               </div>
             ))}
@@ -354,18 +384,24 @@ function PurchaseHistory() {
                         </Modal>
                       </div> */}
                       <div className="flex xl:gap-[180px] lg:gap-[100px]">
-                          <p className="text-lg flex justify-center items-center font-roboto ">
-                            {Moment(`${order.createdDate}`).format("DD/MM/YYYY")}
-                          </p>
-                          {getOrderAction(order.status, detail.productId, order._id)}
-                          <Modal
-                            title={"Đánh giá sản phẩm"}
-                            visible={isModalOpen}
-                            onOk={handleOk}
-                            onCancel={handleCancel}
-                            className="font-roboto text-sm"
-                          >
-                            {selectedProductId && orders && orders.map(order => (
+                        <p className="text-lg flex justify-center items-center font-roboto ">
+                          {Moment(`${order.createdDate}`).format("DD/MM/YYYY")}
+                        </p>
+                        {getOrderAction(
+                          order.status,
+                          detail.productId,
+                          order._id
+                        )}
+                        <Modal
+                          title={"Đánh giá sản phẩm"}
+                          visible={isModalOpen}
+                          onOk={handleOk}
+                          onCancel={handleCancel}
+                          className="font-roboto text-sm"
+                        >
+                          {selectedProductId &&
+                            orders &&
+                            orders.map((order) =>
                               order.orderDetails.map((detail, index) => {
                                 if (detail.productId === selectedProductId) {
                                   return (
@@ -383,17 +419,28 @@ function PurchaseHistory() {
                                         </h3>
                                       </div>
                                       <div className="flex gap-8">
-                                        <p className="font-roboto mb-4">Chất lượng sản phẩm</p>
-                                        <Rate allowHalf defaultValue={0} onChange={handleRatingChange} />
+                                        <p className="font-roboto mb-4">
+                                          Chất lượng sản phẩm
+                                        </p>
+                                        <Rate
+                                          allowHalf
+                                          defaultValue={0}
+                                          onChange={handleRatingChange}
+                                        />
                                       </div>
-                                      <TextArea placeholder="Hãy chia sẻ những điều bạn thích về sản phẩm này với người mua khác nhé!" allowClear value={comment} onChange={handleCommentChange} />
+                                      <TextArea
+                                        placeholder="Hãy chia sẻ những điều bạn thích về sản phẩm này với người mua khác nhé!"
+                                        allowClear
+                                        value={comment}
+                                        onChange={handleCommentChange}
+                                      />
                                     </div>
                                   );
                                 }
                               })
-                            ))}
-                          </Modal>
-                        </div>
+                            )}
+                        </Modal>
+                      </div>
                     </div>
                   </div>
                 ))}
