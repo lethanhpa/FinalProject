@@ -176,7 +176,7 @@ function Products({ products, categories, reviews }) {
               <option value="" disabled hidden>
                 Danh Mục
               </option>
-              {categories.slice(1, 6).map((item) => (
+              {categories.slice(1, 5).map((item) => (
                 <option key={item._id} value={item._id}>
                   {item.name}
                 </option>
