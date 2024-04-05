@@ -1,11 +1,12 @@
 import React, { memo, useState } from "react";
-import { Form, Input, Button, message, BackTop } from "antd";
+import { Form, Input, Button, BackTop } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "../../libraries/axiosClient";
+import { toast } from "react-toastify";
 
-const SignIn = () => {
+function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -37,20 +38,20 @@ const SignIn = () => {
       });
 
       if (customer.data.status) {
-        message.error("Tài khoản của bạn đã bị khóa.");
+        toast.error("Tài khoản của bạn đã bị khóa.");
       } else {
         localStorage.setItem("token", token);
-        console.log('tokenDN', token);
+        console.log("tokenDN", token);
 
         axios.defaults.headers.Authorization = `Bearer ${token}`;
 
-        message.success("Đăng nhập thành công!!!");
+        toast.success("Đăng nhập thành công!!!");
 
         router.push("/");
       }
     } catch (error) {
       console.error(error);
-      message.error("Đăng nhập thất bại.");
+      toast.error("Đăng nhập thất bại.");
     }
   };
 
@@ -138,9 +139,9 @@ const SignIn = () => {
           </Link>
         </div>
       </Form>
-      <BackTop/>
+      <BackTop />
     </div>
   );
-};
+}
 
 export default memo(SignIn);

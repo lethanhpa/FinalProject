@@ -15,8 +15,8 @@ import { useRouter } from "next/router";
 import { UserAddOutlined, LoginOutlined } from "@ant-design/icons";
 import { jwtDecode } from "jwt-decode";
 import axios from "../../../libraries/axiosClient";
-import { message } from "antd";
 import useCartStore from "@/store/CartStore";
+import { toast } from "react-toastify";
 ("../navigation/index");
 
 function TopHeader() {
@@ -46,11 +46,10 @@ function TopHeader() {
     setIsLogin(false);
 
     router.push("/");
-    message.success("Đăng xuất thành công");
+    toast.success("Đăng xuất thành công");
   };
-    
-  const { getCartItems } =
-    useCartStore();
+
+  const { getCartItems } = useCartStore();
 
   const cartItems = getCartItems(customerId);
 
@@ -83,12 +82,11 @@ function TopHeader() {
   };
 
   useEffect(() => {
-    if (customerId) { // Check if customerId exists
+    if (customerId) {
+      // Check if customerId exists
       fetchCustomers(); // Fetch customer data for the current customerId
     }
   }, [customerId]); // useEffect will run again whenever customerId changes
-  
-
 
   const [open, setOpen] = React.useState(false);
 
@@ -99,8 +97,6 @@ function TopHeader() {
   const onClose = () => {
     setOpen(false);
   };
-
-
 
   return (
     <div className="flex justify-between container pt-[0.625rem]">
@@ -179,10 +175,10 @@ function TopHeader() {
                 <div className="relative">
                   <ShoppingCart className="md:w-[1.75rem] md:h-[1.75rem] w-[1.5rem] h-[1.5rem]" />
                   {cartItems.length >= 0 && (
-                  <span className="top-[-8px] right-[-6px] absolute rounded-full bg-red text-white text-xs font-normal leading-[1.125rem] shrink-0 w-[1.25rem] h-[1.25rem] flex justify-center">
-                    {cartItems.length}
-                  </span>
-                  )} 
+                    <span className="top-[-8px] right-[-6px] absolute rounded-full bg-red text-white text-xs font-normal leading-[1.125rem] shrink-0 w-[1.25rem] h-[1.25rem] flex justify-center">
+                      {cartItems.length}
+                    </span>
+                  )}
                 </div>
               </Link>
               <span className="text-sm text-black leading-7 font-normal sm:block hidden font-roboto">
@@ -238,8 +234,9 @@ function TopHeader() {
                 >
                   <Link
                     href="/"
-                    className={`flex items-center ${router.pathname === "/" ? "text-primry" : ""
-                      }`}
+                    className={`flex items-center ${
+                      router.pathname === "/" ? "text-primry" : ""
+                    }`}
                   >
                     Trang chủ
                   </Link>
@@ -251,8 +248,9 @@ function TopHeader() {
                 >
                   <Link
                     href="/products"
-                    className={`flex items-center ${router.pathname === "/products" ? "text-primry" : ""
-                      }`}
+                    className={`flex items-center ${
+                      router.pathname === "/products" ? "text-primry" : ""
+                    }`}
                   >
                     Sản phẩm
                   </Link>
@@ -264,10 +262,11 @@ function TopHeader() {
                 >
                   <Link
                     href="/wedding-jewelry"
-                    className={`flex items-center ${router.pathname === "/wedding-jewelry"
+                    className={`flex items-center ${
+                      router.pathname === "/wedding-jewelry"
                         ? "text-primry"
                         : ""
-                      }`}
+                    }`}
                   >
                     Trang sức cưới
                   </Link>
@@ -279,8 +278,9 @@ function TopHeader() {
                 >
                   <Link
                     href="/brand"
-                    className={`flex items-center ${router.pathname === "/brand" ? "text-primry" : ""
-                      }`}
+                    className={`flex items-center ${
+                      router.pathname === "/brand" ? "text-primry" : ""
+                    }`}
                   >
                     Thương Hiệu
                   </Link>
@@ -292,8 +292,9 @@ function TopHeader() {
                 >
                   <Link
                     href="/promotion"
-                    className={`flex items-center ${router.pathname === "/promotion" ? "text-primry" : ""
-                      }`}
+                    className={`flex items-center ${
+                      router.pathname === "/promotion" ? "text-primry" : ""
+                    }`}
                   >
                     Khuyến mãi
                   </Link>
@@ -305,8 +306,9 @@ function TopHeader() {
                 >
                   <Link
                     href="/contact"
-                    className={`flex items-center ${router.pathname === "/contact" ? "text-primry" : ""
-                      }`}
+                    className={`flex items-center ${
+                      router.pathname === "/contact" ? "text-primry" : ""
+                    }`}
                   >
                     Liên hệ
                   </Link>

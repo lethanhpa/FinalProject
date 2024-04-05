@@ -7,7 +7,6 @@ import {
   DatePicker,
   Space,
   Select,
-  message,
   BackTop,
 } from "antd";
 import {
@@ -19,9 +18,10 @@ import {
 } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import axios from "../../libraries/axiosClient";
+import { toast } from "react-toastify";
 const apiName = "customers";
 
-const SignUp = () => {
+function SignUp() {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
@@ -99,14 +99,14 @@ const SignUp = () => {
           setRefresh((f) => f + 1);
           createForm.resetFields();
           router.push("/sign-in");
-          message.success("Đăng ký thành công!");
+          toast.success("Đăng ký thành công!");
         })
         .catch((err) => {
           console.error(err);
-          message.error("Đăng ký thất bại");
+          toast.error("Đăng ký thất bại");
         });
     } else {
-      message.error("Đã xảy ra lỗi khi tạo địa chỉ hoàn chỉnh.");
+      toast.error("Đã xảy ra lỗi khi tạo địa chỉ hoàn chỉnh.");
     }
     [refresh];
   };
@@ -333,9 +333,9 @@ const SignUp = () => {
           </Button>
         </Form.Item>
       </Form>
-      <BackTop/>
+      <BackTop />
     </div>
   );
-};
+}
 
 export default memo(SignUp);

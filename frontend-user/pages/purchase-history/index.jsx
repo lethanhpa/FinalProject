@@ -1,11 +1,12 @@
 import React, { memo, useEffect, useState } from "react";
 import numeral from "numeral";
-import { BackTop, Modal, Input, Rate, message } from "antd";
+import { BackTop, Modal, Input, Rate } from "antd";
 import axiosClient from "@/libraries/axiosClient";
 import { API_URL } from "@/constants";
 import Moment from "moment";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 const { TextArea } = Input;
 
@@ -77,7 +78,7 @@ function PurchaseHistory() {
   const handleOk = async () => {
     try {
       if (rating === 0) {
-        message.error("Vui lòng chọn số sao để đánh giá sản phẩm.");
+        toast.error("Vui lòng chọn số sao để đánh giá sản phẩm.");
         return;
       }
 
@@ -95,7 +96,7 @@ function PurchaseHistory() {
 
       const response = await axiosClient.post('/reviews', reviewData);
 
-      message.success("Bạn đã đánh giá thành công!");
+      toast.success("Bạn đã đánh giá thành công!");
 
       const updatedReviewedProducts = {
         ...reviewedProducts,
@@ -107,7 +108,7 @@ function PurchaseHistory() {
       setIsModalOpen(false);
     } catch (error) {
       console.error('Error:', error);
-      message.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
+      toast.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
     }
   };
 

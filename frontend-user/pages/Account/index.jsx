@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import {
   Input,
   Form,
-  message,
   Select,
   Space,
   Modal,
@@ -25,6 +24,7 @@ import {
 import { jwtDecode } from "jwt-decode";
 import ImgCrop from "antd-img-crop";
 import { Info } from "lucide-react";
+import { toast } from "react-toastify";
 
 const apiName = "/customers";
 
@@ -111,14 +111,14 @@ function Account() {
           setRefresh((f) => f + 1);
           updateForm.resetFields();
           setOpen(false);
-          message.success("Cập nhật thành công!");
+          toast.success("Cập nhật thành công!");
         })
         .catch((err) => {
           console.error(err);
-          message.error("Cập nhật thất bại");
+          toast.error("Cập nhật thất bại");
         });
     } else {
-      message.error("Cập nhật thất bại.");
+      toast.error("Cập nhật thất bại.");
     }
     [refresh];
   };
@@ -194,11 +194,11 @@ function Account() {
                           onChange={(info) => {
                             if (info.file.status === "done") {
                               router.reload();
-                              message.success(
+                              toast.success(
                                 "Cập nhật ảnh đại diện thành công!"
                               );
                             } else if (info.file.status === "error") {
-                              message.error("Cập nhật ảnh đại diện thất bại.");
+                              toast.error("Cập nhật ảnh đại diện thất bại.");
                             }
                           }}
                         >

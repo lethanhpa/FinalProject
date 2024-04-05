@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { API_URL } from "@/constants";
 import numeral from "numeral";
 import { useRouter } from "next/router";
@@ -7,23 +7,29 @@ import { Button, Popover, Rate, } from 'antd';
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import { Minus, Plus, RefreshCcw, Truck } from "lucide-react";
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';
 
 import axiosClient from "@/libraries/axiosClient";
 import useCartStore from "@/store/CartStore";
 
 function ProductDetails({ product, review }) {
-
-  const [customerId, setCustomerId] = React.useState(null);
-
+  const [customerId, setCustomerId] = useState(null);
   const router = useRouter();
+  const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [stock, setStock] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const [quantity, setQuantity] = React.useState(1);
+  const openLightbox = () => {
+    setIsOpen(true);
+  };
 
-  const [selectedSize, setSelectedSize] = React.useState(null);
-  const [stock, setStock] = React.useState(0);
+  const [showSizeWarning, setShowSizeWarning] = useState(false);
 
-  const [showSizeWarning, setShowSizeWarning] = React.useState(false);
-
+  const closeLightbox = () => {
+    setIsOpen(false);
+  }
 
   const handleSizeChange = (item) => {
     setSelectedSize(item);
@@ -63,7 +69,7 @@ function ProductDetails({ product, review }) {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       const decoded = jwtDecode(token);
@@ -147,10 +153,19 @@ function ProductDetails({ product, review }) {
         {product ? (
           <div key={product._id} className="md:flex items-center lg:gap-[100px] gap-[50px] ">
             <div>
-              <img src={`${API_URL}/${product.imageUrl}`} alt={`slide-${product.id}`} className="hover:-translate-y-1 hover:scale-105  duration-300 text-clip  sm:block flex items-center w-[28rem] object-contain" style={{
-                background:
-                  "-webkit-linear-gradient(top,#fff 0%,#f7f7f7 100%)",
-              }} />
+              <img
+                src={`${API_URL}/${product.imageUrl}`}
+                alt={`slide-${product.id}`}
+                className="hover:-translate-y-1 hover:scale-105 duration-300 text-clip sm:block flex items-center w-[28rem] object-contain cursor-pointer"
+                style={{ background: "-webkit-linear-gradient(top,#fff 0%,#f7f7f7 100%)" }}
+                onClick={openLightbox}
+              />
+              {isOpen && (
+                <Lightbox
+                  mainSrc={`${API_URL}/${product.imageUrl}`}
+                  onCloseRequest={closeLightbox}
+                />
+              )}
             </div>
             <div className="flex flex-col justify-center gap-3 md:mr-[100px] max-w-[400px] md:mt-0 mt-[50px]">
               <h4 className="flex gap-4 text-xl font-roboto font-bold">Jewelry | {product.productName}</h4>
