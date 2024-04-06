@@ -77,11 +77,11 @@ router.post("/forgot-password", async (req, res) => {
     const mailOptions = {
       from: "Jewellery <nguyenthanhtung03082001@gmail.com>",
       to: email,
-      subject: "[JEWELLERY] - Đổi mật khẩu",
+      subject: "[JEWELLERY] - Đặt lại mật khẩu",
       html: `<p>Chào bạn,</p>
              <p>Bạn nhận được email này vì bạn (hoặc ai đó) đã yêu cầu đặt lại mật khẩu cho tài khoản của bạn.</p>
              <p>Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.</p>
-             <p>Nếu bạn muốn đặt lại mật khẩu, vui lòng click vào đường link sau: <a href="${resetLink}">Đổi mật khẩu</a></p>
+             <p>Nếu bạn muốn đặt lại mật khẩu, vui lòng click vào đường link sau: <a href="${resetLink}">Đặt lại mật khẩu</a></p>
              <p>Xin cảm ơn,</p>
              <p>Jewellery</p>`,
     };

@@ -6,7 +6,7 @@ import axiosClient from "@/libraries/axiosClient";
 import { API_URL } from "@/constants";
 import numeral from "numeral";
 import { toast } from "react-toastify";
-import { Select, BackTop } from "antd";
+import { Select, BackTop, Form } from "antd";
 import { useRouter } from "next/router";
 
 function Checkout() {
@@ -25,6 +25,7 @@ function Checkout() {
   const [wards, setWards] = useState([]);
   const orderStore = useOrderStore();
   const router = useRouter();
+  const [form] = Form.useForm();
 
   const { getCartItems, removeAllCart } = useCartStore();
 
@@ -117,81 +118,78 @@ function Checkout() {
 
   const cartItems = getCartItems(customerId);
 
-  console.log('cartItems', cartItems);
+  console.log("cartItems", cartItems);
 
   const handleAddOrder = async () => {
-    const token = localStorage.getItem("token");
-    const decoded = jwtDecode(token);
-    const customerId = decoded._id;
-
-    const itemsWithSizeId = cartItems.filter((item) => item.size);
-    const itemsWithoutSizeId = cartItems.filter((item) => !item.size);
-
-    const orderDetailsWithSizeId = itemsWithSizeId.map((item) => ({
-      productId: item.productId,
-      productName: item.productName,
-      imageUrl: item.imageUrl,
-      quantity: item.quantity,
-      price: item.price - (item.price * item.discount) / 100,
-      discount: item.discount,
-      sizeId: item.sizeId,
-      size: item.size,
-      stock: item.stock,
-    }));
-
-    const orderDetailsWithoutSizeId = itemsWithoutSizeId.map((item) => ({
-      productId: item.productId,
-      productName: item.productName,
-      imageUrl: item.imageUrl,
-      quantity: item.quantity,
-      price: item.price - (item.price * item.discount) / 100,
-      discount: item.discount,
-    }));
-
-    console.log("orderDetailsWithoutSizeId", orderDetailsWithoutSizeId);
-
-    // Tạo danh sách chi tiết đơn hàng cho sản phẩm có thuộc tính sizeId
-
-    console.log("orderDetailsWithSizeId", orderDetailsWithSizeId);
-
-    const orderDetails = [
-      ...orderDetailsWithSizeId,
-      ...orderDetailsWithoutSizeId,
-    ];
-
-    console.log("orderDetails", orderDetails);
-
-    const createdDate = new Date();
-    const shippedDate = new Date(createdDate);
-    shippedDate.setDate(createdDate.getDate() + 15);
-
-    const provinceName = provinces.find(
-      (province) => province.province_id === selectedProvince
-    )?.province_name;
-    const districtName = districts.find(
-      (district) => district.district_id === selectedDistrict
-    )?.district_name;
-    const wardName = wards.find(
-      (ward) => ward.ward_id === selectedWard
-    )?.ward_name;
-
-    const fullAddress = `${address}, ${wardName}, ${districtName}, ${provinceName}`;
-
-    const order = {
-      createdDate: new Date(),
-      shippedDate: shippedDate,
-      paymentType: paymentType,
-      shippingAddress: fullAddress,
-      status: "WAITING",
-      description: description,
-      customerId: customerId,
-      employeeId: null,
-      orderDetails: orderDetails,
-      emailOrder: emailOrder,
-      phoneNumberOrder: phoneNumberOrder,
-    };
-
     try {
+      // Validate các trường trong form
+      const values = await form.validateFields();
+
+      // Tiến hành tạo đơn hàng nếu thông tin đã được điền đầy đủ
+      const token = localStorage.getItem("token");
+      const decoded = jwtDecode(token);
+      const customerId = decoded._id;
+
+      const itemsWithSizeId = cartItems.filter((item) => item.size);
+      const itemsWithoutSizeId = cartItems.filter((item) => !item.size);
+
+      const orderDetailsWithSizeId = itemsWithSizeId.map((item) => ({
+        productId: item.productId,
+        productName: item.productName,
+        imageUrl: item.imageUrl,
+        quantity: item.quantity,
+        price: item.price - (item.price * item.discount) / 100,
+        discount: item.discount,
+        sizeId: item.sizeId,
+        size: item.size,
+        stock: item.stock,
+      }));
+
+      const orderDetailsWithoutSizeId = itemsWithoutSizeId.map((item) => ({
+        productId: item.productId,
+        productName: item.productName,
+        imageUrl: item.imageUrl,
+        quantity: item.quantity,
+        price: item.price - (item.price * item.discount) / 100,
+        discount: item.discount,
+      }));
+
+      const orderDetails = [
+        ...orderDetailsWithSizeId,
+        ...orderDetailsWithoutSizeId,
+      ];
+
+      const createdDate = new Date();
+      const shippedDate = new Date(createdDate);
+      shippedDate.setDate(createdDate.getDate() + 15);
+
+      const provinceName = provinces.find(
+        (province) => province.province_id === selectedProvince
+      )?.province_name;
+      const districtName = districts.find(
+        (district) => district.district_id === selectedDistrict
+      )?.district_name;
+      const wardName = wards.find(
+        (ward) => ward.ward_id === selectedWard
+      )?.ward_name;
+
+      const fullAddress = `${address}, ${wardName}, ${districtName}, ${provinceName}`;
+
+      const order = {
+        createdDate: new Date(),
+        shippedDate: shippedDate,
+        paymentType: paymentType,
+        shippingAddress: fullAddress,
+        status: "WAITING",
+        description: description,
+        customerId: customerId,
+        employeeId: null,
+        orderDetails: orderDetails,
+        emailOrder: emailOrder,
+        phoneNumberOrder: phoneNumberOrder,
+      };
+
+      // Gửi request tạo đơn hàng
       await axiosClient.post("/orders", order);
       removeAllCart(customerId);
       toast.success("Đặt hàng thành công!", 1.5);
@@ -205,131 +203,180 @@ function Checkout() {
         }))
       );
       router.push("/thanks");
-    } catch (error) {
-      console.error(error);
-      toast.error("Đặt hàng thất bại!");
+    } catch (errorInfo) {
+      // Nếu có lỗi valid, hiển thị thông báo yêu cầu nhập đúng thông tin
+      toast.error("Vui lòng nhập đầy đủ thông tin địa chỉ và liên hệ");
     }
   };
 
   return (
     <div className="container ssm:flex block my-10">
-      <div className="flex-1 ">
-        <p className="pb-5">Bạn muốn nhận đơn hàng bằng cách nào?</p>
-        {customers && (
-          <div className="border border-black p-4 rounded-lg-lg">
-            <p>
-              {customers.lastName} {customers.firstName}
-            </p>
-            <p>{customers.email}</p>
-            <p>{customers.phoneNumber}</p>
-          </div>
-        )}
-        <p className="pt-5 pb-5">Vui lòng nhập địa chỉ vận chuyển của bạn</p>
-        <div className="space-y-2 border border-black p-4 rounded-lg-lg">
-          <div className="space-x-3 flex flex-col lg:flex-row">
-            <div>
-              <p>Chọn tỉnh/thành phố:</p>
-              <Select
-                name="provinceId"
-                className="mt-2 xl:w-[221px] lg:w-full border rounded-lg"
-                placeholder="Chọn Tỉnh/Thành phố"
-                onChange={handleProvinceChange}
-                size="large"
-                options={
-                  provinces.length > 0 &&
-                  provinces.map((province) => {
-                    return {
-                      value: province.province_id,
-                      label: province.province_name,
-                    };
-                  })
-                }
-              />
+      <Form form={form}>
+        <div className="flex-1 ">
+          <p className="pb-5">Bạn muốn nhận đơn hàng bằng cách nào?</p>
+          {customers && (
+            <div className="border border-black p-4 rounded-lg-lg">
+              <p>
+                {customers.lastName} {customers.firstName}
+              </p>
+              <p>{customers.email}</p>
+              <p>{customers.phoneNumber}</p>
             </div>
+          )}
+          <p className="pt-5 pb-5">Vui lòng nhập địa chỉ vận chuyển của bạn</p>
+          <div className="space-y-2 border border-black p-4 rounded-lg-lg">
+            <div className="space-x-3 flex flex-col lg:flex-row">
+              <div>
+                <p>Chọn tỉnh/thành phố:</p>
+                <Form.Item
+                  name="provinceId"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn tỉnh/ Thành phố",
+                    },
+                  ]}
+                >
+                  <Select
+                    className="mt-2 xl:w-[221px] lg:w-full border rounded-lg"
+                    placeholder="Chọn Tỉnh/Thành phố"
+                    onChange={handleProvinceChange}
+                    size="large"
+                    options={
+                      provinces.length > 0 &&
+                      provinces.map((province) => {
+                        return {
+                          value: province.province_id,
+                          label: province.province_name,
+                        };
+                      })
+                    }
+                  />
+                </Form.Item>
+              </div>
+              <div>
+                <p>Chọn quận/huyện:</p>
+                <Form.Item
+                  name="districtId"
+                  rules={[
+                    { required: true, message: "Vui lòng chọn Quận/Huyện" },
+                  ]}
+                >
+                  <Select
+                    className="mt-2 xl:w-[221px] lg:w-full border rounded-lg"
+                    placeholder="Chọn Quận/Huyện"
+                    onChange={handleDistrictChange}
+                    size="large"
+                    options={
+                      districts.length > 0 &&
+                      districts.map((district) => {
+                        return {
+                          value: district.district_id,
+                          label: district.district_name,
+                        };
+                      })
+                    }
+                  />
+                </Form.Item>
+              </div>
+              <div>
+                <p>Chọn phường/xã:</p>
+                <Form.Item
+                  name="wardId"
+                  rules={[
+                    { required: true, message: "Vui lòng chọn Phường/Xã" },
+                  ]}
+                >
+                  <Select
+                    className="mt-2 xl:w-[221px] lg:w-full border rounded-lg"
+                    placeholder="Chọn Phường/Xã"
+                    size="large"
+                    onChange={handleWardChange}
+                    options={
+                      wards.length > 0 &&
+                      wards.map((ward) => {
+                        return {
+                          value: ward.ward_id,
+                          label: ward.ward_name,
+                        };
+                      })
+                    }
+                  />
+                </Form.Item>
+              </div>
+            </div>
+            <p>Địa chỉ chi tiết:</p>
+            <Form.Item
+              name="address"
+              rules={[
+                { required: true, message: "Vui lòng nhập địa chỉ cụ thể" },
+              ]}
+            >
+              <input
+                type="text"
+                placeholder="Nhập địa chỉ của bạn"
+                className="border rounded-lg p-2 w-full"
+                value={address}
+                onChange={handleAddressInputChange}
+              />
+            </Form.Item>
+            <p>Email:</p>
+            <Form.Item
+              name="emailOrder"
+              rules={[
+                { required: true, message: "Vui lòng nhập địa chỉ email" },
+                { type: "email", message: "Email không hợp lệ" },
+              ]}
+            >
+              <input
+                type="text"
+                placeholder="Nhập email của bạn"
+                className="border rounded-lg p-2 w-full"
+                value={emailOrder}
+                onChange={(e) => setEmailOrder(e.target.value)}
+              />
+            </Form.Item>
+            <p>Số điện thoại:</p>
+            <Form.Item
+              name="phoneNumberOrder"
+              rules={[
+                { required: true, message: "Vui lòng nhập số điện thoại" },
+                {
+                  pattern: /^[0-9]+$/,
+                  message: "Số điện thoại chỉ được chứa các ký tự số",
+                },
+                { len: 10, message: "Số điện thoại phải có độ dài 10 số" },
+              ]}
+            >
+              <input
+                type="text"
+                placeholder="Nhập số điện thoại của bạn"
+                className="border rounded-lg p-2 w-full"
+                value={phoneNumberOrder}
+                onChange={(e) => setPhoneNumberOrder(e.target.value)}
+              />
+            </Form.Item>
 
-            <div>
-              <p>Chọn quận/huyện:</p>
-              <Select
-                name="districtId"
-                className="mt-2 xl:w-[221px] lg:w-full border rounded-lg"
-                placeholder="Chọn Quận/Huyện"
-                onChange={handleDistrictChange}
-                size="large"
-                options={
-                  districts.length > 0 &&
-                  districts.map((district) => {
-                    return {
-                      value: district.district_id,
-                      label: district.district_name,
-                    };
-                  })
-                }
-              />
-            </div>
-
-            <div>
-              <p>Chọn phường/xã:</p>
-              <Select
-                name="wardId"
-                className="mt-2 xl:w-[221px] lg:w-full border rounded-lg"
-                placeholder="Chọn Phường/Xã"
-                size="large"
-                onChange={handleWardChange}
-                options={
-                  wards.length > 0 &&
-                  wards.map((ward) => {
-                    return {
-                      value: ward.ward_id,
-                      label: ward.ward_name,
-                    };
-                  })
-                }
-              />
-            </div>
+            <p>Ghi chú của bạn về đơn hàng cho chúng tôi:</p>
+            <input
+              type="text"
+              placeholder="Nhập ghi chú của bạn"
+              className="border rounded-lg p-2 w-full"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+            <p>Phương thức thanh toán:</p>
+            <select
+              value={paymentType}
+              onChange={(e) => setPaymentType(e.target.value)}
+              className="border rounded-md py-2 pl-1 w-full"
+            >
+              <option value="CASH">Tiền mặt</option>
+              <option value="TRANSFER">Chuyển khoản</option>
+            </select>
           </div>
-          <p>Địa chỉ chi tiết:</p>
-          <input
-            type="text"
-            placeholder="Nhập địa chỉ của bạn"
-            className="border rounded-lg p-2 w-full"
-            value={address}
-            onChange={handleAddressInputChange}
-          />
-          <p>Email:</p>
-          <input
-            type="text"
-            placeholder="Nhập email của bạn"
-            className="border rounded-lg p-2 w-full"
-            value={emailOrder}
-            onChange={(e) => setEmailOrder(e.target.value)}
-          />
-          <p>Số điện thoại:</p>
-          <input
-            type="text"
-            placeholder="Nhập số điện thoại của bạn"
-            className="border rounded-lg p-2 w-full"
-            value={phoneNumberOrder}
-            onChange={(e) => setPhoneNumberOrder(e.target.value)}
-          />
-          <p>Ghi chú của bạn về đơn hàng cho chúng tôi:</p>
-          <input
-            type="text"
-            placeholder="Nhập ghi chú của bạn"
-            className="border rounded-lg p-2 w-full"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <p>Phương thức thanh toán:</p>
-          <select
-            value={paymentType}
-            onChange={(e) => setPaymentType(e.target.value)}
-            className="border rounded-md py-2 pl-1 w-full"
-          >
-            <option value="CASH">Tiền mặt</option>
-            <option value="TRANSFER">Chuyển khoản</option>
-          </select>
         </div>
-      </div>
+      </Form>
       {cartItems.length > 0 && (
         <div className="flex-1">
           <div className="flex justify-center flex-col w-full">

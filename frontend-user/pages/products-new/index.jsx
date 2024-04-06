@@ -12,7 +12,6 @@ function productsNew({ products, categories, reviews }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
-  const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedMaterial, setSelectedMaterial] = useState("");
   const [selectedStone, setSelectedStone] = useState("");
 
@@ -69,12 +68,6 @@ function productsNew({ products, categories, reviews }) {
     if (selectedPrice) {
       filteredProducts = filteredProducts.filter((product) =>
         checkDiscountedPriceRange(product, selectedPrice)
-      );
-    }
-
-    if (searchKeyword) {
-      filteredProducts = filteredProducts.filter((product) =>
-        product.productName.toLowerCase().includes(searchKeyword.toLowerCase())
       );
     }
 
@@ -200,25 +193,6 @@ function productsNew({ products, categories, reviews }) {
               </option>
               <option value="200000000 -">Trên 200,000,000đ</option>
             </select>
-          </div>
-          <div className="w-1/4 relative flex ">
-            <input
-              id="search"
-              className="border w-full px-2 py-1.5 text-left"
-              placeholder="Tìm kiếm..."
-              required
-              type="text"
-              onChange={(e) => setSearchKeyword(e.target.value)}
-              value={searchKeyword}
-            />
-            <button
-              type="submit"
-              id="search"
-              aria-label="search"
-              className="absolute right-2.5 mt-1.5 mr-1"
-            >
-              <Search className="text-primry" />
-            </button>
           </div>
           <div className="w-1/4 md:flex border">
             <select
@@ -399,11 +373,12 @@ export default memo(productsNew);
 
 export async function getStaticProps() {
   try {
-    const [productsResponse, categoriesResponse, reviewsResponse] = await Promise.all([
-      axiosClient.get("/products"),
-      axiosClient.get("/categories"),
-      axiosClient.get("/reviews"),
-    ]);
+    const [productsResponse, categoriesResponse, reviewsResponse] =
+      await Promise.all([
+        axiosClient.get("/products"),
+        axiosClient.get("/categories"),
+        axiosClient.get("/reviews"),
+      ]);
 
     return {
       props: {

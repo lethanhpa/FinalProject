@@ -12,7 +12,6 @@ function Products({ products, categories, reviews }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
-  const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedMaterial, setSelectedMaterial] = useState("");
   const [selectedStone, setSelectedStone] = useState("");
 
@@ -72,12 +71,6 @@ function Products({ products, categories, reviews }) {
       );
     }
 
-    if (searchKeyword) {
-      filteredProducts = filteredProducts.filter((product) =>
-        product.productName.toLowerCase().includes(searchKeyword.toLowerCase())
-      );
-    }
-
     return filteredProducts;
   };
 
@@ -122,24 +115,6 @@ function Products({ products, categories, reviews }) {
       return price <= parseInt(maxPrice);
     }
   };
-
-  // const calculateAverageRating = (productId, reviews) => {
-  //   const productReviews = reviews.filter(
-  //     (review) => review.productId === productId
-  //   );
-  //   const totalReviews = productReviews.length;
-  //   if (totalReviews === 0) return "0";
-  //   const totalRating = productReviews.reduce(
-  //     (sum, review) => sum + review.ratingRate,
-  //     0
-  //   );
-  //   const averageRating = totalRating / totalReviews;
-  //   return `${
-  //     averageRating % 1 === 0
-  //       ? averageRating.toFixed(0)
-  //       : averageRating.toFixed(1)
-  //   } (${totalReviews})`;
-  // };
 
   const calculateAverageRating = (productId, reviews) => {
     const productReviews = reviews.filter(
@@ -221,25 +196,6 @@ function Products({ products, categories, reviews }) {
               </option>
               <option value="200000000 -">Trên 200,000,000đ</option>
             </select>
-          </div>
-          <div className="w-1/4 relative flex ">
-            <input
-              id="search"
-              className="border w-full px-2 py-1.5 text-left"
-              placeholder="Tìm kiếm..."
-              required
-              type="text"
-              onChange={(e) => setSearchKeyword(e.target.value)}
-              value={searchKeyword}
-            />
-            <button
-              type="submit"
-              id="search"
-              aria-label="search"
-              className="absolute right-2.5 mt-1.5 mr-1"
-            >
-              <Search className="text-primry" />
-            </button>
           </div>
           <div className="w-1/4 md:flex border">
             <select

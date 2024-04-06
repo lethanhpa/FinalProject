@@ -9,7 +9,6 @@ import { API_URL } from "@/constants";
 function WeddingJewelry({ products, reviews }) {
   const [visibleProducts, setVisibleProducts] = useState(8);
   const [selectedPrice, setSelectedPrice] = useState("");
-  const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedMaterial, setSelectedMaterial] = useState("");
   const [selectedStone, setSelectedStone] = useState("");
 
@@ -53,12 +52,6 @@ function WeddingJewelry({ products, reviews }) {
     if (selectedPrice) {
       filteredProducts = filteredProducts.filter((product) =>
         checkDiscountedPriceRange(product, selectedPrice)
-      );
-    }
-
-    if (searchKeyword) {
-      filteredProducts = filteredProducts.filter((product) =>
-        product.productName.toLowerCase().includes(searchKeyword.toLowerCase())
       );
     }
 
@@ -203,26 +196,6 @@ function WeddingJewelry({ products, reviews }) {
                 <option value="Kim Cương">Kim Cương</option>
                 <option value="Đá">Đá</option>
               </select>
-            </div>
-
-            <div className="w-1/4 relative flex">
-              <input
-                id="search"
-                className="border w-full px-2 py-1.5 text-left"
-                placeholder="Tìm kiếm..."
-                required
-                type="text"
-                onChange={(e) => setSearchKeyword(e.target.value)}
-                value={searchKeyword}
-              />
-              <button
-                type="submit"
-                id="search"
-                aria-label="search"
-                className="absolute right-2.5 mt-1.5 mr-1"
-              >
-                <Search className="text-primry" />
-              </button>
             </div>
           </div>
           <div className="flex items-center mb-5">

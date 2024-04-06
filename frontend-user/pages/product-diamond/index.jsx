@@ -7,12 +7,11 @@ import { Search } from "lucide-react";
 import { BackTop, Button, Divider, Rate } from "antd";
 import axiosClient from "@/libraries/axiosClient";
 
-function ProductDiamond({ products, categories , reviews}) {
+function ProductDiamond({ products, categories, reviews }) {
   const [visibleProducts, setVisibleProducts] = useState(20);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
-  const [searchKeyword, setSearchKeyword] = useState("");
 
   const totalProducts = products.length;
 
@@ -45,12 +44,6 @@ function ProductDiamond({ products, categories , reviews}) {
     if (selectedPrice) {
       filteredProducts = filteredProducts.filter((product) =>
         checkDiscountedPriceRange(product, selectedPrice)
-      );
-    }
-
-    if (searchKeyword) {
-      filteredProducts = filteredProducts.filter((product) =>
-        product.productName.toLowerCase().includes(searchKeyword.toLowerCase())
       );
     }
 
@@ -136,25 +129,6 @@ function ProductDiamond({ products, categories , reviews}) {
                 </option>
               ))}
             </select>
-          </div>
-          <div className="w-1/4 relative flex">
-            <input
-              id="search"
-              className="border w-full px-2 py-1.5 text-left"
-              placeholder="Tìm kiếm..."
-              required
-              type="text"
-              onChange={(e) => setSearchKeyword(e.target.value)}
-              value={searchKeyword}
-            />
-            <button
-              type="submit"
-              id="search"
-              aria-label="search"
-              className="absolute right-2.5 mt-1.5 mr-1"
-            >
-              <Search className="text-primry" />
-            </button>
           </div>
           <div className="w-1/4 md:flex border">
             <select
@@ -287,13 +261,13 @@ function ProductDiamond({ products, categories , reviews}) {
                       )}
                     </div>
                     <div className="flex justify-center gap-2">
-                    <Rate
-                      allowHalf
-                      disabled
-                      defaultValue={calculateAverageRating(item.id, reviews)}
-                      style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
-                    />
-                  </div>
+                      <Rate
+                        allowHalf
+                        disabled
+                        defaultValue={calculateAverageRating(item.id, reviews)}
+                        style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                      />
+                    </div>
                     <Divider>
                       <Button
                         className="bg-black text-white hover:bg-white font-light"
@@ -333,11 +307,12 @@ export default memo(ProductDiamond);
 
 export async function getStaticProps() {
   try {
-    const [productsResponse, categoriesResponse, reviewsResponse] = await Promise.all([
-      axiosClient.get("/products"),
-      axiosClient.get("/categories"),
-      axiosClient.get("/reviews"),
-    ]);
+    const [productsResponse, categoriesResponse, reviewsResponse] =
+      await Promise.all([
+        axiosClient.get("/products"),
+        axiosClient.get("/categories"),
+        axiosClient.get("/reviews"),
+      ]);
 
     return {
       props: {
