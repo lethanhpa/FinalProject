@@ -210,7 +210,6 @@ function WeddingJewelry({ products, reviews }) {
                 </button>
               </div>
             )}
-
             {selectedMaterial && (
               <div className="flex items-center mr-2 border px-1 py-0.1 mt-3 bg-pink">
                 <span>{selectedMaterial}</span>
