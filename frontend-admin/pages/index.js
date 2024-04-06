@@ -1,11 +1,12 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+import React, { memo } from "react";
+import HomePage from "./home";
 
 function Home() {
-  const router = useRouter();
-  useEffect(() => {
-    router.push("/statistical");
-  }, []);
-}
+  return (
+    <>
+      <HomePage/>
+    </>
+  );
+};
 
-export default Home;
+export default memo(Home);
