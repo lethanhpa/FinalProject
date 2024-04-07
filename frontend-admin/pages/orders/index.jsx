@@ -171,6 +171,9 @@ function ManageOrder() {
               case "CANCELED":
                 statusText = "Đã hủy";
                 break;
+              case "APPROVED":
+                statusText = "Đã duyệt";
+                break;
               case "WAITING":
                 statusText = "Đang đợi duyệt";
                 break;
@@ -286,6 +289,8 @@ function ManageOrder() {
               <Select.Option value="WAITING">WAITING</Select.Option>
               <Select.Option value="COMPLETE">COMPLETE</Select.Option>
               <Select.Option value="CANCELED">CANCELED</Select.Option>
+              <Select.Option value="APPROVED">APPROVED</Select.Option>
+              
             </Select>
           </Form.Item>
         </Form>

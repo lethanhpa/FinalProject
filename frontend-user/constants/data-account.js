@@ -12,12 +12,6 @@ const listAccount = [
     name: "Lịch sử mua hàng",
     link: "/purchase-history",
   },
-  {
-    id: "3",
-    icon: <FileLock size={24} />,
-    name: "Đổi mật khẩu",
-    link: "/change-password",
-  },
 ];
 
 export { listAccount };

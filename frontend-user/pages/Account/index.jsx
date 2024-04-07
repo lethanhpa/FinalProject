@@ -146,6 +146,10 @@ function Account() {
     }
   }, [router]);
 
+  const HanleChangePass = () => {
+    router.push("/change-password");
+  }
+
   return (
     <>
       {isLogin ? (
@@ -243,15 +247,18 @@ function Account() {
                       </div>
                     </div>
                   </div>
-                  <div className="text-center pt-6">
+                  <div className="text-center pt-6 flex gap-4 items-center justify-center">
                     <button
                       onClick={() => {
                         setOpen(true);
                         setUpdateId(customers._id);
                       }}
-                      className="mt-8 mb-8 bg-black text-white px-4 py-2 rounded-lg shadow-lg hover:bg-gray hover:text-black transition-colors duration-300 w-[250px]"
+                      className="mt-8 mb-8 bg-black text-white px-4 py-2 rounded-lg shadow-lg hover:bg-white border border-black hover:text-black transition-colors duration-300 w-[250px]"
                     >
                       Chỉnh sửa thông tin cá nhân
+                    </button>
+                    <button onClick={HanleChangePass} className="mt-8 mb-8 bg-black text-white px-4 py-2 rounded-lg shadow-lg hover:bg-white border border-black hover:text-black transition-colors duration-300 w-[250px]">
+                      Đổi mật khẩu
                     </button>
                   </div>
                 </div>

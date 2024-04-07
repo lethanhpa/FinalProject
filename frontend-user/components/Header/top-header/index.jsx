@@ -130,7 +130,7 @@ function TopHeader() {
                 />
               </button>
               <span className="text-sm text-black leading-7 font-normal sm:block hidden font-roboto">
-                {customers.firstName} {customers.lastName}
+                {customers.lastName} {customers.firstName}
               </span>
               <div
                 id="myDropdown"
@@ -234,9 +234,8 @@ function TopHeader() {
                 >
                   <Link
                     href="/"
-                    className={`flex items-center ${
-                      router.pathname === "/" ? "text-primry" : ""
-                    }`}
+                    className={`flex items-center ${router.pathname === "/" ? "text-primry" : ""
+                      }`}
                   >
                     Trang chủ
                   </Link>
@@ -248,9 +247,8 @@ function TopHeader() {
                 >
                   <Link
                     href="/products"
-                    className={`flex items-center ${
-                      router.pathname === "/products" ? "text-primry" : ""
-                    }`}
+                    className={`flex items-center ${router.pathname === "/products" ? "text-primry" : ""
+                      }`}
                   >
                     Sản phẩm
                   </Link>
@@ -262,11 +260,10 @@ function TopHeader() {
                 >
                   <Link
                     href="/wedding-jewelry"
-                    className={`flex items-center ${
-                      router.pathname === "/wedding-jewelry"
+                    className={`flex items-center ${router.pathname === "/wedding-jewelry"
                         ? "text-primry"
                         : ""
-                    }`}
+                      }`}
                   >
                     Trang sức cưới
                   </Link>
@@ -278,9 +275,8 @@ function TopHeader() {
                 >
                   <Link
                     href="/brand"
-                    className={`flex items-center ${
-                      router.pathname === "/brand" ? "text-primry" : ""
-                    }`}
+                    className={`flex items-center ${router.pathname === "/brand" ? "text-primry" : ""
+                      }`}
                   >
                     Thương Hiệu
                   </Link>
@@ -292,9 +288,8 @@ function TopHeader() {
                 >
                   <Link
                     href="/promotion"
-                    className={`flex items-center ${
-                      router.pathname === "/promotion" ? "text-primry" : ""
-                    }`}
+                    className={`flex items-center ${router.pathname === "/promotion" ? "text-primry" : ""
+                      }`}
                   >
                     Khuyến mãi
                   </Link>
@@ -306,9 +301,8 @@ function TopHeader() {
                 >
                   <Link
                     href="/contact"
-                    className={`flex items-center ${
-                      router.pathname === "/contact" ? "text-primry" : ""
-                    }`}
+                    className={`flex items-center ${router.pathname === "/contact" ? "text-primry" : ""
+                      }`}
                   >
                     Liên hệ
                   </Link>
