@@ -91,12 +91,7 @@ function ProductDetails({ product, review }) {
     }
   };
 
-  const handleAddCartSize = (productId, quantity, productName, imageUrl, price, discount, stock, sizeId, code, size) => {
-    console.log('productId', productId);
-    console.log('quantity', quantity);
-    console.log('stock', stock);
-    console.log('size', size);
-    console.log('sizeId', sizeId);
+  const handleAddCartSize = (productId, quantity, productName, imageUrl, price, discount, stock, code, size) => {
     if (!selectedSize) {
       setShowSizeWarning(true);
       toast.warning('Vui lòng chọn kích cỡ trước khi thêm vào giỏ hàng.');
@@ -108,7 +103,7 @@ function ProductDetails({ product, review }) {
       return;
     }
     try {
-      addToCartSize(customerId, productId, quantity, productName, imageUrl, price, discount, stock, sizeId, code, size);
+      addToCartSize(customerId, productId, quantity, productName, imageUrl, price, discount, stock, code, size);
       toast.success("Thêm vào giỏ hàng thành công", 1.5);
     } catch (error) {
       toast.warning("Thêm vào giỏ hàng thất bại!", 1.5);
@@ -239,7 +234,7 @@ function ProductDetails({ product, review }) {
                       <Minus size={24} />
                     </button>
                     <input
-                      className="border border-solid border-inherit lg:max-w-[75px] max-w-[50px] min-h-[44px] font-roboto text-xl font-medium leading-7 lg:px-[25px] px-[15px]"
+                      className="border text-center border-solid border-inherit lg:max-w-[75px] max-w-[50px] min-h-[44px] font-roboto text-xl font-medium leading-7 lg:px-[25px] px-[15px]"
                       min="1"
                       max={stock}
                       value={quantity}
@@ -275,7 +270,7 @@ function ProductDetails({ product, review }) {
                         <Minus size={24} />
                       </button>
                       <input
-                        className="border border-solid border-inherit lg:max-w-[75px] max-w-[50px] min-h-[44px] font-roboto text-xl font-medium leading-7 lg:px-[25px] px-[15px]"
+                        className="border text-center border-solid border-inherit lg:max-w-[75px] max-w-[50px] min-h-[44px] font-roboto text-xl font-medium leading-7 lg:px-[25px] px-[15px]"
                         min="1"
                         max={stock}
                         value={quantity > stock ? stock : quantity}
@@ -294,7 +289,7 @@ function ProductDetails({ product, review }) {
                         <Plus />
                       </button>
                     </div>
-                    <Button onClick={() => handleAddCartSize(product._id, quantity, product.productName, product.imageUrl, product.price, product.discount, stock, product.sizeId, product.code, selectedSize.size)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
+                    <Button onClick={() => handleAddCartSize(product._id, quantity, product.productName, product.imageUrl, product.price, product.discount, stock, product.code, selectedSize.size)} className="text-md font-roboto bg-primry text-white min-h-[45px] hover:bg-white hover:text-primry hover:border-primry">Thêm vào giỏ hàng</Button>
                   </div>
                 </>
               )}
@@ -309,7 +304,7 @@ function ProductDetails({ product, review }) {
                       <Minus size={24} />
                     </button>
                     <input
-                      className="border border-solid border-inherit lg:max-w-[75px] max-w-[50px] min-h-[44px] font-roboto text-xl font-medium leading-7 lg:px-[25px] px-[15px]"
+                      className="border text-center border-solid border-inherit lg:max-w-[75px] max-w-[50px] min-h-[44px] font-roboto text-xl font-medium leading-7 lg:px-[25px] px-[15px]"
                       min="1"
                       max={product.stock}
                       value={quantity > product.stock ? product.stock : quantity}
@@ -380,7 +375,7 @@ function ProductDetails({ product, review }) {
                         allowHalf
                         disabled
                         defaultValue={item.ratingRate}
-                        style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                        style={{ fontSize: "18px" }}
                       />
                     </p>
                     <p> {Moment(item.reviewDate).format("DD/MM/YYYY")}</p>
@@ -425,7 +420,6 @@ export async function getStaticProps(req) {
       revalidate: 10,
     };
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.log("err", error);
     return {
       notFound: true,

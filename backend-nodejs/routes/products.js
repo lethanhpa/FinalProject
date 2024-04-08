@@ -15,7 +15,7 @@ const router = express.Router();
 router.get('/', function (req, res, next) {
     try {
         Product.find()
-            .populate("category")// .populate("review")
+            .populate("category")
             .populate("size")
             .then((result) => {
                 res.send(result);
@@ -47,7 +47,6 @@ router.get('/:id', async function (req, res, next) {
             const id = req.params.id;
 
             let found = await Product.findById(id).populate("category")
-                // .populate("review")
                 .populate("size");
                 
             if (found) {
@@ -71,29 +70,14 @@ router.post('/', async function (req, res, next) {
             price: yup.number().min(0).required(),
             discount: yup.number().min(0).max(100).required(),
             stock: yup.number().min(0),
-            // imageId: yup
-            //     .string()
-            //     .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
-            //         return ObjectId.isValid(value);
-            //     }),
             categoryId: yup
                 .string()
                 .required()
                 .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
                     return ObjectId.isValid(value);
                 }),
-            // reviewId: yup
-            //     .string()
-            // .required()
-            // .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
-            //     return ObjectId.isValid(value);
-            // })
-            // ,
             sizeId: yup
                 .string()
-            // .test("Validate ObjectID", "${path} is not valid ObjectID", (value) => {
-            //     return ObjectId.isValid(value);
-            // }),
         }),
     });
 

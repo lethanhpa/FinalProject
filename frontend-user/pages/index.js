@@ -20,26 +20,19 @@ function Home({ products, reviews }) {
 export default memo(Home);
 
 export async function getServerSideProps() {
-  // const responseProduct = await axiosClient.get("/products");
-  // const products = responseProduct.data;
-  // return {
-  //   props: {
-  //     products,
-  //   },
-  // };
   try {
     const [productsResponse, categoriesResponse, reviewsResponse] =
       await Promise.all([
         axiosClient.get("/products"),
         axiosClient.get("/categories"),
-        axiosClient.get("/reviews"), // Assuming this endpoint fetches all reviews
+        axiosClient.get("/reviews"),
       ]);
 
     return {
       props: {
         products: productsResponse.data,
         categories: categoriesResponse.data,
-        reviews: reviewsResponse.data, // Pass reviews data as props
+        reviews: reviewsResponse.data,
       },
     };
   } catch (error) {

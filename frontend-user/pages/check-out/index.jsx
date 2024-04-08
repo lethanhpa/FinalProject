@@ -118,14 +118,10 @@ function Checkout() {
 
   const cartItems = getCartItems(customerId);
 
-  console.log("cartItems", cartItems);
-
   const handleAddOrder = async () => {
     try {
-      // Validate các trường trong form
       const values = await form.validateFields();
 
-      // Tiến hành tạo đơn hàng nếu thông tin đã được điền đầy đủ
       const token = localStorage.getItem("token");
       const decoded = jwtDecode(token);
       const customerId = decoded._id;
@@ -140,7 +136,6 @@ function Checkout() {
         quantity: item.quantity,
         price: item.price - (item.price * item.discount) / 100,
         discount: item.discount,
-        sizeId: item.sizeId,
         size: item.size,
         stock: item.stock,
       }));
@@ -189,7 +184,6 @@ function Checkout() {
         phoneNumberOrder: phoneNumberOrder,
       };
 
-      // Gửi request tạo đơn hàng
       await axiosClient.post("/orders", order);
       removeAllCart(customerId);
       toast.success("Đặt hàng thành công!", 1.5);
@@ -204,7 +198,6 @@ function Checkout() {
       );
       router.push("/thanks");
     } catch (errorInfo) {
-      // Nếu có lỗi valid, hiển thị thông báo yêu cầu nhập đúng thông tin
       toast.error("Vui lòng nhập đầy đủ thông tin địa chỉ và liên hệ");
     }
   };
@@ -380,9 +373,9 @@ function Checkout() {
       {cartItems.length > 0 && (
         <div className="flex-1">
           <div className="flex justify-center flex-col w-full">
-            {cartItems.map((item) => (
+            {cartItems.map((item, index) => (
               <div
-                key={item.id}
+                key={index}
                 className="flex justify-start items-center space-x-10"
               >
                 <div className="pb-4 md:pb-8 block w-[110px] md:w-40 drop-shadow-2xl">

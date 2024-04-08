@@ -22,7 +22,6 @@ import { PlusOutlined, EditOutlined } from "@ant-design/icons";
 import { API_URL } from "@/constants";
 import axiosClient from "@/libraries/axiosClient";
 import numeral from "numeral";
-import HomePage from "../home";
 import { useRouter } from "next/router";
 
 const { Column } = Table;
@@ -354,7 +353,6 @@ function ManageProducts() {
       ) : (
         <>
           <div>
-            <HomePage />
             <h1 className="text-2xl text-center mt-3">Danh Sách Sản Phẩm</h1>
             <div className="flex items-center justify-between px-2 pb-3">
               <div className="flex items-center w-3/6">

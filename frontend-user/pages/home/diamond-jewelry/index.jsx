@@ -14,7 +14,6 @@ import "swiper/css/scrollbar";
 import "swiper/css";
 
 function Diamond({ products, reviews }) {
-
   const router = useRouter();
 
   const handleLink = () => {
@@ -145,7 +144,7 @@ function Diamond({ products, reviews }) {
                               <span className="font-roboto text-sm flex justify-center text-primry font-semibold">
                                 {numeral(
                                   item.price -
-                                  (item.price * item.discount * 1) / 100
+                                    (item.price * item.discount * 1) / 100
                                 ).format("0,0")}
                                 đ
                               </span>
@@ -163,8 +162,11 @@ function Diamond({ products, reviews }) {
                           <Rate
                             allowHalf
                             disabled
-                            defaultValue={calculateAverageRating(item.id, reviews)}
-                            style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                            defaultValue={calculateAverageRating(
+                              item.id,
+                              reviews
+                            )}
+                            style={{ fontSize: "18px" }}
                           />
                         </div>
                         <Divider>
@@ -177,13 +179,6 @@ function Diamond({ products, reviews }) {
                             Chi tiết
                           </Button>
                         </Divider>
-                        {/* <div className="flex justify-between px-[0.5rem]">
-                                                <div className="font-roboto text-sm opacity-50 font-normal flex gap-[4px]">
-                                                    <p>{item.rating.rate}</p>
-                                                    <p>({item.rating.count})</p>
-                                                </div>
-                                                <p className="font-roboto text-sm opacity-50 font-normal">{item.sell} <span>đã bán</span></p>
-                                            </div> */}
                       </div>
                     </div>
                   </SwiperSlide>

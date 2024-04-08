@@ -7,7 +7,7 @@ import Moment from "moment";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import { X } from 'lucide-react';
+import { X } from "lucide-react";
 
 const { TextArea } = Input;
 
@@ -53,10 +53,12 @@ function PurchaseHistory() {
       const response = await axiosClient.get(`/orders/${customerId}`);
       const data = response.data.results;
 
-      data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
-
-      setOrders(data);
-      console.log("««««« set »»»»»", setOrders);
+      if (data && data.length > 0) {
+        data.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+        setOrders(data);
+      } else {
+        console.log("No data to sort.");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -141,12 +143,10 @@ function PurchaseHistory() {
   };
 
   const getOrderAction = (status, productId, order) => {
-    console.log("order", order);
     const isReviewed = reviewedProducts[productId._id];
 
     if (status === "COMPLETE") {
       if (!isReviewed) {
-        // Nếu sản phẩm chưa được đánh giá
         return (
           <button
             className="bg-primry text-white font-bold w-[150px] h-[40px] rounded-full hover:bg-white hover:text-primry hover:border-primry hover:border mr-5"
@@ -186,8 +186,6 @@ function PurchaseHistory() {
     }
   };
 
-
-
   const getStatusText = (status) => {
     if (status === "COMPLETE") {
       return "Đã mua";
@@ -195,8 +193,7 @@ function PurchaseHistory() {
       return "Đang đợi duyệt";
     } else if (status === "APPROVED") {
       return "Đơn đã được duyệt";
-    }
-    else {
+    } else {
       return "Đã hủy";
     }
   };
@@ -204,11 +201,10 @@ function PurchaseHistory() {
   const getPayment = (paymentType) => {
     if (paymentType === "CASH") {
       return "Thanh toán sau khi nhận hàng";
-    }
-    else {
+    } else {
       return "Thanh toán trực tuyến";
     }
-  }
+  };
 
   return (
     <div className="py-14  md:px-6 xl:px-20 xl:container ">
@@ -217,16 +213,16 @@ function PurchaseHistory() {
           LỊCH SỬ MUA HÀNG
         </h1>
       </div>
-      <div
-        className="flex flex-col mt-[20px] gap-[30px]"
-
-      >
+      <div className="flex flex-col mt-[20px] gap-[30px]">
         {orders &&
           orders
             .filter((order) => order.status !== "CANCELED")
             .map((order) => {
               return (
-                <div key={order._id} className="border border-black rounded-xl font-roboto text-md flex flex-col gap-2 ">
+                <div
+                  key={order._id}
+                  className="border border-black rounded-xl font-roboto text-md flex flex-col gap-2 "
+                >
                   <div className="font-roboto text-md flex flex-col gap-1 ">
                     <div className="flex gap-4 ml-2 mt-2">
                       <p className="w-[180px]">Trạng thái đơn hàng :</p>
@@ -239,20 +235,20 @@ function PurchaseHistory() {
                     <div className="flex gap-4 ml-2">
                       <p className="w-[180px]">Phương thức thanh toán :</p>
                       {getPayment(order.paymentType)}
-
                     </div>
                     <div className="flex gap-4 ml-2">
                       <p className="w-[180px]">Ngày đặt đơn :</p>
                       <p className="text-md flex justify-center items-center font-roboto ">
-                        {Moment(`${order.createdDate}`).format(
-                          "DD/MM/YYYY"
-                        )}
+                        {Moment(`${order.createdDate}`).format("DD/MM/YYYY")}
                       </p>
                     </div>
                     {order.orderDetails.map((detail, index) => {
                       const totalAmount = detail.price * detail.quantity;
                       return (
-                        <div key={index} className="flex border-t border-gray gap-4 ml-2 mb-2 ">
+                        <div
+                          key={index}
+                          className="flex border-t border-gray gap-4 ml-2 mb-2 "
+                        >
                           <div className="max-w-[100px] ">
                             <img
                               src={`${API_URL}${detail.imageUrl}`}
@@ -266,21 +262,25 @@ function PurchaseHistory() {
                             </h3>
                             <div className="flex justify-start items-start flex-col gap-[4px] max-w-[400px]">
                               <p className="text-sm font-roboto flex">
-                                <span> <X size={18} /> </span>
+                                <span>
+                                  {" "}
+                                  <X size={18} />{" "}
+                                </span>
                                 <span> {detail.quantity}</span>
                               </p>
                               <p className="text-sm font-roboto">
                                 <span>Giá: </span>
                                 {numeral(totalAmount).format("0,0")}đ
                               </p>
-                              {detail.size && <div className="flex gap-2 text-sm font-roboto">
-                                <p>Size :</p>
-                                <p>{detail.size}</p>
-                              </div>}
+                              {detail.size && (
+                                <div className="flex gap-2 text-sm font-roboto">
+                                  <p>Size :</p>
+                                  <p>{detail.size}</p>
+                                </div>
+                              )}
                             </div>
                           </div>
                           <div className="flex items-center gap-[30px] justify-between">
-
                             {getOrderAction(
                               order.status,
                               detail.productId,
@@ -297,7 +297,9 @@ function PurchaseHistory() {
                                 orders &&
                                 orders.map((order) =>
                                   order.orderDetails.map((detail, index) => {
-                                    if (detail.productId === selectedProductId) {
+                                    if (
+                                      detail.productId === selectedProductId
+                                    ) {
                                       return (
                                         <div key={index}>
                                           <div className="flex">
@@ -334,27 +336,26 @@ function PurchaseHistory() {
                                   })
                                 )}
                             </Modal>
-
                           </div>
                         </div>
                       );
                     })}
                   </div>
-                  <div className="mb-2 flex justify-end">{HuyDonAction(
-                    order.status,
-                    order._id
-                  )}</div>
+                  <div className="mb-2 flex justify-end">
+                    {HuyDonAction(order.status, order._id)}
+                  </div>
                 </div>
-              )
-            }
-
-            )}
+              );
+            })}
         {orders &&
           orders
             .filter((order) => order.status === "CANCELED")
             .map((order) => {
               return (
-                <div key={order._id} className="border border-black rounded-xl font-roboto text-md flex flex-col gap-2 ">
+                <div
+                  key={order._id}
+                  className="border border-black rounded-xl font-roboto text-md flex flex-col gap-2 "
+                >
                   <div className="font-roboto text-md flex flex-col gap-1 ">
                     <div className="flex gap-4 ml-2 mt-2">
                       <p className="w-[180px]">Trạng thái đơn hàng :</p>
@@ -367,20 +368,20 @@ function PurchaseHistory() {
                     <div className="flex gap-4 ml-2">
                       <p className="w-[180px]">Phương thức thanh toán :</p>
                       {getPayment(order.paymentType)}
-
                     </div>
                     <div className="flex gap-4 ml-2">
                       <p className="w-[180px]">Ngày đặt đơn :</p>
                       <p className="text-md flex justify-center items-center font-roboto ">
-                        {Moment(`${order.createdDate}`).format(
-                          "DD/MM/YYYY"
-                        )}
+                        {Moment(`${order.createdDate}`).format("DD/MM/YYYY")}
                       </p>
                     </div>
                     {order.orderDetails.map((detail, index) => {
                       const totalAmount = detail.price * detail.quantity;
                       return (
-                        <div key={index} className="flex border-t border-gray gap-4 ml-2 mb-2 ">
+                        <div
+                          key={index}
+                          className="flex border-t border-gray gap-4 ml-2 mb-2 "
+                        >
                           <div className="max-w-[100px] ">
                             <img
                               src={`${API_URL}${detail.imageUrl}`}
@@ -394,21 +395,25 @@ function PurchaseHistory() {
                             </h3>
                             <div className="flex justify-start items-start flex-col gap-[4px] max-w-[400px]">
                               <p className="text-sm font-roboto flex">
-                                <span> <X size={18} /> </span>
+                                <span>
+                                  {" "}
+                                  <X size={18} />{" "}
+                                </span>
                                 <span> {detail.quantity}</span>
                               </p>
                               <p className="text-sm font-roboto">
                                 <span>Giá: </span>
                                 {numeral(totalAmount).format("0,0")}đ
                               </p>
-                              {detail.size && <div className="flex gap-2 text-sm font-roboto">
-                                <p>Size :</p>
-                                <p>{detail.size}</p>
-                              </div>}
+                              {detail.size && (
+                                <div className="flex gap-2 text-sm font-roboto">
+                                  <p>Size :</p>
+                                  <p>{detail.size}</p>
+                                </div>
+                              )}
                             </div>
                           </div>
                           <div className="flex items-center gap-[30px] justify-between">
-
                             {getOrderAction(
                               order.status,
                               detail.productId,
@@ -425,7 +430,9 @@ function PurchaseHistory() {
                                 orders &&
                                 orders.map((order) =>
                                   order.orderDetails.map((detail, index) => {
-                                    if (detail.productId === selectedProductId) {
+                                    if (
+                                      detail.productId === selectedProductId
+                                    ) {
                                       return (
                                         <div key={index}>
                                           <div className="flex">
@@ -462,21 +469,17 @@ function PurchaseHistory() {
                                   })
                                 )}
                             </Modal>
-
                           </div>
                         </div>
                       );
                     })}
                   </div>
-                  <div className="mb-2 flex justify-end">{HuyDonAction(
-                    order.status,
-                    order._id
-                  )}</div>
+                  <div className="mb-2 flex justify-end">
+                    {HuyDonAction(order.status, order._id)}
+                  </div>
                 </div>
-              )
-            }
-
-            )}
+              );
+            })}
       </div>
 
       <BackTop />

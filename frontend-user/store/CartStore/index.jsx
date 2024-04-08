@@ -18,23 +18,20 @@ const useCartStore = create(
           stock,
           code
         ) => {
-          console.log("customerId", customerId);
           set((state) => {
             const customerCart = state.carts[customerId] || [];
             const existingProductIndex = customerCart.findIndex(
               (item) => item.productId === productId
             );
-            
+
             const maxQuantity = Math.min(quantity, stock);
-            
-            // Kiểm tra xem có vượt quá tồn kho hay không
+
             const totalQuantity =
               existingProductIndex !== -1
                 ? customerCart[existingProductIndex].quantity + maxQuantity
                 : maxQuantity;
 
             if (totalQuantity > stock) {
-              // Hiển thị thông báo cảnh báo cho người dùng
               toast.warning("Thêm vào giỏ hàng thất bại!", 1.5);
               alert(
                 `Bạn không thể thêm nhiều hơn ${stock} sản phẩm vào giỏ hàng.`
@@ -73,11 +70,9 @@ const useCartStore = create(
           price,
           discount,
           stock,
-          sizeId,
           code,
           size
         ) => {
-          console.log("customerId", customerId);
           set((state) => {
             const customerCart = state.carts[customerId] || [];
             const existingProductIndex = customerCart.findIndex(
@@ -97,7 +92,6 @@ const useCartStore = create(
                 price,
                 discount,
                 stock,
-                sizeId,
                 code,
                 size,
               });

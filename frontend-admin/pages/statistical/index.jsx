@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import RevenueLineChart from "@/components/RevenueChart";
-import HomePage from "../home";
 import axiosClient from "@/libraries/axiosClient";
 import PieChart from "@/components/PieChart";
 import { Select } from "antd";
@@ -9,7 +8,7 @@ const apiName = "/orders";
 
 function Statistical() {
   const [monthlyRevenue, setMonthlyRevenue] = useState({});
-  const [selectedYear, setSelectedYear] = useState("2024"); // Mặc định hiển thị năm 2024
+  const [selectedYear, setSelectedYear] = useState("2024");
 
   useEffect(() => {
     axiosClient
@@ -28,7 +27,6 @@ function Statistical() {
 
   return (
     <div>
-      <HomePage />
       <div className="container my-5 overflow-x-auto">
         <div className="flex items-center mb-5">
           <h1 className="mr-3">Chọn năm:</h1>

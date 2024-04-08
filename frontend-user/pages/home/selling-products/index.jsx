@@ -7,7 +7,6 @@ import numeral from "numeral";
 import { API_URL } from "@/constants";
 import { Button, Divider, Rate } from "antd";
 import router from "next/router";
-// import Rated from "../../../components/App/AppRating/Rated";
 
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -16,7 +15,6 @@ import "swiper/css/scrollbar";
 import "swiper/css";
 
 function SellingProduct({ products, reviews }) {
-
   const calculateAverageRating = (productId, reviews) => {
     const productReviews = reviews.filter(
       (review) => review.productId === productId
@@ -60,34 +58,28 @@ function SellingProduct({ products, reviews }) {
             depth: 100,
             modifier: 2.5,
           }}
-          // pagination={true}
           modules={[Autoplay, EffectCoverflow, Pagination]}
           speed={3000}
           breakpoints={{
             0: {
               slidesPerView: 1,
               centeredSlides: true,
-              // initialSlide: 3,
             },
             320: {
               slidesPerView: 1,
               centeredSlides: true,
-              // initialSlide: 3,
             },
             360: {
               slidesPerView: 2,
               centeredSlides: true,
-              // initialSlide: 3,
             },
             900: {
               slidesPerView: 2,
               centeredSlides: true,
-              // initialSlide: 3,
             },
             1200: {
               slidesPerView: 3,
               centeredSlides: true,
-              // initialSlide: 3,
             },
           }}
         >
@@ -129,7 +121,7 @@ function SellingProduct({ products, reviews }) {
                             <span className="font-roboto text-md flex justify-center text-primry font-semibold">
                               {numeral(
                                 item.price -
-                                (item.price * item.discount * 1) / 100
+                                  (item.price * item.discount * 1) / 100
                               ).format("0,0")}
                               đ
                             </span>
@@ -147,13 +139,15 @@ function SellingProduct({ products, reviews }) {
                         <Rate
                           allowHalf
                           disabled
-                          defaultValue={calculateAverageRating(item.id, reviews)}
-                          style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                          defaultValue={calculateAverageRating(
+                            item.id,
+                            reviews
+                          )}
+                          style={{ fontSize: "18px" }}
                         />
                       </div>
                       <Divider>
                         <Button
-                          // type="primary"
                           className="bg-black text-white hover:bg-white hover:text-black font-light"
                           onClick={() => {
                             router.push(`/${item.id}`);
@@ -162,13 +156,6 @@ function SellingProduct({ products, reviews }) {
                           Chi tiết
                         </Button>
                       </Divider>
-                      {/* <div className="flex justify-between px-[0.5rem]">
-                                                <div className="font-roboto text-sm opacity-50 font-normal flex gap-[4px]">
-                                                    <p>{item.rating.rate}</p>
-                                                    <p>({item.rating.count})</p>
-                                                </div>
-                                                <p className="font-roboto text-sm opacity-50 font-normal">{item.sell} <span>đã bán</span></p>
-                                            </div> */}
                     </div>
                   </div>
                 </SwiperSlide>
@@ -181,5 +168,3 @@ function SellingProduct({ products, reviews }) {
 }
 
 export default memo(SellingProduct);
-
-

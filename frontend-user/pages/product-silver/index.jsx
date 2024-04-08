@@ -205,7 +205,6 @@ function ProductSilver({ products, categories, reviews }) {
       <div className="grid lg:grid-cols-4 gap-10 md:grid-cols-3 sm:grid-cols-2 mx-2.5">
         {filteredProducts &&
           filteredProducts
-            // .slice(0, visibleProducts)
             .filter((product) =>
               product.productName.toLowerCase().includes("bạc")
             )
@@ -265,7 +264,7 @@ function ProductSilver({ products, categories, reviews }) {
                         allowHalf
                         disabled
                         defaultValue={calculateAverageRating(item.id, reviews)}
-                        style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                        style={{ fontSize: "18px" }}
                       />
                     </div>
                     <Divider>
@@ -278,13 +277,6 @@ function ProductSilver({ products, categories, reviews }) {
                         Chi tiết
                       </Button>
                     </Divider>
-                    {/* <div className="flex justify-between px-[0.5rem]">
-                <div className="font-roboto text-sm opacity-50 font-normal flex gap-[4px]">
-                    <p>{item.rating.rate}</p>
-                    <p>({item.rating.count})</p>
-                </div>
-                <p className="font-roboto text-sm opacity-50 font-normal">{item.sell} <span>đã bán</span></p>
-            </div> */}
                   </div>
                 </div>
               );

@@ -41,7 +41,6 @@ function SignIn() {
         toast.error("Tài khoản của bạn đã bị khóa.");
       } else {
         localStorage.setItem("token", token);
-        console.log("tokenDN", token);
 
         axios.defaults.headers.Authorization = `Bearer ${token}`;
 

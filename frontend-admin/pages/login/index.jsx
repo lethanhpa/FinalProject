@@ -29,23 +29,21 @@ const Login = (props) => {
     try {
       const response = await axios.post("/employees/login", account);
       const { token } = response.data;
-      
-      if (response.data.isLocked === true) {
+      const isLocked = response.data.payload.isLocked;
+
+      if (isLocked === true) {
         message.error("Tài khoản của bạn đã bị khóa.");
       } else {
-      localStorage.setItem("token", token);
+        localStorage.setItem("token", token);
 
-      axios.defaults.headers.Authorization = `Bearer ${token}`;
+        axios.defaults.headers.Authorization = `Bearer ${token}`;
 
-      const payload = response.data.payload;
-      localStorage.setItem("payload", JSON.stringify(payload));
+        const payload = response.data.payload;
+        localStorage.setItem("payload", JSON.stringify(payload));
 
-      setIsLogin(true);
-
-      router.push("/products")
-
-      message.success("Đăng nhập thành công");
-
+        setIsLogin(true);
+        router.push("/statistical");
+        message.success("Đăng nhập thành công");
       }
     } catch (error) {
       console.error(error);

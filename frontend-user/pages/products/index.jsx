@@ -339,7 +339,7 @@ function Products({ products, categories, reviews }) {
                 allowHalf
                 disabled
                 defaultValue={calculateAverageRating(item.id, reviews)}
-                style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                style={{ fontSize: "18px" }}
               />
             </div>
             <Divider className="h-4">
@@ -379,14 +379,14 @@ export async function getStaticProps() {
       await Promise.all([
         axiosClient.get("/products"),
         axiosClient.get("/categories"),
-        axiosClient.get("/reviews"), // Assuming this endpoint fetches all reviews
+        axiosClient.get("/reviews"),
       ]);
 
     return {
       props: {
         products: productsResponse.data,
         categories: categoriesResponse.data,
-        reviews: reviewsResponse.data, // Pass reviews data as props
+        reviews: reviewsResponse.data,
       },
     };
   } catch (error) {

@@ -43,7 +43,6 @@ const customerSchema = new Schema(
     gender: { type: String, required: true },
     birthday: { type: Date },
     status: { type: Boolean, default: false },
-    // avatarUrl: { type: Schema.Types.ObjectId, ref: 'Media' },
   },
   {
     versionKey: false,

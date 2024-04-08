@@ -14,12 +14,11 @@ import "swiper/css/scrollbar";
 import "swiper/css";
 
 function NewProduct({ products, reviews }) {
-
   const THIRTY_DAYS_IN_MS = 40 * 24 * 60 * 60 * 1000; // 30 ngày tính bằng mili giây
   const currentDate = new Date();
 
   function filterNewProducts(products) {
-    return products.filter(product => {
+    return products.filter((product) => {
       const createdAtTimestamp = new Date(product.createdAt).getTime();
       const timeDifference = currentDate.getTime() - createdAtTimestamp;
       return timeDifference <= THIRTY_DAYS_IN_MS; // Chỉ lấy các sản phẩm được tạo trong vòng 30 ngày trước
@@ -27,8 +26,6 @@ function NewProduct({ products, reviews }) {
   }
 
   const newProducts = filterNewProducts(products);
-
-  console.log('newProducts',newProducts);
 
   const swiperRef = useRef();
 
@@ -115,7 +112,7 @@ function NewProduct({ products, reviews }) {
             },
           }}
         >
-          {newProducts  &&
+          {newProducts &&
             newProducts.map((item) => {
               return (
                 <SwiperSlide key={item.id}>
@@ -153,7 +150,7 @@ function NewProduct({ products, reviews }) {
                             <span className="font-roboto text-sm flex justify-center text-primry font-semibold">
                               {numeral(
                                 item.price -
-                                (item.price * item.discount * 1) / 100
+                                  (item.price * item.discount * 1) / 100
                               ).format("0,0")}
                               đ
                             </span>
@@ -171,13 +168,15 @@ function NewProduct({ products, reviews }) {
                         <Rate
                           allowHalf
                           disabled
-                          defaultValue={calculateAverageRating(item.id, reviews)}
-                          style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                          defaultValue={calculateAverageRating(
+                            item.id,
+                            reviews
+                          )}
+                          style={{ fontSize: "18px" }}
                         />
                       </div>
                       <Divider>
                         <Button
-                          // type="primary"
                           className="bg-black text-white hover:bg-white hover:text-black font-light"
                           onClick={() => {
                             router.push(`/${item.id}`);
@@ -186,13 +185,6 @@ function NewProduct({ products, reviews }) {
                           Chi tiết
                         </Button>
                       </Divider>
-                      {/* <div className="flex justify-between px-[0.5rem]">
-                                                <div className="font-roboto text-sm opacity-50 font-normal flex gap-[4px]">
-                                                    <p>{item.rating.rate}</p>
-                                                    <p>({item.rating.count})</p>
-                                                </div>
-                                                <p className="font-roboto text-sm opacity-50 font-normal">{item.sell} <span>đã bán</span></p>
-                                            </div> */}
                     </div>
                   </div>
                 </SwiperSlide>

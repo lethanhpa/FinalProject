@@ -3,11 +3,9 @@ const Order = require('./Order');
 const Product = require('./Product');
 const Review = require('./Review');
 const Size = require('./Size');
-const ShippingAddress = require('./ShippingAddress');
 const Customer = require('./Customer');
 const Employee = require('./Employee');
-const Cart = require('./Cart');
 
 module.exports = {
-    Category, Order, Product, Review, Size, ShippingAddress, Customer, Employee, Cart
+    Category, Order, Product, Review, Size, Customer, Employee
 };

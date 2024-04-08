@@ -16,7 +16,6 @@ import {
   Trash2,
 } from "lucide-react";
 import axiosClient from "@/libraries/axiosClient";
-import HomePage from "../home";
 import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
 const { Column } = Table;
@@ -163,7 +162,6 @@ function ManageStock() {
         </>
       ) : (
         <>
-          <HomePage />
           <h1 className="text-2xl text-center mt-3">
             Danh Sách Size & Số Lượng
           </h1>

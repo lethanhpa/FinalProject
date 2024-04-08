@@ -79,7 +79,7 @@ function SearchProduct({ products, reviews }) {
                       allowHalf
                       disabled
                       defaultValue={calculateAverageRating(item.id, reviews)}
-                      style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                      style={{ fontSize: "18px" }}
                     />
                   </div>
                   <Divider>
@@ -92,13 +92,6 @@ function SearchProduct({ products, reviews }) {
                       Chi tiết
                     </Button>
                   </Divider>
-                  {/* <div className="flex justify-between px-[0.5rem]">
-                                <div className="font-roboto text-sm opacity-50 font-normal flex gap-[4px]">
-                                    <p>{item.rating.rate}</p>
-                                    <p>({item.rating.count})</p>
-                                </div>
-                                <p className="font-roboto text-sm opacity-50 font-normal">{item.sell} <span>đã bán</span></p>
-                            </div> */}
                 </div>
               </div>
             );

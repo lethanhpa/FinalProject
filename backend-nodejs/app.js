@@ -21,15 +21,14 @@ passport.use(passportConfigCustomer);
 passport.use(passportConfigLocal);
 
 const categoriesRouter = require('./routes/categories');
-const productImagesRouter = require('./routes/productImages');
 const customerAvatarRouter = require('./routes/customerAvatar');
-const reviewsRouter = require('./routes/reviews');
-const sizesRouter = require('./routes/sizes');
-const productsRouter = require('./routes/products');
 const customersRouter = require('./routes/customers');
 const employeesRouter = require('./routes/employees');
 const ordersRouter = require('./routes/orders');
-const cartsRouter = require('./routes/carts');
+const productImagesRouter = require('./routes/productImages');
+const productsRouter = require('./routes/products');
+const reviewsRouter = require('./routes/reviews');
+const sizesRouter = require('./routes/sizes');
 
 const app = express();
 
@@ -72,14 +71,13 @@ mongoose.connection.on('error', (err) => {
 
 app.use('/categories', categoriesRouter);
 app.use('/customerAvatar', customerAvatarRouter);
-app.use('/productImages', productImagesRouter);
-app.use('/reviews', reviewsRouter);
-app.use('/sizes', sizesRouter);
-app.use('/products', productsRouter);
 app.use('/customers', customersRouter);
 app.use('/employees', employeesRouter);
 app.use('/orders', ordersRouter);
-app.use('/carts', cartsRouter);
+app.use('/productImages', productImagesRouter);
+app.use('/products', productsRouter);
+app.use('/reviews', reviewsRouter);
+app.use('/sizes', sizesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

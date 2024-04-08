@@ -14,7 +14,6 @@ import numeral from "numeral";
 import Moment from "moment";
 import { CircleXIcon, EyeIcon, FilePenLine } from "lucide-react";
 import axiosClient from "@/libraries/axiosClient";
-import HomePage from "../home";
 
 const { Column } = Table;
 
@@ -81,11 +80,27 @@ function ManageOrder() {
       });
   };
 
-  const text = "Xác nhận xóa ?";
+  const handleCancelOrder = async (orderId) => {
+    try {
+      const response = await axiosClient.patch(`/orders/${orderId}`, {
+        status: "CANCELED",
+      });
+
+      if (response.status === 200) {
+        await axiosClient.patch(`/orders/return-stock/${orderId}`);
+        setRefresh((prevRefresh) => prevRefresh + 1);
+      } else {
+        console.error("Có lỗi xảy ra khi hủy đơn hàng");
+      }
+    } catch (error) {
+      console.error("Có lỗi xảy ra khi gửi yêu cầu hủy đơn hàng", error);
+    }
+  };
+
+  const text = "Xác nhận hủy đơn hàng ?";
 
   return (
     <div>
-      <HomePage />
       <h1 className="text-2xl text-center my-3">Danh Sách Đơn Hàng</h1>
       <Table
         dataSource={data}
@@ -215,36 +230,37 @@ function ManageOrder() {
                 <EyeIcon className="mr-2" size={20} strokeWidth={1} />
                 Xem
               </button>
-              <button
-                className="w-full flex justify-between items-center text-blue py-1 px-1 rounded-md border-2 border-blue hover:bg-gray hover:text-black"
-                onClick={() => {
-                  setOpen(true);
-                  setUpdateId(record._id);
-                  updateForm.setFieldsValue(record);
-                }}
-              >
-                <FilePenLine className="mr-2" size={20} strokeWidth={1} />
-                Sửa
-              </button>
-
-              <Popconfirm
-                placement="top"
-                title={text}
-                onConfirm={() => {
-                  axiosClient.delete(apiName + "/" + record._id).then(() => {
-                    setRefresh((f) => f + 1);
-                    message.success("Xóa thành công", 1.5);
-                  });
-                }}
-                okText="Có"
-                okButtonProps={{ className: "bg-black text-white" }}
-                cancelText="Không"
-              >
-                <button className="w-full flex justify-between items-center text-red py-1 px-1 rounded-md border-2 border-red hover:bg-gray hover:text-black">
-                  <CircleXIcon className="mr-2" size={20} strokeWidth={1} />
-                  Hủy
+              {record.status !== "CANCELED" && (
+                <button
+                  className="w-full flex justify-between items-center text-blue py-1 px-1 rounded-md border-2 border-blue hover:bg-gray hover:text-black"
+                  onClick={() => {
+                    setOpen(true);
+                    setUpdateId(record._id);
+                    updateForm.setFieldsValue(record);
+                  }}
+                >
+                  <FilePenLine className="mr-2" size={20} strokeWidth={1} />
+                  Sửa
                 </button>
-              </Popconfirm>
+              )}
+              {record.status !== "CANCELED" && (
+                <Popconfirm
+                  placement="top"
+                  title={text}
+                  disabled={record.status === "CANCELED"}
+                  onConfirm={() => {
+                    handleCancelOrder(record._id);
+                  }}
+                  okText="Có"
+                  okButtonProps={{ className: "bg-black text-white" }}
+                  cancelText="Không"
+                >
+                  <button className="w-full flex justify-between items-center text-red py-1 px-1 rounded-md border-2 border-red hover:bg-gray hover:text-black">
+                    <CircleXIcon className="mr-2" size={20} strokeWidth={1} />
+                    Hủy
+                  </button>
+                </Popconfirm>
+              )}
             </Space>
           )}
         />
@@ -290,7 +306,6 @@ function ManageOrder() {
               <Select.Option value="COMPLETE">COMPLETE</Select.Option>
               <Select.Option value="CANCELED">CANCELED</Select.Option>
               <Select.Option value="APPROVED">APPROVED</Select.Option>
-              
             </Select>
           </Form.Item>
         </Form>

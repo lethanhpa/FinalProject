@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 import axiosClient from "@/libraries/axiosClient";
 import Moment from "moment";
-import HomePage from "../home";
 const { Column } = Table;
 
 const apiName = "/employees";
@@ -96,6 +95,10 @@ function ManageEmployees() {
       });
   };
 
+  const checkUserRole = (role) => {
+    return role !== "Admin";
+  };
+
   return (
     <div>
       {showTable === false ? (
@@ -161,7 +164,7 @@ function ManageEmployees() {
               ]}
               hasFeedback
             >
-              <Input />
+              <Input placeholder="yyyy/mm/dd"/>
             </Form.Item>
             <Form.Item
               label="Giới tính"
@@ -240,18 +243,10 @@ function ManageEmployees() {
             <Form.Item
               label="Chức vụ"
               name="role"
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy điền đầy đủ thông tin",
-                },
-              ]}
-              hasFeedback
+              initialValue="Nhân viên"
+              hidden
             >
-              <Select className="text-start">
-                <Select.Option value="Admin">Admin</Select.Option>
-                <Select.Option value="Nhân viên">Nhân viên</Select.Option>
-              </Select>
+              <Input type="hidden" />
             </Form.Item>
             <Form.Item
               wrapperCol={{
@@ -267,7 +262,6 @@ function ManageEmployees() {
         </>
       ) : (
         <div>
-          <HomePage />
           <h1 className="text-2xl text-center mt-3">Danh Sách Nhân Viên</h1>
           <div className="flex justify-end pr-2">
             <button
@@ -329,7 +323,7 @@ function ManageEmployees() {
               key="action"
               render={(record) => (
                 <Space size="middle">
-                  {!record.isLocked && (
+                  {checkUserRole(record.role) && !record.isLocked && (
                     <button
                       className="w-full flex justify-between items-center text-black py-1 px-1 rounded-md border-2 border-black hover:bg-gray hover:text-black"
                       onClick={() => lockEmployees(record._id)}
@@ -338,7 +332,7 @@ function ManageEmployees() {
                       Khóa
                     </button>
                   )}
-                  {record.isLocked && (
+                  {checkUserRole(record.role) && record.isLocked && (
                     <button
                       className="w-full flex justify-between items-center text-black py-1 px-1 rounded-md border-2 border-black hover:bg-gray hover:text-black"
                       onClick={() => unlockEmployees(record._id)}

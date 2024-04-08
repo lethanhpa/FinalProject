@@ -12,16 +12,6 @@ mongoose.set('strictQuery', false);
 mongoose.connect(CONNECTION_STRING);
 
 
-router.get('/count', async (req, res, next) => {
-    try {
-        const orderCount = await Order.countDocuments();
-        res.status(200).json({ count: orderCount }); s
-    } catch (err) {
-        res.status(500).json({ message: 'Internal Server Error' });
-    }
-});
-
-
 router.get('/', async (req, res, next) => {
     try {
         let orders = await Order.find().populate('customer').populate('employee').populate('shippingAddress').lean({ virtuals: true });
@@ -246,10 +236,24 @@ router.patch("/return-stock/:orderId", async (req, res, next) => {
             const productId = orderDetail.productId;
             const quantity = orderDetail.quantity;
 
-            await Product.updateOne(
-                { _id: productId },
-                { $inc: { stock: quantity } }
-            );
+            if (orderDetail.size) {
+                const product = await Product.findOne({ _id: productId }).populate("sizeId")
+
+                const sizeIndex = product.sizeId.sizes.findIndex(size => size.size === orderDetail.size);
+
+                if (sizeIndex >= 0) {
+                    product.sizeId.sizes[sizeIndex].stock += quantity;
+
+                    await product.sizeId.save();
+                } else {
+                    console.log(`Không tìm thấy kích thước ${orderDetail.size} cho sản phẩm ${productId}`);
+                }
+            } else {
+                await Product.updateOne(
+                    { _id: productId },
+                    { $inc: { stock: quantity } }
+                );
+            }
         }
 
         res.status(200).json({ message: "Đã hoàn trả số lượng sản phẩm thành công" });
@@ -259,6 +263,5 @@ router.patch("/return-stock/:orderId", async (req, res, next) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
-
 
 module.exports = router;

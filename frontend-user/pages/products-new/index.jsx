@@ -338,7 +338,7 @@ function productsNew({ products, categories, reviews }) {
                       allowHalf
                       disabled
                       defaultValue={calculateAverageRating(item.id, reviews)}
-                      style={{ fontSize: "18px" }} // Đặt kích thước font chữ cho Rate
+                      style={{ fontSize: "18px" }} 
                     />
                   </div>
                   <Divider>

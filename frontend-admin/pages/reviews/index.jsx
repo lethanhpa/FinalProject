@@ -1,10 +1,8 @@
 import React, { memo, useState, useEffect } from "react";
-import { Table, Space, Rate } from "antd";
-import { LockIcon, UnlockIcon } from "lucide-react";
+import { Table, Rate } from "antd";
 import axiosClient from "@/libraries/axiosClient";
 import { API_URL } from "@/constants";
 import Moment from "moment";
-import HomePage from "../home";
 const { Column } = Table;
 
 const apiName = "/reviews";
@@ -53,7 +51,6 @@ function ManageReview() {
 
   return (
     <div>
-      <HomePage />
       <h1 className="text-2xl text-center my-3">Danh Sách Đánh Giá</h1>
       <Table dataSource={data} rowKey="_id" scroll={{ x: true }}>
         <Column
