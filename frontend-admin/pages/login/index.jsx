@@ -42,8 +42,13 @@ const Login = (props) => {
         localStorage.setItem("payload", JSON.stringify(payload));
 
         setIsLogin(true);
-        router.push("/statistical");
         message.success("Đăng nhập thành công");
+        const role = response.data.payload.role;
+        if (role === "Admin") {
+          router.push("/statistical");
+        } else {
+          router.push("/products");
+        }
       }
     } catch (error) {
       console.error(error);
