@@ -14,7 +14,7 @@ mongoose.connect(CONNECTION_STRING);
 
 router.get('/', async (req, res, next) => {
     try {
-        let orders = await Order.find().populate('customer').populate('employee').populate('shippingAddress').lean({ virtuals: true });
+        let orders = await Order.find().populate('customer').populate('employee').lean({ virtuals: true });
 
         // Bổ sung thông tin về giá sản phẩm trong mỗi đơn hàng
         orders = await Promise.all(orders.map(async (order) => {
