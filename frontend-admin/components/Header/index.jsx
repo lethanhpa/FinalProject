@@ -35,7 +35,7 @@ function Header(props) {
           className="w-3/4 ml-16"
         />
       </div>
-      {isLoggedIn && ( // Kiểm tra nếu đã đăng nhập thì hiển thị nút đăng xuất
+      {isLoggedIn && (
         <Button
           type="button"
           className="bg-black text-white hover:bg-white hover:text-black hover:border hover:border-black font-thin mr-8"

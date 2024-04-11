@@ -1,10 +1,17 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import HomePage from "./home";
+import SigIn from "../pages/sign-in";
 
 function Home() {
+  const [isLogin, setIsLogin] = useState(false);
+
   return (
     <>
-      <HomePage/>
+      {!isLogin ? (
+        <SigIn setIsLogin={setIsLogin} />
+      ) : (
+        <HomePage />
+      )}
     </>
   );
 };

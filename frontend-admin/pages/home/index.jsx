@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Menu } from "antd";
+import { Menu, Spin} from "antd";
+import { LoadingOutlined } from '@ant-design/icons';
 import {
   Home,
   Users,
@@ -14,13 +15,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import SigIn from "../sign-in";
 import { jwtDecode } from "jwt-decode";
+import axiosClient from "@/libraries/axiosClient";
 
 const itemAdmin = [
   {
-    label: "Trang Chủ",
+    label: "Thống kê",
     key: "home",
     icon: <Home size={20} strokeWidth={1} />,
-    path: "/",
+    path: "/statistical",
   },
   {
     label: "Quản Lý Nhân Viên",
@@ -108,15 +110,19 @@ const itemEmployee = [
 function HomePage() {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(false);
-  const [role, setRole] = useState([]);
+  const [employees, setEmployees] = useState([]);
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const token = localStorage.getItem("token");
         const decoded = jwtDecode(token);
+        const employeeId = decoded._id;
+
+        const response = await axiosClient.get(`/employees/${employeeId}`);
+        const data = response.data;
         setIsLogin(true);
-        setRole(decoded.role)
+        setEmployees(data);
       } catch (error) {
         console.error(error);
       }
@@ -144,21 +150,15 @@ function HomePage() {
             className="w-auto flex justify-center"
             style={{ boxShadow: "0 5px 10px rgba(0,0,0,0.1)" }}
           >
-            {role === "Admin"
-              ? itemAdmin.map((item) => (
-                  <Menu.Item key={item.key} icon={item.icon}>
-                    <Link href={item.path}>{item.label}</Link>
-                  </Menu.Item>
-                ))
-              : itemEmployee.map((item) => (
-                  <Menu.Item key={item.key} icon={item.icon}>
-                    <Link href={item.path}>{item.label}</Link>
-                  </Menu.Item>
-                ))}
+            {(employees && employees.role === "Admin" ? itemAdmin : itemEmployee).map((item) => (
+            <Menu.Item key={item.key} icon={item.icon}>
+              <Link href={item.path}>{item.label}</Link>
+            </Menu.Item>
+          ))}
           </Menu>
         </>
       ) : (
-        <SigIn setIsLogin={setIsLogin} />
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
       )}
     </>
   );
