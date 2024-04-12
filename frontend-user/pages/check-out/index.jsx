@@ -6,7 +6,7 @@ import axiosClient from "@/libraries/axiosClient";
 import { API_URL } from "@/constants";
 import numeral from "numeral";
 import { toast } from "react-toastify";
-import { Select, BackTop, Form } from "antd";
+import { Select, BackTop, Form, Radio, Space } from "antd";
 import { useRouter } from "next/router";
 
 function Checkout() {
@@ -18,7 +18,7 @@ function Checkout() {
   const [address, setAddress] = useState("");
   const [emailOrder, setEmailOrder] = useState("");
   const [phoneNumberOrder, setPhoneNumberOrder] = useState("");
-  const [paymentType, setPaymentType] = useState("CASH");
+  const [payMethod, setPayMethod] = useState([]);
   const [description, setDescription] = useState("");
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -173,7 +173,6 @@ function Checkout() {
       const order = {
         createdDate: new Date(),
         shippedDate: shippedDate,
-        paymentType: paymentType,
         shippingAddress: fullAddress,
         status: "WAITING",
         description: description,
@@ -184,19 +183,46 @@ function Checkout() {
         phoneNumberOrder: phoneNumberOrder,
       };
 
-      await axiosClient.post("/orders", order);
-      removeAllCart(customerId);
-      toast.success("Đặt hàng thành công!", 1.5);
-      orderStore.setOrderDetails(
-        cartItems.map((item) => ({
-          productName: item.productName,
-          createdDate: new Date(),
-          price: item.price - (item.price * item.discount) / 100,
-          quantity: item.quantity,
-          discount: item.discount,
-        }))
-      );
-      router.push("/thanks");
+      if (payMethod === "COD") {
+        order.paymentType = "CASH";
+        await axiosClient.post("/orders", order);
+        removeAllCart(customerId);
+        orderStore.setOrderDetails(
+          cartItems.map((item) => ({
+            productName: item.productName,
+            createdDate: new Date(),
+            price: item.price - (item.price * item.discount) / 100,
+            quantity: item.quantity,
+          }))
+        );
+        toast.success("Đặt hàng thành công!", 1.5);
+        router.push("/thanks");
+      }
+
+      if (payMethod === "vnpay") {
+        order.paymentType = "VNPAY";
+        const amount = cartItems
+          .map(
+            (item) =>
+              ((item.price * (100 - item.discount)) / 100) * item.quantity
+          )
+          .reduce((accumulator, subtotal) => accumulator + subtotal, 0);
+
+        const payPost = async () => {
+          try {
+            const found = await axiosClient.post(
+              `/orders/pay/create_vnpay_url`,
+              { amount: amount }
+            );
+            window.location.href = found.data.urlPay;
+          } catch (error) {
+            toast.error("Đặt hàng thất bại!", 1.5);
+          }
+        };
+        await axiosClient.post("/orders", order);
+        removeAllCart(customerId);
+        payPost();
+      }
     } catch (errorInfo) {
       toast.error("Vui lòng nhập đầy đủ thông tin địa chỉ và liên hệ");
     }
@@ -359,14 +385,53 @@ function Checkout() {
               onChange={(e) => setDescription(e.target.value)}
             />
             <p>Phương thức thanh toán:</p>
-            <select
-              value={paymentType}
-              onChange={(e) => setPaymentType(e.target.value)}
-              className="border rounded-md py-2 pl-1 w-full"
+            <Form.Item
+              name="payMethod"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn phương thức thanh toán",
+                },
+              ]}
             >
-              <option value="CASH">Tiền mặt</option>
-              <option value="TRANSFER">Chuyển khoản</option>
-            </select>
+              <Radio.Group defaultValue={payMethod}>
+                <Space
+                  direction="vertical"
+                  onChange={(e) => setPayMethod(e.target.value)}
+                >
+                  <Radio className="flex" value="COD">
+                    <Space>
+                      <span>Thanh toán trực tiếp (COD)</span>
+                      <span>
+                        <img
+                          width={25}
+                          height={25}
+                          src={
+                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKbZ0bQHF9cNGzFlD8gAddwu0a15l43bcWyg&usqp=CAU"
+                          }
+                          alt="COD"
+                        />
+                      </span>
+                    </Space>
+                  </Radio>
+                  <Radio className="flex" value="vnpay">
+                    <Space>
+                      <span>Vnpay</span>
+                      <span>
+                        <img
+                          width={25}
+                          height={25}
+                          src={
+                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQULr3Ust3Yw-IS1KvGuHQFys81W1ava9Ohd8gduuRPXA&sg"
+                          }
+                          alt="vnpay"
+                        />
+                      </span>
+                    </Space>
+                  </Radio>
+                </Space>
+              </Radio.Group>
+            </Form.Item>
           </div>
         </div>
       </Form>

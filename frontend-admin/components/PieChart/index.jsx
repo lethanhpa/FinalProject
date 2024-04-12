@@ -23,8 +23,10 @@ const PieChart = () => {
       return "Đã mua";
     } else if (status === "WAITING") {
       return "Đang đợi duyệt";
-    } else status === "CANCELED";
-    return "Đã hủy";
+    } else if (status === "CANCELED") {
+      return "Đã hủy";
+    } else status = "APPROVED";
+    return "Đã duyệt";
   };
 
   const labels = Object.keys(statusData).map(getStatusText);
@@ -34,8 +36,8 @@ const PieChart = () => {
       {
         label: "Số lượng đơn hàng",
         data: Object.values(statusData),
-        backgroundColor: ["#36A2EB", "#FFCE56", "#000000"],
-        hoverBackgroundColor: ["#36A2EB", "#FFCE56", "#000000"],
+        backgroundColor: ["#36A2EB", "#FFCE56", "#000000", "#2020e0"],
+        hoverBackgroundColor: ["#36A2EB", "#FFCE56", "#000000", "#2020e0"],
       },
     ],
   };

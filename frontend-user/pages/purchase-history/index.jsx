@@ -202,7 +202,7 @@ function PurchaseHistory() {
     if (paymentType === "CASH") {
       return "Thanh toán sau khi nhận hàng";
     } else {
-      return "Thanh toán trực tuyến";
+      return "VNPAY";
     }
   };
 

@@ -79,7 +79,7 @@ const orderSchema = new Schema({
         default: 'CASH',
         validate: {
             validator: (value) => {
-                if (['CASH', 'CREDIT CARD'].includes(value.toUpperCase())) {
+                if (['CASH', 'CREDIT CARD', 'VNPAY'].includes(value.toUpperCase())) {
                     return true;
                 }
                 return false;
@@ -94,7 +94,7 @@ const orderSchema = new Schema({
         default: 'WAITING',
         validate: {
             validator: (value) => {
-                if (['WAITING', 'COMPLETED', 'CANCELED'].includes(value)) {
+                if (['WAITING', 'COMPLETED', 'CANCELED', 'APPROVED'].includes(value)) {
                     return true;
                 }
                 return false;
