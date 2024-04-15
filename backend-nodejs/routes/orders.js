@@ -169,9 +169,6 @@ async function updateProductStock(order) {
     }
 }
 
-
-
-
 router.delete("/:id", function (req, res, next) {
     const validationSchema = yup.object().shape({
         params: yup.object({
@@ -281,7 +278,7 @@ router.post("/pay/create_vnpay_url", (req, res, next) => {
     const tmnCode = config.vnp_TmnCode;
     const secretKey = config.vnp_HashSecret;
     const vnpUrl = config.vnp_Url;
-    const returnUrl = `${WEBSHOP_URL}/thanks`;
+    const returnUrl = `${WEBSHOP_URL}/payment`;
 
     const date = moment();
 
