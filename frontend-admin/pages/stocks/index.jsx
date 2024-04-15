@@ -200,16 +200,15 @@ function ManageStock() {
               key="sizes"
               render={(sizes) => (
                 <div>
-                  {sizes.map((item, index) => (
-                    <span key={item._id}>
-                      {index > 0 && " || "}
-                      Size: {item.size} Số lượng: {item.stock}
-                    </span>
+                  {sizes.map((item) => (
+                    <div key={item._id}>
+                      <span>Size: {item.size}</span>
+                      <span> Số lượng: {item.stock}</span>
+                    </div>
                   ))}
                 </div>
               )}
             />
-
             <Column
               title="Hành động"
               key="action"

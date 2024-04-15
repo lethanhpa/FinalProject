@@ -42,7 +42,7 @@ const Login = (props) => {
         localStorage.setItem("payload", JSON.stringify(payload));
 
         setIsLogin(true);
-        router.push("/statistical");
+        router.push("/products");
         message.success("Đăng nhập thành công");
       }
     } catch (error) {

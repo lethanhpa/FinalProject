@@ -167,7 +167,9 @@ function ManageProducts() {
     if (product && product.sizeId) {
       const sizeObject = sizes.find((size) => size._id === product.sizeId);
       if (sizeObject && sizeObject.sizes.length > 0) {
-        return sizeObject.sizes.map((item) => item.size).join(", ");
+        return sizeObject.sizes.map((item, index) => (
+          <div key={index}>{item.size}</div>
+        ));
       }
     }
     return "";
@@ -178,7 +180,9 @@ function ManageProducts() {
     if (product && product.sizeId) {
       const sizeObject = sizes.find((size) => size._id === product.sizeId);
       if (sizeObject && sizeObject.sizes.length > 0) {
-        return sizeObject.sizes.map((item) => item.stock).join(", ");
+        return sizeObject.sizes.map((item, index) => (
+          <div key={index}>{item.stock}</div>
+        ));
       }
     }
     return "";
