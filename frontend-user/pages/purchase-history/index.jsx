@@ -261,11 +261,11 @@ function PurchaseHistory() {
                               {detail.productName}
                             </h3>
                             <div className="flex justify-start items-start flex-col gap-[4px] max-w-[400px]">
-                              <p className="text-sm font-roboto flex">
+                              <p className="text-sm font-roboto flex items-center">
                                 <span>
-                                  <X size={8} />
+                                  <X size={16} />
                                 </span>
-                                <span> {detail.quantity}</span>
+                                {detail.quantity}
                               </p>
                               <p className="text-sm font-roboto">
                                 <span>Giá: </span>
