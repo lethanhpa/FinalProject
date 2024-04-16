@@ -223,6 +223,7 @@ function Checkout() {
         const orderId = response.data._id;
 
         localStorage.setItem("orderId", orderId);
+        localStorage.setItem("orderInfo", JSON.stringify(order));
         removeAllCart(customerId);
         payPost();
       }
