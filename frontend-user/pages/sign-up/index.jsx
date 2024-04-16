@@ -288,7 +288,16 @@ function SignUp() {
         <Form.Item
           name="phoneNumber"
           className="mx-12"
-          rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập số điện thoại",
+            },
+            {
+              pattern: /^(0\d{9,10})$/,
+              message: "Số điện thoại không hợp lệ",
+            },
+          ]}
         >
           <Input
             prefix={<PhoneOutlined className="mr-2 text-lg text-primry" />}

@@ -8,6 +8,8 @@ import {
   Select,
   Space,
   Button,
+  Radio,
+  DatePicker,
 } from "antd";
 import {
   ArrowBigLeftDash,
@@ -30,6 +32,57 @@ function ManageEmployees() {
   const [createForm] = Form.useForm();
   const [updateForm] = Form.useForm();
   const [refresh, setRefresh] = useState(0);
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+
+  useEffect(() => {
+    fetchProvinces();
+    fetchDistricts();
+    fetchWards();
+  }, []);
+
+  const fetchProvinces = () => {
+    fetch("https://vapi.vnappmob.com/api/province/")
+      .then((response) => response.json())
+      .then((data) => {
+        setProvinces(data.results);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi gọi API:", error);
+      });
+  };
+
+  const fetchDistricts = (provinceId) => {
+    fetch(`https://vapi.vnappmob.com/api/province/district/${provinceId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setDistricts(data.results);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi gọi API:", error);
+      });
+  };
+
+  const fetchWards = (districtId) => {
+    fetch(`https://vapi.vnappmob.com/api/province/ward/${districtId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setWards(data.results);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi gọi API:", error);
+      });
+  };
+
+  const handleProvinceChange = (value) => {
+    fetchDistricts(value);
+    setWards([]);
+  };
+
+  const handleDistrictChange = (value) => {
+    fetchWards(value);
+  };
 
   useEffect(() => {
     axiosClient
@@ -44,17 +97,37 @@ function ManageEmployees() {
   }, [refresh]);
 
   const onFinish = (values) => {
-    axiosClient
-      .post(apiName, values)
-      .then((_response) => {
-        setRefresh((f) => f + 1);
-        createForm.resetFields();
-        message.success("Thêm mới thành công", 1.5);
-        setShowTable(true);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    const { provinceId, districtId, wardId, address } = values;
+
+    const provinceName = provinces.find(
+      (province) => province.province_id === provinceId
+    )?.province_name;
+    const districtName = districts.find(
+      (district) => district.district_id === districtId
+    )?.district_name;
+    const wardName = wards.find((ward) => ward.ward_id === wardId)?.ward_name;
+
+    if (provinceName && districtName && wardName) {
+      const fullAddress = `${address}, ${wardName}, ${districtName}, ${provinceName}  `;
+
+      const dataToSend = { ...values, address: fullAddress };
+
+      axiosClient
+        .post(apiName, dataToSend)
+        .then((_response) => {
+          setRefresh((f) => f + 1);
+          createForm.resetFields();
+          message.success("Thêm mới thành công", 1.5);
+          setShowTable(true);
+        })
+        .catch((err) => {
+          console.error(err);
+          message.error("Thêm mới thất bại");
+        });
+    } else {
+      toast.error("Đã xảy ra lỗi khi tạo địa chỉ hoàn chỉnh.");
+    }
+    [refresh];
   };
 
   const lockEmployees = (employeesId) => {
@@ -129,11 +202,11 @@ function ManageEmployees() {
           >
             <Form.Item
               label="Họ"
-              name="firstName"
+              name="lastName"
               rules={[
                 {
                   required: true,
-                  message: "Hãy điền đầy đủ thông tin",
+                  message: "Vui lòng nhập họ",
                 },
               ]}
               hasFeedback
@@ -142,46 +215,43 @@ function ManageEmployees() {
             </Form.Item>
             <Form.Item
               label="Tên"
-              name="lastName"
+              name="firstName"
               rules={[
                 {
                   required: true,
-                  message: "Hãy điền đầy đủ thông tin",
+                  message: "Vui lòng nhập tên",
                 },
               ]}
               hasFeedback
             >
               <Input />
             </Form.Item>
+
             <Form.Item
               label="Ngày sinh"
               name="birthday"
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy điền đầy đủ thông tin",
-                },
-              ]}
+              rules={[{ required: true, message: "Vui lòng chọn ngày sinh" }]}
               hasFeedback
             >
-              <Input placeholder="yyyy/mm/dd"/>
+              <DatePicker
+                placeholder="yyyy-mm-dd"
+                size="large"
+                style={{ width: "100%" }}
+              />
             </Form.Item>
             <Form.Item
               label="Giới tính"
               name="gender"
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy điền đầy đủ thông tin",
-                },
-              ]}
+              rules={[{ required: true, message: "Vui lòng chọn giới tính" }]}
               hasFeedback
             >
-              <Select className="text-start">
-                <Select.Option value="Nam">Nam</Select.Option>
-                <Select.Option value="Nữ">Nữ</Select.Option>
-                <Select.Option value="LGBT">LGBT</Select.Option>
-              </Select>
+              <Space>
+                <Radio.Group>
+                  <Radio value="Nam">Nam</Radio>
+                  <Radio value="Nữ">Nữ</Radio>
+                  <Radio value="LGBT">LGBT</Radio>
+                </Radio.Group>
+              </Space>
             </Form.Item>
             <Form.Item
               label="Email"
@@ -214,32 +284,130 @@ function ManageEmployees() {
             >
               <Input.Password />
             </Form.Item>
+
+            <Form.Item
+              label="Nhập lại mật khẩu"
+              name="confirmPassword"
+              dependencies={["password"]}
+              rules={[
+                { required: true, message: "Vui lòng xác nhận mật khẩu" },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject("Mật khẩu xác nhận không khớp");
+                  },
+                }),
+              ]}
+              hasFeedback
+            >
+              <Input.Password />
+            </Form.Item>
+
             <Form.Item
               label="Số điện thoại"
               name="phoneNumber"
               rules={[
                 {
                   required: true,
-                  message: "Hãy điền đầy đủ thông tin",
+                  message: "Vui lòng nhập số điện thoại",
                 },
-              ]}
-              hasFeedback
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Địa chỉ"
-              name="address"
-              rules={[
                 {
-                  required: true,
-                  message: "Hãy điền đầy đủ thông tin",
+                  pattern: /^(0\d{9,10})$/,
+                  message: "Số điện thoại không hợp lệ",
                 },
               ]}
               hasFeedback
             >
               <Input />
             </Form.Item>
+
+            <Form.Item label="Địa chỉ" rules={[{ required: true }]} hasFeedback>
+              <div className="xl:space-x-3 lg:block xl:flex">
+                <Form.Item
+                  name="provinceId"
+                  className="w-full"
+                  rules={[
+                    { required: true, message: "Vui lòng chọn Tỉnh/Thành phố" },
+                  ]}
+                  hasFeedback
+                >
+                  <Select
+                    placeholder="Chọn Tỉnh/Thành phố"
+                    onChange={handleProvinceChange}
+                    size="large"
+                    options={
+                      provinces.length > 0 &&
+                      provinces.map((province) => {
+                        return {
+                          value: province.province_id,
+                          label: province.province_name,
+                        };
+                      })
+                    }
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="districtId"
+                  className="w-full"
+                  rules={[
+                    { required: true, message: "Vui lòng chọn Quận/Huyện" },
+                  ]}
+                  hasFeedback
+                >
+                  <Select
+                    placeholder="Chọn Quận/Huyện"
+                    onChange={handleDistrictChange}
+                    size="large"
+                    options={
+                      districts.length > 0 &&
+                      districts.map((district) => {
+                        return {
+                          value: district.district_id,
+                          label: district.district_name,
+                        };
+                      })
+                    }
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="wardId"
+                  className="w-full"
+                  rules={[
+                    { required: true, message: "Vui lòng chọn Phường/Xã" },
+                  ]}
+                  hasFeedback
+                >
+                  <Select
+                    placeholder="Chọn Phường/Xã"
+                    size="large"
+                    options={
+                      wards.length > 0 &&
+                      wards.map((ward) => {
+                        return {
+                          value: ward.ward_id,
+                          label: ward.ward_name,
+                        };
+                      })
+                    }
+                  />
+                </Form.Item>
+              </div>
+
+              <Form.Item
+                name="address"
+                rules={[
+                  { required: true, message: "Vui lòng nhập địa chỉ cụ thể" },
+                ]}
+                hasFeedback
+              >
+                <Input size="large" placeholder="Nhập địa chỉ cụ thể" />
+              </Form.Item>
+            </Form.Item>
+
             <Form.Item
               label="Chức vụ"
               name="role"
@@ -281,8 +449,8 @@ function ManageEmployees() {
                 return <span>{index + 1}</span>;
               }}
             />
-            <Column title="Họ" dataIndex="firstName" key="firstName" />
-            <Column title="Tên" dataIndex="lastName" key="lastName" />
+            <Column title="Họ" dataIndex="lastName" key="lastName" />
+            <Column title="Tên" dataIndex="firstName" key="firstName" />
             <Column title="Email" dataIndex="email" key="email" />
             <Column
               title="Số điện thoại"
@@ -392,7 +560,7 @@ function ManageEmployees() {
                 <Input className="pointer-events-none" bordered={false} />
               </Form.Item>
               <Form.Item label="Ngày sinh" name="birthday">
-                <Input className="pointer-events-none" bordered={false} />
+                <Input className="pointer-events-none" bordered={false}  />
               </Form.Item>
               <Form.Item label="Giới tính" name="gender">
                 <Select className="text-start">
