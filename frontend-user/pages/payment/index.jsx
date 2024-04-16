@@ -1,14 +1,46 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import axiosClient from "@/libraries/axiosClient";
 import { CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
-import { memo } from "react";
-import { useRouter } from "next/router";
 
 function Payment() {
   const router = useRouter();
-  const { vnp_TransactionStatus } = router.query; // Đổi tên biến này để phản ánh query parameter thực tế
-  console.log('««««« vnp_TransactionStatus »»»»»', vnp_TransactionStatus);
+  const { vnp_TransactionStatus } = router.query;
 
-  // Kiểm tra xem TransactionStatus có tồn tại và có giá trị là "00" hay không
+  useEffect(() => {
+    const deleteOrder = async (orderId) => {
+      try {
+        await axiosClient.patch(`orders/return-stock/${orderId}`);
+        await axiosClient.delete(`/orders/${orderId}`);
+      } catch (error) {
+        console.error(
+          "Lỗi khi xóa đơn hàng và hoàn trả số lượng sản phẩm:",
+          error
+        );
+      }
+    };
+
+    const handlePaymentResult = async () => {
+      const orderId = localStorage.getItem("orderId");
+      if (!orderId) return;
+
+      if (vnp_TransactionStatus === "00") {
+        localStorage.removeItem("orderId");
+      } else if (vnp_TransactionStatus) {
+        try {
+          await deleteOrder(orderId);
+
+          localStorage.removeItem("orderId");
+        } catch (error) {
+          console.error("Lỗi khi xóa đơn hàng từ database:", error);
+        }
+      }
+    };
+
+    handlePaymentResult();
+  }, [vnp_TransactionStatus]);
+
   const isSuccess = vnp_TransactionStatus === "00";
 
   return (
@@ -51,4 +83,4 @@ function Payment() {
   );
 }
 
-export default memo(Payment);
+export default Payment;

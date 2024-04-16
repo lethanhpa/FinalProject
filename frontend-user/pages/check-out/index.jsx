@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import useCartStore from "@/store/CartStore";
 import useOrderStore from "@/store/OrderStore";
 import { jwtDecode } from "jwt-decode";
@@ -219,7 +219,10 @@ function Checkout() {
             toast.error("Đặt hàng thất bại!", 1.5);
           }
         };
-        await axiosClient.post("/orders", order);
+        const response = await axiosClient.post("/orders", order);
+        const orderId = response.data._id;
+
+        localStorage.setItem("orderId", orderId);
         removeAllCart(customerId);
         payPost();
       }
@@ -535,4 +538,4 @@ function Checkout() {
     </div>
   );
 }
-export default Checkout;
+export default memo(Checkout);
