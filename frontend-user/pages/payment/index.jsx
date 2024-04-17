@@ -5,43 +5,14 @@ import { CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
 import moment from "moment";
 import numeral from "numeral";
+import useCartStore from "@/store/CartStore";
+import { jwtDecode } from "jwt-decode";
 
 function Payment() {
   const router = useRouter();
   const { vnp_TransactionStatus } = router.query;
   const [orderInfo, setOrderInfo] = useState([]);
-
-  useEffect(() => {
-    const deleteOrder = async (orderId) => {
-      try {
-        await axiosClient.patch(`orders/return-stock/${orderId}`);
-        await axiosClient.delete(`/orders/${orderId}`);
-      } catch (error) {
-        console.error(
-          "Lỗi khi xóa đơn hàng và hoàn trả số lượng sản phẩm:",
-          error
-        );
-      }
-    };
-
-    const handlePaymentResult = async () => {
-      const orderId = localStorage.getItem("orderId");
-      if (!orderId) return;
-
-      if (vnp_TransactionStatus === "00") {
-        localStorage.removeItem("orderId");
-      } else if (vnp_TransactionStatus) {
-        try {
-          await deleteOrder(orderId);
-          localStorage.removeItem("orderId");
-        } catch (error) {
-          console.error("Lỗi khi xóa đơn hàng từ database:", error);
-        }
-      }
-    };
-
-    handlePaymentResult();
-  }, [vnp_TransactionStatus]);
+  const { removeAllCart } = useCartStore();
 
   useEffect(() => {
     const storedOrderInfo = localStorage.getItem("orderInfo");
@@ -49,6 +20,25 @@ function Payment() {
       setOrderInfo(JSON.parse(storedOrderInfo));
     }
   }, []);
+
+  useEffect(() => {
+    const handleAddOrder = async () => {
+      if (vnp_TransactionStatus === "00") {
+        try {
+          const token = localStorage.getItem("token");
+          const decoded = jwtDecode(token);
+          const customerId = decoded._id;
+          await axiosClient.post("/orders", orderInfo);
+          removeAllCart(customerId);
+        } catch (err) {
+          console.log(err);
+        }
+      } else if (vnp_TransactionStatus) {
+        return;
+      }
+    };
+    handleAddOrder();
+  }, [vnp_TransactionStatus]);
 
   const isSuccess = vnp_TransactionStatus === "00";
 

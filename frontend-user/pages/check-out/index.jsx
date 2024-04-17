@@ -219,12 +219,9 @@ function Checkout() {
             toast.error("Đặt hàng thất bại!", 1.5);
           }
         };
-        const response = await axiosClient.post("/orders", order);
-        const orderId = response.data._id;
 
-        localStorage.setItem("orderId", orderId);
         localStorage.setItem("orderInfo", JSON.stringify(order));
-        removeAllCart(customerId);
+
         payPost();
       }
     } catch (errorInfo) {
