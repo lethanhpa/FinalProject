@@ -1,15 +1,16 @@
-import { CheckCircle, Info } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import useOrderStore from "@/store/OrderStore";
 import moment from "moment";
 import numeral from "numeral";
 import Link from "next/link";
+import { memo } from "react";
 
 function Thanks() {
   const orderDetails = useOrderStore((state) => state.orderDetails);
 
   return (
-    <>
-      {orderDetails.length > 0 ? (
+    <div>
+      {orderDetails.length > 0 && (
         <div className="border border-transparent my-20 mx-60 rounded-2xl shadow-2xl">
           <div>
             <div className="flex justify-center items-center mt-10">
@@ -46,47 +47,38 @@ function Thanks() {
                   </tr>
                 </thead>
                 <tbody>
-                  {orderDetails.map((item, index) => {
-                    return (
-                      <tr
-                        key={index}
-                        className="border border-solid border-gray-500"
-                      >
-                        <td className="flex items-center justify-center py-3">
-                          <p className="font-elle font-light">
-                            {item.productName}
-                          </p>
-                        </td>
-                        <td className="border border-solid border-gray-500">
-                          <div className="flex items-center justify-center py-3">
-                            {moment(item.createdDate).format("DD/MM/YYYY")}
-                          </div>
-                        </td>
-                        <td className="border border-solid border-gray-500">
-                          <div className="flex justify-center items-center py-3">
-                            {numeral(
-                              (item.price * (100 - item.discount)) / 100
-                            ).format("0,0")}
-                            đ
-                          </div>
-                        </td>
-                        <td className="border border-solid border-gray-500">
-                          <div className="flex justify-center items-center py-3">
-                            {item.quantity}
-                          </div>
-                        </td>
-                        <td className="border border-solid border-gray-500">
-                          <div className="flex items-center justify-center py-3">
-                            {numeral(
-                              ((item.price * (100 - item.discount)) / 100) *
-                                item.quantity
-                            ).format("0,0")}
-                            đ
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {orderDetails.map((item, index) => (
+                    <tr
+                      key={index}
+                      className="border border-solid border-gray-500"
+                    >
+                      <td className="flex items-center justify-center py-3">
+                        <p className="font-elle font-light">
+                          {item.productName}
+                        </p>
+                      </td>
+                      <td className="border border-solid border-gray-500">
+                        <div className="flex items-center justify-center py-3">
+                          {moment(item.createdDate).format("DD/MM/YYYY")}
+                        </div>
+                      </td>
+                      <td className="border border-solid border-gray-500">
+                        <div className="flex justify-center items-center py-3">
+                          {numeral(item.price).format("0,0")}đ
+                        </div>
+                      </td>
+                      <td className="border border-solid border-gray-500">
+                        <div className="flex justify-center items-center py-3">
+                          {item.quantity}
+                        </div>
+                      </td>
+                      <td className="border border-solid border-gray-500">
+                        <div className="flex items-center justify-center py-3">
+                          {numeral(item.price * item.quantity).format("0,0")}đ
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </div>
             </table>
@@ -112,14 +104,9 @@ function Thanks() {
             </Link>
           </div>
         </div>
-      ) : (
-        <div className="my-20 mx-60  flex justify-center font-bold">
-          <Info />
-          <p className="ml-3">Vui lòng mua sản phẩm</p>
-        </div>
       )}
-    </>
+    </div>
   );
 }
 
-export default Thanks;
+export default memo(Thanks);

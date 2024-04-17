@@ -202,7 +202,7 @@ function PurchaseHistory() {
     if (paymentType === "CASH") {
       return "Thanh toán sau khi nhận hàng";
     } else {
-      return "Thanh toán trực tuyến";
+      return "VNPAY";
     }
   };
 
@@ -261,12 +261,11 @@ function PurchaseHistory() {
                               {detail.productName}
                             </h3>
                             <div className="flex justify-start items-start flex-col gap-[4px] max-w-[400px]">
-                              <p className="text-sm font-roboto flex">
+                              <p className="text-sm font-roboto flex items-center">
                                 <span>
-                                  {" "}
-                                  <X size={18} />{" "}
+                                  <X size={16} />
                                 </span>
-                                <span> {detail.quantity}</span>
+                                {detail.quantity}
                               </p>
                               <p className="text-sm font-roboto">
                                 <span>Giá: </span>
@@ -394,12 +393,11 @@ function PurchaseHistory() {
                               {detail.productName}
                             </h3>
                             <div className="flex justify-start items-start flex-col gap-[4px] max-w-[400px]">
-                              <p className="text-sm font-roboto flex">
+                              <p className="text-sm font-roboto flex items-center">
                                 <span>
-                                  {" "}
-                                  <X size={18} />{" "}
+                                  <X size={16} />
                                 </span>
-                                <span> {detail.quantity}</span>
+                                {detail.quantity}
                               </p>
                               <p className="text-sm font-roboto">
                                 <span>Giá: </span>
@@ -407,8 +405,7 @@ function PurchaseHistory() {
                               </p>
                               {detail.size && (
                                 <div className="flex gap-2 text-sm font-roboto">
-                                  <p>Size :</p>
-                                  <p>{detail.size}</p>
+                                  <p>Size: {detail.size} </p>
                                 </div>
                               )}
                             </div>

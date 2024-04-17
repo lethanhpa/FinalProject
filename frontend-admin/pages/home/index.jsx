@@ -16,12 +16,12 @@ import Login from "../login";
 import { jwtDecode } from "jwt-decode";
 import axios from "../../libraries/axiosClient";
 
-const itemAdmin = [
+const menuItems = [
   {
     label: "Thống Kê",
     key: "manageStatistical",
     icon: <AreaChart size={20} strokeWidth={1} />,
-    path: "statistical ",
+    path: "statistical",
   },
   {
     label: "Quản Lý Nhân Viên",
@@ -67,67 +67,29 @@ const itemAdmin = [
   },
 ];
 
-const itemEmployee = [
-  {
-    label: "Quản Lý Khách Hàng",
-    key: "manageCustomers",
-    icon: <Users size={20} strokeWidth={1} />,
-    path: "customers",
-  },
-  {
-    label: "Quản Lý Số Lượng",
-    key: "manageStock",
-    icon: <Boxes size={20} strokeWidth={1} />,
-    path: "stocks",
-  },
-  {
-    label: "Quản Lý Sản Phẩm",
-    key: "manageProducts",
-    icon: <PackageOpen size={20} strokeWidth={1} />,
-    path: "products",
-  },
-  {
-    label: "Quản Lý Đánh Giá",
-    key: "manageReviews",
-    icon: <MessageSquareQuote size={20} strokeWidth={1} />,
-    path: "reviews",
-  },
-  {
-    label: "Quản Lý Danh Mục",
-    key: "manageCategories",
-    icon: <BookOpen size={20} strokeWidth={1} />,
-    path: "categories",
-  },
-  {
-    label: "Quản Lý Đơn Hàng",
-    key: "manageOrders",
-    icon: <ShoppingCart size={20} strokeWidth={1} />,
-    path: "orders",
-  },
-];
-
 function HomePage() {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(false);
-  const [employees, setEmployees] = useState([]);
+  const [employeeRole, setEmployeeRole] = useState("");
 
   useEffect(() => {
-    const fetchEmployees = async () => {
+    const fetchEmployeeData = async () => {
       try {
         const token = localStorage.getItem("token");
         const decoded = jwtDecode(token);
         const employeeId = decoded._id;
 
         const response = await axios.get(`/employees/${employeeId}`);
-        const data = response.data;
+        const { role } = response.data;
 
-        setEmployees(data);
+        setEmployeeRole(role);
         setIsLogin(true);
       } catch (error) {
         console.error(error);
       }
     };
-    fetchEmployees();
+
+    fetchEmployeeData();
   }, []);
 
   useEffect(() => {
@@ -141,6 +103,12 @@ function HomePage() {
     }
   }, [router.pathname]);
 
+  const filteredMenuItems = menuItems.filter(
+    (item) =>
+      employeeRole === "Admin" ||
+      (item.key !== "manageStatistical" && item.key !== "manageEmployees")
+  );
+
   return (
     <>
       {isLogin ? (
@@ -150,17 +118,11 @@ function HomePage() {
             className="w-auto flex justify-center sticky top-0 z-40"
             style={{ boxShadow: "0 5px 10px rgba(0,0,0,0.1)" }}
           >
-            {employees.role === "Admin"
-              ? itemAdmin.map((item) => (
-                  <Menu.Item key={item.key} icon={item.icon}>
-                    <Link href={item.path}>{item.label}</Link>
-                  </Menu.Item>
-                ))
-              : itemEmployee.map((item) => (
-                  <Menu.Item key={item.key} icon={item.icon}>
-                    <Link href={item.path}>{item.label}</Link>
-                  </Menu.Item>
-                ))}
+            {filteredMenuItems.map((item) => (
+              <Menu.Item key={item.key} icon={item.icon}>
+                <Link href={item.path}>{item.label}</Link>
+              </Menu.Item>
+            ))}
           </Menu>
         </>
       ) : (
