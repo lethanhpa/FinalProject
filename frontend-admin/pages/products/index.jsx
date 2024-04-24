@@ -563,7 +563,7 @@ function ManageProducts() {
                   />
                 </Form.Item>
                 {showSizeInput && (
-                  <Form.Item label="Kích cỡ" name="sizeId">
+                  <Form.Item label="Kích cỡ" name="sizeId" hidden>
                     <Select
                       style={{ width: "100%" }}
                       options={sizes.map((c) => {
