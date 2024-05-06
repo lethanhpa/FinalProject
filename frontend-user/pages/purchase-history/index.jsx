@@ -171,6 +171,7 @@ function PurchaseHistory() {
       if (response.status === 200) {
         await axiosClient.patch(`/orders/return-stock/${orderId}`);
         fetchOrders();
+        toast.success("Đơn hàng đã được hủy", 1.5);
       } else {
         console.error("Có lỗi xảy ra khi hủy đơn hàng");
       }
@@ -210,15 +211,20 @@ function PurchaseHistory() {
     router.push(`/${productId._id}`);
   };
 
-  const HuyDonAction = (status, order) => {
+  const HuyDonAction = (status, orderId) => {
     if (status === "WAITING") {
       return (
-        <button
-          className="mr-5 bg-primry text-white font-bold w-[150px] h-[40px] rounded-full hover:bg-white hover:text-primry hover:border-primry hover:border"
-          onClick={() => handleCancelOrder(order)}
+        <Popconfirm
+          title="Bạn chắc chắn muốn hủy đơn hàng?"
+          onConfirm={() => handleCancelOrder(orderId)}
+          okText="Có"
+          okButtonProps={{ className: "bg-black" }}
+          cancelText="Không"
         >
-          Hủy đơn hàng
-        </button>
+          <button className="mr-5 bg-primry text-white font-bold w-[150px] h-[40px] rounded-full hover:bg-white hover:text-primry hover:border-primry hover:border">
+            Hủy đơn hàng
+          </button>
+        </Popconfirm>
       );
     }
   };
