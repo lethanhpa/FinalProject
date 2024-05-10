@@ -317,7 +317,7 @@ function WeddingJewelry({ products, reviews }) {
             ))}
         </div>
         <span className="flex justify-center font-elle mt-7 mb-3">
-          Hiển thị
+          Hiển thị{" "}
           {Math.min(
             filteredProducts.filter(
               (item) => item.categoryId === "65d72854f159c29036e3b592"
