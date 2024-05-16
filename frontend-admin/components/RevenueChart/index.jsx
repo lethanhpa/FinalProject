@@ -23,7 +23,7 @@ const RevenueLineChart = ({ monthlyRevenue }) => {
             label: "Doanh thu",
             data: data,
             fill: false,
-            borderColor: "#000000",
+            borderColor: "#3366ff",
             tension: 0.1,
           },
         ],

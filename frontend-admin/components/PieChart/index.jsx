@@ -36,8 +36,8 @@ const PieChart = () => {
       {
         label: "Số lượng đơn hàng",
         data: Object.values(statusData),
-        backgroundColor: ["#36A2EB", "#FFCE56", "#000000", "#2020e0"],
-        hoverBackgroundColor: ["#36A2EB", "#FFCE56", "#000000", "#2020e0"],
+        backgroundColor: ["#36A2EB", "#FFCE56", "#339933", "#2020e0"],
+        hoverBackgroundColor: ["#36A2EB", "#FFCE56", "#339933", "#2020e0"],
       },
     ],
   };

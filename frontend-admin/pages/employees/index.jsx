@@ -202,7 +202,7 @@ function ManageEmployees() {
           >
             <Form.Item
               label="Họ"
-              name="lastName"
+              name="firstName"
               rules={[
                 {
                   required: true,
@@ -215,7 +215,7 @@ function ManageEmployees() {
             </Form.Item>
             <Form.Item
               label="Tên"
-              name="firstName"
+              name="lastName"
               rules={[
                 {
                   required: true,
@@ -449,8 +449,8 @@ function ManageEmployees() {
                 return <span>{index + 1}</span>;
               }}
             />
-            <Column title="Họ" dataIndex="lastName" key="lastName" />
-            <Column title="Tên" dataIndex="firstName" key="firstName" />
+            <Column title="Họ" dataIndex="firstName" key="firstName" />
+            <Column title="Tên" dataIndex="lastName" key="lastName" />
             <Column title="Email" dataIndex="email" key="email" />
             <Column
               title="Số điện thoại"
@@ -553,14 +553,14 @@ function ManageEmployees() {
                 span: 16,
               }}
             >
-              <Form.Item label="Họ" name="firstName">
-                <Input className="pointer-events-none" bordered={false} />
+              <Form.Item label="Họ" name="firstName" >
+                <Input />
               </Form.Item>
               <Form.Item label="Tên" name="lastName">
-                <Input className="pointer-events-none" bordered={false} />
+                <Input />
               </Form.Item>
               <Form.Item label="Ngày sinh" name="birthday">
-                <Input className="pointer-events-none" bordered={false}  />
+                <Input className="pointer-events-none" bordered={false}/>
               </Form.Item>
               <Form.Item label="Giới tính" name="gender">
                 <Select className="text-start">
@@ -573,16 +573,17 @@ function ManageEmployees() {
                 <Input className="pointer-events-none" bordered={false} />
               </Form.Item>
               <Form.Item label="Số điện thoại" name="phoneNumber">
-                <Input className="pointer-events-none" bordered={false} />
+                <Input  />
               </Form.Item>
               <Form.Item label="Địa chỉ" name="address">
-                <Input />
+                <Input className="pointer-events-none" bordered={false}/>
               </Form.Item>
-              <Form.Item label="Chức vụ" name="role">
-                <Select className="text-start">
+              <Form.Item label="Chức vụ" name="role" >
+                {/* <Select className="text-start">
                   <Select.Option value="Admin">Admin</Select.Option>
                   <Select.Option value="Nhân viên">Nhân viên</Select.Option>
-                </Select>
+                </Select> */}
+                <Input className="pointer-events-none" bordered={false}/>
               </Form.Item>
             </Form>
           </Modal>

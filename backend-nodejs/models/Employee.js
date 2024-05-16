@@ -41,7 +41,6 @@ const employeeSchema = new Schema({
     birthday: { type: Date },
     gender: { type: String, required: true },
     role: { type: String, required: true },
-    avatar: { type: String },
     isLocked: { type: Boolean, default: false },
 },
     {

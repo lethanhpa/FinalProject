@@ -11,7 +11,7 @@ function Brand() {
             <p className="font-roboto font-normal text-md"> Slogan/ Câu khẩu hiệu: Niềm Tin và Phong Cách Tầm nhìn: Trở thành công ty hàng đầu Châu Á về chế tác trang sức và bán lẻ sản phẩm tôn vinh vẻ đẹp, vươn tầm thế giới. Sứ mệnh: Jewel không ngừng sáng tạo để mang lại những sản phẩm tinh tế với giá trị thật để tôn vinh vẻ đẹp cho con người và cuộc sống. Giá trị cốt lõi: Chính trực để trường tồn, Kiên định bám mục tiêu, Quan tâm cùng phát triển, Tận tâm vì khách hàng, Tiên phong tạo khác biệt.</p>
         </div>
         <h3 className="uppercase font-roboto font-medium text-lg">2. Quá trình phát triển Trang sức & đá quý Jewel</h3>
-        <p className="font-roboto font-normal text-md indent-5">2022: Tăng tốc tái tạo – Ứng biến vươn cao Năm 2022, Jewel tiếp tục kiên định với các định hướng đến giai đoạn tăng trưởng mới:
+        <p className="font-roboto font-normal text-md ">2022: Tăng tốc tái tạo – Ứng biến vươn cao Năm 2022, Jewel tiếp tục kiên định với các định hướng đến giai đoạn tăng trưởng mới:
             Tăng trưởng vững chắc với trọng tâm duy trì vị thế số một tại thị trường; Không ngừng phát triển đồng bộ năng lực sản xuất, quản trị chuỗi cung ứng, quản trị chiến lược, marketing,..
             để tạo sức mạnh toàn diện của doanh nghiệp; tiếp tục công cuộc làm giàu tài nguyên nguồn nhân lực, tài nguyên thương hiệu, tài nguyên khách hàng, để gia tăng giá trị cốt lõi của doanh nghiệp…
             Đặc biệt, trong năm 2022 khi bối cảnh thị trường vẫn còn nhiều khó khăn và biến động, tuy nhiên Jewel vẫn đạt được kết quả kinh doanh ấn tượng với doanh thu thuần và lợi nhuận sau thuế đạt 33,876 tỷ đồng
@@ -25,7 +25,7 @@ function Brand() {
             kích thích trải nghiệm các dòng sản phẩm trong hệ sinh thái thương hiệu Jewel. Đồng thời, năm 2021 cũng đánh dấu nhiều thành công của Jewel trên con đường hoàn thiện hệ thống bán hàng đa kênh và tiến nhanh vào
             thị trường số hóa trên cơ sở phân tích tâm lý, hành vi tiêu dùng của cư dân số hóa.</p>
         <h3 className="uppercase font-roboto font-medium text-lg">3. Thành tựu đạt được</h3>
-        <ul className="font-roboto font-normal text-md indent-5 flex flex-col gap-2">
+        <ul className="font-roboto font-normal text-md  flex flex-col gap-2">
             <li >Top 3 nhà bán lẻ khu vực Châu Á - JNA</li>
             <li>Top 6 thương hiệu của năm – JNA</li>
             <li>Môi trường làm việc tốt nhất Châu Á</li>

@@ -12,6 +12,7 @@ const productSchema = new Schema(
         categoryId: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
         reviewId: { type: Schema.Types.ObjectId, ref: 'Review' },
         sizeId: { type: Schema.Types.ObjectId, ref: 'Size' },
+        sell: {type: Number, min: 0, default: 0},
     },
     {
         versionKey: false,

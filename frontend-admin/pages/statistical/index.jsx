@@ -42,7 +42,7 @@ function Statistical() {
           <div className="w-full">
             {selectedYear && monthlyRevenue[selectedYear] && (
               <div>
-                <h1 className="flex justify-center font-bold mb-3">
+                <h1 className="flex justify-center font-bold mb-3 text-xl">
                   Biểu đồ doanh thu các tháng trong năm {selectedYear}
                 </h1>
                 <RevenueLineChart
@@ -52,7 +52,7 @@ function Statistical() {
             )}
           </div>
           <div>
-            <h1 className="flex justify-center font-bold mb-3">
+            <h1 className="flex justify-center font-bold mb-3 text-lg">
               Biểu đồ thống kê theo trạng thái
             </h1>
             <PieChart />

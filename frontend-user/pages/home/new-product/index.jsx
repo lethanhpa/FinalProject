@@ -14,14 +14,14 @@ import "swiper/css/scrollbar";
 import "swiper/css";
 
 function NewProduct({ products, reviews }) {
-  const THIRTY_DAYS_IN_MS = 40 * 24 * 60 * 60 * 1000; // 30 ngày tính bằng mili giây
+  const THIRTY_DAYS_IN_MS = 60 * 24 * 60 * 60 * 1000; // 60 ngày tính bằng mili giây
   const currentDate = new Date();
 
   function filterNewProducts(products) {
     return products.filter((product) => {
       const createdAtTimestamp = new Date(product.createdAt).getTime();
       const timeDifference = currentDate.getTime() - createdAtTimestamp;
-      return timeDifference <= THIRTY_DAYS_IN_MS; // Chỉ lấy các sản phẩm được tạo trong vòng 30 ngày trước
+      return timeDifference <= THIRTY_DAYS_IN_MS; 
     });
   }
 

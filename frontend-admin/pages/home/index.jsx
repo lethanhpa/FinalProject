@@ -36,10 +36,10 @@ const menuItems = [
     path: "customers",
   },
   {
-    label: "Quản Lý Số Lượng",
+    label: "Quản Lý Size",
     key: "manageStock",
     icon: <Boxes size={20} strokeWidth={1} />,
-    path: "stocks",
+    path: "sizes",
   },
   {
     label: "Quản Lý Sản Phẩm",
@@ -48,7 +48,7 @@ const menuItems = [
     path: "products",
   },
   {
-    label: "Quản Lý Đánh Giá",
+    label: "Quản Lý Đánh Giá, Bình luận",
     key: "manageReviews",
     icon: <MessageSquareQuote size={20} strokeWidth={1} />,
     path: "reviews",

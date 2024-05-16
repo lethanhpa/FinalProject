@@ -13,6 +13,9 @@ import { API_URL } from "@/constants";
 import numeral from "numeral";
 import Moment from "moment";
 import { CircleXIcon, EyeIcon, FilePenLine } from "lucide-react";
+import {
+  SearchOutlined,
+} from "@ant-design/icons";
 import axiosClient from "@/libraries/axiosClient";
 
 const { Column } = Table;
@@ -36,6 +39,7 @@ function ManageOrder() {
       .then((response) => {
         const { data } = response;
         setData(data);
+        console.log('data', data);
       })
       .catch((err) => {
         console.error(err);
@@ -119,7 +123,7 @@ function ManageOrder() {
           key="customerName"
           render={(_text, record) => {
             return (
-              <span>{`${record.customer.firstName} ${record.customer.lastName}`}</span>
+              <span>{`${record.customer.lastName} ${record.customer.firstName}`}</span>
             );
           }}
         />
@@ -138,7 +142,7 @@ function ManageOrder() {
           }}
         />
         <Column
-          title="Ngày đặt"
+          title="Ngày giao  "
           dataIndex="shippedDate"
           key="shippedDate"
           render={(text) => {
@@ -150,9 +154,11 @@ function ManageOrder() {
           dataIndex="shippingAddress"
           key="shippingAddress"
           render={(text, record) => {
-            return <span>{`${record.shippingAddress}`}</span>;
+            return <span>{`${record.shippingAddress}`} </span>;
           }}
         />
+
+
         <Column
           title="Phương thức"
           dataIndex="paymentType"
@@ -163,8 +169,8 @@ function ManageOrder() {
               case "CASH":
                 paymentText = "Tiền mặt";
                 break;
-              case "CREDIT CARD":
-                paymentText = "Chuyển khoản";
+              case "VNPAY":
+                paymentText = "VNPAY";
                 break;
               default:
                 paymentText = text;
@@ -172,7 +178,20 @@ function ManageOrder() {
             }
             return <span>{paymentText}</span>;
           }}
+          filters={[
+            {
+              text: 'Tiền mặt',
+              value: 'CASH',
+            },
+            {
+              text: 'VNPAY',
+              value: 'VNPAY',
+            }
+          ]}
+          onFilter={(value, record) => record.paymentType.indexOf(value.toString()) === 0}
         />
+
+
         <Column
           title="Trạng thái"
           dataIndex="status"
@@ -198,12 +217,33 @@ function ManageOrder() {
             }
             return <span>{statusText}</span>;
           }}
+          filters={[
+            {
+              text: 'Đã mua',
+              value: 'COMPLETE',
+            },
+            {
+              text: 'Đã hủy',
+              value: 'CANCELED',
+            },
+            {
+              text: 'Đã duyệt',
+              value: 'APPROVED',
+            },
+            {
+              text: 'Đang đợi duyệt',
+              value: 'WAITING',
+            },
+          ]}
+          onFilter={(value, record) => record.status.indexOf(value.toString()) === 0}
         />
+
+
         <Column
           title="Nhân viên"
           dataIndex="employee"
           key="employee"
-          render={(employee, record) => {
+          render={(employee) => {
             if (employee) {
               return (
                 <span>{`${employee.firstName} ${employee.lastName}`}</span>
@@ -213,6 +253,7 @@ function ManageOrder() {
             }
           }}
         />
+
 
         <Column title="Ghi chú" dataIndex="description" key="description" />
         <Column
@@ -295,7 +336,7 @@ function ManageOrder() {
               options={employees.map((c) => {
                 return {
                   value: c._id,
-                  label: c.lastName + " " + c.firstName,
+                  label: c.firstName + " " + c.lastName,
                 };
               })}
             />

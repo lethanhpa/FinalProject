@@ -194,12 +194,20 @@ function PurchaseHistory() {
         );
       } else {
         return (
+          <>
           <button
             className="bg-primry text-white font-bold w-[150px] h-[40px] rounded-full hover:bg-white hover:text-primry hover:border-primry hover:border mr-5"
             onClick={() => HandleMuaLai(productId)}
           >
             Mua lại
           </button>
+          <button
+          className="bg-primry text-white font-bold w-[150px] h-[40px] rounded-full hover:bg-white hover:text-primry hover:border-primry hover:border mr-5"
+          onClick={() => handleReview(productId)}
+        >
+          Xem đánh giá
+        </button>
+          </>
         );
       }
     }
@@ -221,22 +229,6 @@ function PurchaseHistory() {
         </button>
       );
     }
-  };
-
-  const getReview = (status, productId) => {
-    const isReviewed = reviewedProducts[productId._id];
-
-    if (status === "COMPLETE" && isReviewed) {
-      return (
-        <button
-          className="bg-primry text-white font-bold w-[150px] h-[40px] rounded-full hover:bg-white hover:text-primry hover:border-primry hover:border mr-5"
-          onClick={() => handleReview(productId)}
-        >
-          Xem đánh giá
-        </button>
-      );
-    }
-    return null;
   };
 
   const handleReview = (productId) => {
@@ -401,13 +393,6 @@ function PurchaseHistory() {
                     })}
                   </div>
                   <div className="mb-2 flex justify-end">
-                    {order.orderDetails.map((detail, index) => {
-                      return (
-                        <div key={index}>
-                          {getReview(order.status, detail.productId, order)}
-                        </div>
-                      );
-                    })}
                     <Modal
                       title="Đã đánh giá"
                       open={isModalOpenReview}

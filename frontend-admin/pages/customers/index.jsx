@@ -58,8 +58,8 @@ function ManageCustomers() {
             return <span>{index + 1}</span>;
           }}
         />
-        <Column title="Họ" dataIndex="firstName" key="firstName" />
-        <Column title="Tên" dataIndex="lastName" key="lastName" />
+        <Column title="Họ" dataIndex="lastName" key="lastName" />
+        <Column title="Tên" dataIndex="firstName" key="firstName" />
         <Column title="Email" dataIndex="email" key="email" />
         <Column
           title="Số điện thoại"
