@@ -3,6 +3,7 @@ import RevenueLineChart from "@/components/RevenueChart";
 import axiosClient from "@/libraries/axiosClient";
 import PieChart from "@/components/PieChart";
 import { Select } from "antd";
+import DailyRevenueChart from "@/components/DailyRevenueChart";
 
 const apiName = "/orders";
 
@@ -57,6 +58,12 @@ function Statistical() {
             </h1>
             <PieChart />
           </div>
+        </div>
+        <div className="mt-10">
+          <h1 className="flex justify-center font-bold mb-3">
+            Biểu đồ thống kê doanh thu theo ngày
+          </h1>
+          <DailyRevenueChart />
         </div>
       </div>
     </div>

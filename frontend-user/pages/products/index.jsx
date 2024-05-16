@@ -71,6 +71,18 @@ function Products({ products, categories, reviews }) {
       );
     }
 
+    filteredProducts = filteredProducts.filter(
+      (product) =>
+        product.categoryId !== "65d72854f159c29036e3b592" &&
+        product.categoryId !== "65f12a3743051681d5a2c8bd"
+    );
+
+    if (selectedCategory) {
+      filteredProducts = filteredProducts.filter(
+        (product) => product.categoryId === selectedCategory
+      );
+    }
+
     return filteredProducts;
   };
 

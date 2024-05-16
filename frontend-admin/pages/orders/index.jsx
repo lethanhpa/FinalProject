@@ -172,6 +172,9 @@ function ManageOrder() {
               case "VNPAY":
                 paymentText = "VNPAY";
                 break;
+              case "VNPAY":
+                paymentText = "VNPAY";
+                break;
               default:
                 paymentText = text;
                 break;
@@ -343,10 +346,10 @@ function ManageOrder() {
           </Form.Item>
           <Form.Item label="Trạng thái" name="status">
             <Select style={{ width: "80%" }}>
-              <Select.Option value="WAITING">WAITING</Select.Option>
-              <Select.Option value="COMPLETE">COMPLETE</Select.Option>
-              <Select.Option value="CANCELED">CANCELED</Select.Option>
-              <Select.Option value="APPROVED">APPROVED</Select.Option>
+              <Select.Option value="WAITING">Đang đợi duyệt</Select.Option>
+              <Select.Option value="COMPLETE">Đã mua</Select.Option>
+              <Select.Option value="CANCELED">Đã hủy</Select.Option>
+              <Select.Option value="APPROVED">Đã duyệt</Select.Option>
             </Select>
           </Form.Item>
         </Form>
