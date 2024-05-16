@@ -30,8 +30,8 @@ const DailyRevenueChart = () => {
             {
               label: "Doanh thu (VNĐ)", // Đổi label của trục y
               data: values,
-              backgroundColor: "#000000",
-              borderColor: "#000000",
+              backgroundColor: "#3366ff",
+              borderColor: "#3366ff",
               borderWidth: 1,
             },
           ],

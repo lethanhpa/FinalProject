@@ -60,7 +60,7 @@ function Statistical() {
           </div>
         </div>
         <div className="mt-10">
-          <h1 className="flex justify-center font-bold mb-3">
+          <h1 className="flex justify-center font-bold mb-3 text-xl">
             Biểu đồ thống kê doanh thu theo ngày
           </h1>
           <DailyRevenueChart />

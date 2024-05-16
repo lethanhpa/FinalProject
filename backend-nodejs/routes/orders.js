@@ -81,9 +81,7 @@ const calculateMonthlyRevenue = (orders) => {
         if (order.status === 'COMPLETE') { // Chỉ tính toán doanh thu cho các đơn hàng có status là 'COMPLETE'
             const year = new Date(order.createdAt).getFullYear(); // Lấy năm từ createdAt
             const month = new Date(order.createdAt).getMonth() + 1; // Lấy tháng từ createdAt
-            const revenue = order.orderDetails.reduce((total, item) => total + (((item.price * (100 - item.discount)) /
-                100) *
-                item.quantity), 0); // Tính doanh thu từ orderDetails
+            const revenue = order.orderDetails.reduce((total, item) => total + (item.price * item.quantity), 0); // Tính doanh thu từ orderDetails
             if (!monthlyRevenue[year]) {
                 monthlyRevenue[year] = {};
             }
@@ -106,9 +104,9 @@ const calculateMonthlyRevenue = (orders) => {
 const calculateDailyRevenue = (orders) => {
     const dailyRevenue = {};
     orders.forEach((order) => {
-        if (order.status === 'COMPLETE') {
+        if (order.status === 'COMPLETE' || order.paymentType === 'VNPAY') {
             const date = moment(order.createdAt).format('YYYY-MM-DD');
-            const revenue = order.orderDetails.reduce((total, item) => total + (((item.price * (100 - item.discount)) / 100) * item.quantity), 0);
+            const revenue = order.orderDetails.reduce((total, item) => total + (item.price  * item.quantity), 0);
             if (!dailyRevenue[date]) {
                 dailyRevenue[date] = 0;
             }
