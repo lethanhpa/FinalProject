@@ -54,6 +54,12 @@ function ManageReview() {
       <h1 className="text-2xl text-center my-3">Danh Sách Đánh Giá</h1>
       <Table dataSource={data} rowKey="_id" scroll={{ x: true }}>
         <Column
+          title="STT"
+          render={(_text, _record, index) => {
+            return <span>{index + 1}</span>;
+          }}
+        />
+        <Column
           title="Khách hàng"
           dataIndex="customer"
           key="customer"

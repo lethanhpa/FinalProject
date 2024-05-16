@@ -64,6 +64,16 @@ router.get('/revenue', async (req, res, next) => {
     }
 });
 
+router.get('/revenue/daily', async (req, res, next) => {
+    try {
+        const orders = await Order.find({ status: 'COMPLETE' });
+        const dailyRevenue = calculateDailyRevenue(orders);
+        res.status(200).json(dailyRevenue);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 // Hàm tính toán doanh thu theo tháng và năm từ danh sách đơn hàng
 const calculateMonthlyRevenue = (orders) => {
     const monthlyRevenue = {};
@@ -91,6 +101,22 @@ const calculateMonthlyRevenue = (orders) => {
     }
 
     return monthlyRevenue;
+};
+
+const calculateDailyRevenue = (orders) => {
+    const dailyRevenue = {};
+    orders.forEach((order) => {
+        if (order.status === 'COMPLETE') {
+            const date = moment(order.createdAt).format('YYYY-MM-DD');
+            const revenue = order.orderDetails.reduce((total, item) => total + (((item.price * (100 - item.discount)) / 100) * item.quantity), 0);
+            if (!dailyRevenue[date]) {
+                dailyRevenue[date] = 0;
+            }
+            dailyRevenue[date] += revenue;
+        }
+    });
+
+    return dailyRevenue;
 };
 
 router.get("/:id", async function (req, res, next) {

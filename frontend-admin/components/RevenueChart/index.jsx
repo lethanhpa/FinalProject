@@ -20,9 +20,10 @@ const RevenueLineChart = ({ monthlyRevenue }) => {
         labels: labels,
         datasets: [
           {
-            label: "Doanh thu",
+            label: "Doanh thu (VNĐ)",
             data: data,
             fill: false,
+            backgroundColor: "#000000",
             borderColor: "#000000",
             tension: 0.1,
           },
@@ -37,7 +38,7 @@ const RevenueLineChart = ({ monthlyRevenue }) => {
             type: "linear",
             title: {
               display: true,
-              text: "Tổng tiền",
+              text: "Tổng tiền (VNĐ)",
             },
           },
         },
