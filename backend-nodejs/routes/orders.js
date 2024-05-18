@@ -182,13 +182,14 @@ async function updateProductStock(order) {
             if (sizeIndex >= 0) {
 
                 product.sizeId.sizes[sizeIndex].stock -= quantity;
+                product.sizeId.sizes[sizeIndex].sell = (product.sizeId.sizes[sizeIndex].sell || 0) + quantity;
 
                 await product.sizeId.save();
             } else {
                 console.log(`Không tìm thấy kích thước ${orderDetail.size} cho sản phẩm ${productId}`);
             }
         } else {
-            await Product.updateOne({ _id: productId }, { $inc: { stock: -quantity } });
+            await Product.updateOne({ _id: productId }, { $inc: { stock: -quantity, sell: quantity } });
         }
     }
 }

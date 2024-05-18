@@ -187,6 +187,18 @@ function ManageProducts() {
     }
     return "";
   };
+  const getSell = (productId) => {
+    const product = data.find((item) => item._id === productId);
+    if (product && product.sizeId) {
+      const sizeObject = sizes.find((size) => size._id === product.sizeId);
+      if (sizeObject && sizeObject.sizes.length > 0) {
+        return sizeObject.sizes.map((item, index) => (
+          <div key={index}>{item.sell}</div>
+        ));
+      }
+    }
+    return "";
+  };
 
   const text = "Bạn có muốn xóa sản phẩm?";
 
@@ -435,7 +447,7 @@ function ManageProducts() {
                 render={(sizeId) => <span>{getSizeBySizeId(sizeId)}</span>}
               />
               <Column
-                title="Số lượng"
+                title="Số lượng còn"
                 dataIndex="_id"
                 key="stock"
                 render={(text, record) => {
@@ -445,6 +457,20 @@ function ManageProducts() {
                     return <span>{stockQuantity}</span>;
                   } else {
                     return <span>{getStockByStockId(stockId)}</span>;
+                  }
+                }}
+              />
+              <Column
+                title="Số lượng bán"
+                dataIndex="_id"
+                key="sell"
+                render={(text, record) => {
+                  const sellId = record._id;
+                  const SellQuantity = record.sell;
+                  if (SellQuantity) {
+                    return <span>{SellQuantity}</span>;
+                  } else {
+                    return <span>{getSell(sellId)}</span>;
                   }
                 }}
               />
