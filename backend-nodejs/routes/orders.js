@@ -193,6 +193,38 @@ async function updateProductStock(order) {
     }
 }
 
+router.get('/sold-products/:productId', async (req, res, next) => {
+    try {
+        const productId = req.params.productId;
+
+        let orders = await Order.find({ status: 'COMPLETE' }).lean();
+
+        let totalSoldQuantity = 0;
+
+        orders.forEach(order => {
+            order.orderDetails.forEach(detail => {
+                if (detail.productId.toString() === productId) {
+                    totalSoldQuantity += detail.quantity;
+                }
+            });
+        });
+
+        const product = await Product.findById(productId);
+
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        res.status(200).json({
+            product: product,
+            totalSoldQuantity: totalSoldQuantity
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 router.delete("/:id", function (req, res, next) {
     const validationSchema = yup.object().shape({
         params: yup.object({

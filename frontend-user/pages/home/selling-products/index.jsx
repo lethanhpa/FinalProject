@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import Link from "next/link";
 import { Autoplay, EffectCoverflow, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -6,6 +6,7 @@ import { ChevronsRight } from "lucide-react";
 import numeral from "numeral";
 import { API_URL } from "@/constants";
 import { Button, Divider, Rate } from "antd";
+import axiosClient from "../../../libraries/axiosClient";
 import router from "next/router";
 
 import "swiper/css/navigation";
@@ -15,6 +16,9 @@ import "swiper/css/scrollbar";
 import "swiper/css";
 
 function SellingProduct({ products, reviews }) {
+
+  const [sell, setSell] = useState();
+
   const calculateAverageRating = (productId, reviews) => {
     const productReviews = reviews.filter(
       (review) => review.productId === productId
@@ -28,6 +32,21 @@ function SellingProduct({ products, reviews }) {
     const averageRating = totalRating / totalReviews;
     return averageRating;
   };
+
+  useEffect(() => {
+    fetchOrders
+  }, []);
+
+  const fetchOrders = async (productId) => {
+    try {
+      const response = await axiosClient.get(`/orders/sold-products/${productId}`);
+      setSell(response.data);
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   return (
     <div className="pt-[2.5rem]">
@@ -85,7 +104,7 @@ function SellingProduct({ products, reviews }) {
         >
           {products &&
             products.map((item) => {
-              return (
+      return (
                 <SwiperSlide key={item.id}>
                   <div
                     className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[50px] min-h-[50px] shadow-md rounded hover:bg-second-3 flex flex-col justify-center items-center border-pink"
@@ -146,6 +165,9 @@ function SellingProduct({ products, reviews }) {
                           style={{ fontSize: "18px" }}
                         />
                       </div>
+                      <span className="font-roboto text-md flex justify-center">
+                        Đã bán: {numeral(item.soldCount).format("0,0")}
+                      </span>
                       <Divider>
                         <Button
                           className="bg-black text-white hover:bg-white hover:text-black font-light"
