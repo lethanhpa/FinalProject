@@ -66,7 +66,21 @@ router.get('/revenue', async (req, res, next) => {
 
 router.get('/revenue/daily', async (req, res, next) => {
     try {
-        const orders = await Order.find({ status: 'COMPLETE' });
+        const { year, month } = req.query;
+
+        // Tạo phạm vi ngày cho tháng và năm được chỉ định
+        const startDate = new Date(`${year}-${month}-01`);
+        const endDate = new Date(startDate);
+        endDate.setMonth(endDate.getMonth() + 1); // Chuyển sang tháng tiếp theo
+
+        const orders = await Order.find({
+            status: 'COMPLETE',
+            createdDate: {
+                $gte: startDate,
+                $lt: endDate
+            }
+        });
+
         const dailyRevenue = calculateDailyRevenue(orders);
         res.status(200).json(dailyRevenue);
     } catch (err) {
@@ -79,8 +93,8 @@ const calculateMonthlyRevenue = (orders) => {
     const monthlyRevenue = {};
     orders.forEach((order) => {
         if (order.status === 'COMPLETE') { // Chỉ tính toán doanh thu cho các đơn hàng có status là 'COMPLETE'
-            const year = new Date(order.createdAt).getFullYear(); // Lấy năm từ createdAt
-            const month = new Date(order.createdAt).getMonth() + 1; // Lấy tháng từ createdAt
+            const year = new Date(order.createdDate).getFullYear(); // Lấy năm từ createdDate
+            const month = new Date(order.createdDate).getMonth() + 1; // Lấy tháng từ createdDate
             const revenue = order.orderDetails.reduce((total, item) => total + (item.price * item.quantity), 0); // Tính doanh thu từ orderDetails
             if (!monthlyRevenue[year]) {
                 monthlyRevenue[year] = {};
@@ -105,8 +119,8 @@ const calculateDailyRevenue = (orders) => {
     const dailyRevenue = {};
     orders.forEach((order) => {
         if (order.status === 'COMPLETE' || order.paymentType === 'VNPAY') {
-            const date = moment(order.createdAt).format('YYYY-MM-DD');
-            const revenue = order.orderDetails.reduce((total, item) => total + (item.price  * item.quantity), 0);
+            const date = moment(order.createdDate).format('YYYY-MM-DD');
+            const revenue = order.orderDetails.reduce((total, item) => total + (item.price * item.quantity), 0);
             if (!dailyRevenue[date]) {
                 dailyRevenue[date] = 0;
             }

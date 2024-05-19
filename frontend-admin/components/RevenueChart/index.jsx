@@ -1,9 +1,28 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
+import { Select } from "antd";
+import axiosClient from "@/libraries/axiosClient";
 
-const RevenueLineChart = ({ monthlyRevenue }) => {
+const RevenueLineChart = () => {
   const chartRef = useRef(null);
-  let chartInstance = useRef(null);
+  const chartInstance = useRef(null);
+  const [monthlyRevenue, setMonthlyRevenue] = useState({});
+  const [selectedYear, setSelectedYear] = useState(
+    new Date().getFullYear().toString()
+  );
+
+  useEffect(() => {
+    const fetchMonthlyRevenue = async () => {
+      try {
+        const response = await axiosClient.get(`/orders/revenue`);
+        setMonthlyRevenue(response.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchMonthlyRevenue();
+  }, []);
 
   useEffect(() => {
     if (chartInstance.current) {
@@ -11,8 +30,14 @@ const RevenueLineChart = ({ monthlyRevenue }) => {
     }
 
     const ctx = chartRef.current.getContext("2d");
-    const labels = Object.keys(monthlyRevenue).map((month) => `Tháng ${month}`);
-    const data = Object.values(monthlyRevenue);
+    const labels = monthlyRevenue[selectedYear]
+      ? Object.keys(monthlyRevenue[selectedYear]).map(
+          (month) => `Tháng ${month}`
+        )
+      : [];
+    const data = monthlyRevenue[selectedYear]
+      ? Object.values(monthlyRevenue[selectedYear])
+      : [];
 
     chartInstance.current = new Chart(ctx, {
       type: "line",
@@ -40,6 +65,7 @@ const RevenueLineChart = ({ monthlyRevenue }) => {
               display: true,
               text: "Tổng tiền (VNĐ)",
             },
+            beginAtZero: true,
           },
         },
       },
@@ -50,9 +76,32 @@ const RevenueLineChart = ({ monthlyRevenue }) => {
         chartInstance.current.destroy();
       }
     };
-  }, [monthlyRevenue]);
+  }, [selectedYear, monthlyRevenue]);
 
-  return <canvas ref={chartRef} />;
+  const handleYearChange = (value) => {
+    setSelectedYear(value);
+  };
+
+  return (
+    <div>
+      <div className="flex">
+        <h1 className="mr-3">Chọn tháng:</h1>
+        <Select
+          value={selectedYear}
+          onChange={handleYearChange}
+          style={{ width: 120, marginBottom: 20 }}
+        >
+          {Object.keys(monthlyRevenue).map((year) => (
+            <Select.Option key={year} value={year}>
+              {year}
+            </Select.Option>
+          ))}
+        </Select>
+      </div>
+
+      <canvas ref={chartRef} />
+    </div>
+  );
 };
 
 export default RevenueLineChart;

@@ -1,56 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import RevenueLineChart from "@/components/RevenueChart";
-import axiosClient from "@/libraries/axiosClient";
 import PieChart from "@/components/PieChart";
-import { Select } from "antd";
 import DailyRevenueChart from "@/components/DailyRevenueChart";
 
-const apiName = "/orders";
-
 function Statistical() {
-  const [monthlyRevenue, setMonthlyRevenue] = useState({});
-  const [selectedYear, setSelectedYear] = useState("2024");
-
-  useEffect(() => {
-    axiosClient
-      .get(`${apiName}/revenue`)
-      .then((response) => {
-        setMonthlyRevenue(response.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
-
-  const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
-  };
+  const [selectedYear, setSelectedYear] = useState(
+    new Date().getFullYear().toString()
+  );
 
   return (
     <div>
       <div className="container my-5 overflow-x-auto">
-        <div className="flex items-center mb-5">
-          <h1 className="mr-3">Chọn năm:</h1>
-          <Select value={selectedYear} onChange={handleYearChange}>
-            {Object.keys(monthlyRevenue).map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </Select>
-        </div>
         <div className="flex justify-between">
           <div className="w-full">
-            {selectedYear && monthlyRevenue[selectedYear] && (
-              <div>
-                <h1 className="flex justify-center font-bold mb-3 text-xl">
-                  Biểu đồ doanh thu các tháng trong năm {selectedYear}
-                </h1>
-                <RevenueLineChart
-                  monthlyRevenue={monthlyRevenue[selectedYear]}
-                />
-              </div>
-            )}
+            <h1 className="flex justify-center font-bold mb-3 text-xl">
+              Biểu đồ doanh thu các tháng
+            </h1>
+            <RevenueLineChart />
           </div>
           <div>
             <h1 className="flex justify-center font-bold mb-3 text-lg">
@@ -63,7 +29,7 @@ function Statistical() {
           <h1 className="flex justify-center font-bold mb-3 text-xl">
             Biểu đồ thống kê doanh thu theo ngày
           </h1>
-          <DailyRevenueChart />
+          <DailyRevenueChart selectedYear={selectedYear} />
         </div>
       </div>
     </div>
