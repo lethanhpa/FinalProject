@@ -29,6 +29,16 @@ function SellingProduct({ products, reviews }) {
     return averageRating;
   };
 
+  const filteredProducts = products.filter(item => {
+    const totalSell = item.size ? item.size.sizes.reduce((acc, size) => acc + size.sell, 0) : false;
+  
+    return totalSell >= 5 || item.sell >=5;
+  });
+  
+  filteredProducts.forEach(item => {
+    console.log("item", item);
+  });
+
   return (
     <div className="pt-[2.5rem]">
       <div className="flex justify-between">
@@ -83,10 +93,12 @@ function SellingProduct({ products, reviews }) {
             },
           }}
         >
-          {products &&
-            products.map((item) => {
+          {filteredProducts &&
+            filteredProducts.map((item) => {
+              //  console.log('ssellSize', item.size.sizes.stock);
               return (
                 <SwiperSlide key={item.id}>
+                 
                   <div
                     className="sm:min-w-[15.625rem] sm:min-h-[12.5rem] min-w-[50px] min-h-[50px] shadow-md rounded hover:bg-second-3 flex flex-col justify-center items-center border-pink"
                     style={{

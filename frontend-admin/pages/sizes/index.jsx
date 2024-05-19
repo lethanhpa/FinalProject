@@ -201,9 +201,10 @@ function ManageStock() {
               render={(sizes) => (
                 <div>
                   {sizes.map((item) => (
-                    <div key={item._id}>
-                      <span>Size: {item.size}</span>
-                      <span> Số lượng: {item.stock}</span>
+                    <div key={item._id} className="flex gap-6 border-b ">
+                      <p>Size: {item.size}</p>
+                      <p> Số lượng còn: {item.stock}</p>
+                      <p>Số lượng bán: {item.sell}</p>
                     </div>
                   ))}
                 </div>

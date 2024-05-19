@@ -5,6 +5,7 @@ const sizeDetailSchema = new Schema(
     {
         size: { type: String },
         stock: { type: Number },
+        sell : {type: Number, min: 0, default: 0},
     },
     {
         _id: true
@@ -21,6 +22,8 @@ const sizeSchema = new Schema(
         timestamps: true
     }
 );
+
+
 
 sizeSchema.set('toObject', { virtual: true });
 

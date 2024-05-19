@@ -108,6 +108,8 @@ function Selling({ products, categories, reviews }) {
     return averageRating;
   };
 
+
+
   return (
     <div className="container my-5">
       <div className="mb-5 mx-2.5">
@@ -206,9 +208,12 @@ function Selling({ products, categories, reviews }) {
         {filteredProducts &&
           filteredProducts
             .slice(0, visibleProducts)
-            .filter((product) =>
-              product.productName.toLowerCase().includes("kim cương")
-            )
+            .filter((item => {
+              const totalSell = item.size ? item.size.sizes.reduce((acc, size) => acc + size.sell, 0) : false;
+
+              return totalSell >= 5 || item.sell >= 5;
+            }
+            ))
             .map((item) => {
               return (
                 <div
@@ -246,7 +251,7 @@ function Selling({ products, categories, reviews }) {
                           <span className="font-roboto text-sm flex justify-center text-primry font-semibold">
                             {numeral(
                               item.price -
-                                (item.price * item.discount * 1) / 100
+                              (item.price * item.discount * 1) / 100
                             ).format("0,0")}
                             đ
                           </span>
