@@ -30,13 +30,14 @@ function SellingProduct({ products, reviews }) {
   };
 
   const filteredProducts = products.filter(item => {
-    console.log('item', item.size)
-    const totalSell = item.sizes && item.sizes.length > 0 ? item.sizes.reduce(size => size.sell >= 1) : false;
-    console.log('aaa', item.sizes && item.sizes.length > 0);
+    const totalSell = item.size ? item.size.sizes.reduce((acc, size) => acc + size.sell, 0) : false;
   
-    console.log('totalSell', totalSell);
-    return totalSell || item.sell >= 1;
-});
+    return totalSell >= 5 || item.sell >=5;
+  });
+  
+  filteredProducts.forEach(item => {
+    console.log("item", item);
+  });
 
   return (
     <div className="pt-[2.5rem]">
