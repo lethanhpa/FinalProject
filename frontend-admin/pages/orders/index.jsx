@@ -13,9 +13,7 @@ import { API_URL } from "@/constants";
 import numeral from "numeral";
 import Moment from "moment";
 import { CircleXIcon, EyeIcon, FilePenLine } from "lucide-react";
-import {
-  SearchOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import axiosClient from "@/libraries/axiosClient";
 
 const { Column } = Table;
@@ -39,7 +37,7 @@ function ManageOrder() {
       .then((response) => {
         const { data } = response;
         setData(data);
-        console.log('data', data);
+        console.log("data", data);
       })
       .catch((err) => {
         console.error(err);
@@ -158,7 +156,6 @@ function ManageOrder() {
           }}
         />
 
-
         <Column
           title="Phương thức"
           dataIndex="paymentType"
@@ -183,17 +180,18 @@ function ManageOrder() {
           }}
           filters={[
             {
-              text: 'Tiền mặt',
-              value: 'CASH',
+              text: "Tiền mặt",
+              value: "CASH",
             },
             {
-              text: 'VNPAY',
-              value: 'VNPAY',
-            }
+              text: "VNPAY",
+              value: "VNPAY",
+            },
           ]}
-          onFilter={(value, record) => record.paymentType.indexOf(value.toString()) === 0}
+          onFilter={(value, record) =>
+            record.paymentType.indexOf(value.toString()) === 0
+          }
         />
-
 
         <Column
           title="Trạng thái"
@@ -222,25 +220,26 @@ function ManageOrder() {
           }}
           filters={[
             {
-              text: 'Đã mua',
-              value: 'COMPLETE',
+              text: "Đã mua",
+              value: "COMPLETE",
             },
             {
-              text: 'Đã hủy',
-              value: 'CANCELED',
+              text: "Đã hủy",
+              value: "CANCELED",
             },
             {
-              text: 'Đã duyệt',
-              value: 'APPROVED',
+              text: "Đã duyệt",
+              value: "APPROVED",
             },
             {
-              text: 'Đang đợi duyệt',
-              value: 'WAITING',
+              text: "Đang đợi duyệt",
+              value: "WAITING",
             },
           ]}
-          onFilter={(value, record) => record.status.indexOf(value.toString()) === 0}
+          onFilter={(value, record) =>
+            record.status.indexOf(value.toString()) === 0
+          }
         />
-
 
         <Column
           title="Nhân viên"
@@ -256,7 +255,6 @@ function ManageOrder() {
             }
           }}
         />
-
 
         <Column title="Ghi chú" dataIndex="description" key="description" />
         <Column
@@ -287,11 +285,10 @@ function ManageOrder() {
                   Sửa
                 </button>
               )}
-              {record.status !== "CANCELED" && (
+              {record.status === "WAITING" && (
                 <Popconfirm
                   placement="top"
                   title={text}
-                  disabled={record.status === "CANCELED"}
                   onConfirm={() => {
                     handleCancelOrder(record._id);
                   }}

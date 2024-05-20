@@ -85,7 +85,7 @@ const RevenueLineChart = () => {
   return (
     <div>
       <div className="flex">
-        <h1 className="mr-3">Chọn tháng:</h1>
+        <h1 className="mr-3">Chọn năm:</h1>
         <Select
           value={selectedYear}
           onChange={handleYearChange}
