@@ -16,21 +16,55 @@ mongoose.connect(CONNECTION_STRING);
 const WEBSHOP_URL = 'http://localhost:3000'
 
 
+// router.get('/', async (req, res, next) => {
+//     try {
+//         let orders = await Order.find().populate('customer').populate('employee').lean({ virtuals: true });
+
+//         // Bổ sung thông tin về giá sản phẩm trong mỗi đơn hàng
+//         orders = await Promise.all(orders.map(async (order) => {
+//             order.orderDetails = await Promise.all(order.orderDetails.map(async (detail) => {
+//                 const product = await Product.findById(detail.productId);
+//                 return {
+//                     ...detail,
+//                     price: product.price // Thêm thông tin giá sản phẩm vào mỗi mục trong orderDetails
+//                 };
+//             }));
+//             return order;
+//         }));
+
+//         res.json(orders);
+//     } catch (error) {
+//         res.status(500).json({ ok: false, error });
+//     }
+// });
+
 router.get('/', async (req, res, next) => {
     try {
         let orders = await Order.find().populate('customer').populate('employee').lean({ virtuals: true });
 
-        // Bổ sung thông tin về giá sản phẩm trong mỗi đơn hàng
-        orders = await Promise.all(orders.map(async (order) => {
-            order.orderDetails = await Promise.all(order.orderDetails.map(async (detail) => {
-                const product = await Product.findById(detail.productId);
+        // Lấy tất cả productIds từ tất cả các đơn hàng
+        const productIds = orders.flatMap(order => order.orderDetails.map(detail => detail.productId));
+
+        // Truy xuất tất cả sản phẩm một lần duy nhất
+        const products = await Product.find({ _id: { $in: productIds } }).lean();
+
+        // Tạo một từ điển productId -> product để dễ dàng tra cứu
+        const productMap = products.reduce((map, product) => {
+            map[product._id] = product;
+            return map;
+        }, {});
+
+        // Bổ sung thông tin về giá sản phẩm vào mỗi mục trong orderDetails
+        orders = orders.map(order => {
+            order.orderDetails = order.orderDetails.map(detail => {
+                const product = productMap[detail.productId];
                 return {
                     ...detail,
-                    price: product.price // Thêm thông tin giá sản phẩm vào mỗi mục trong orderDetails
+                    price: product ? product.price : null // Thêm thông tin giá sản phẩm vào mỗi mục trong orderDetails
                 };
-            }));
+            });
             return order;
-        }));
+        });
 
         res.json(orders);
     } catch (error) {
