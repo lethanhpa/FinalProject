@@ -121,7 +121,7 @@ function WeddingJewelry({ products, reviews }) {
       <div className="container mt-5 font-roboto">
         <div className="flex justify-center w-full">
           <img
-            src="https://file.hstatic.net/1000381168/collection/1920x820px_26f943dfb45a417eba1d409288cd08c0.png"
+            src="./img/banner_trangsuccuoi2.png"
             alt="trang-suc-cuoi"
           />
         </div>
@@ -347,14 +347,14 @@ function WeddingJewelry({ products, reviews }) {
         <img
           className="w-[500px] h-auto"
           alt=""
-          src="https://scontent.fdad4-1.fna.fbcdn.net/v/t1.15752-9/432339548_650257733964462_1568424930694873481_n.png?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGf9V6MiNIgbLBSn15_uIskevuemWo27t56-56Zajbu3vORCZk75cyMaEack1RvBVkh1du209ZJjeLki06fV_t_&_nc_ohc=0enDyxGFN38AX8dNCkw&_nc_ht=scontent.fdad4-1.fna&oh=03_AdSm86IoQQ_PUXR_4K1KOyScRfzUOM5AKx-3BOpvvXwR8Q&oe=6617E221"
+          src="./img/phan_trang.png"
         />
       </div>
 
       <div className="container mt-5 font-roboto">
         <div className="mt-[3.125rem] flex justify-center w-full">
           <img
-            src="https://www.mulloysjewelry.com/cdn/shop/collections/Memoire_Top_Banner_2307x630.jpg?v=1683717094"
+            src="./img/banner_trangsuccuoi.png"
             alt="trang-suc-cuoi"
           />
         </div>

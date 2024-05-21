@@ -148,7 +148,7 @@ function Account() {
 
   const HanleChangePass = () => {
     router.push("/change-password");
-  }
+  };
 
   return (
     <>
@@ -198,17 +198,19 @@ function Account() {
                           onChange={(info) => {
                             if (info.file.status === "done") {
                               router.reload();
-                              toast.success(
-                                "Cập nhật ảnh đại diện thành công!"
-                              );
+                              toast.success("Cập nhật ảnh đại diện thành công!");
                             } else if (info.file.status === "error") {
-                              toast.error("Cập nhật ảnh đại diện thất bại.");
+                              toast.error("Cập nhật ảnh đại diện thất bại");
                             }
                           }}
                         >
                           <div className="relative">
                             <img
-                              src={`${API_URL}/${customers.avatarUrl}`}
+                              src={
+                                customers.avatarUrl
+                                  ? `${API_URL}/${customers.avatarUrl}`
+                                  : "./img/Avatar.png"
+                              }
                               alt={`Avatar-${customers._id}`}
                               className="w-[300px] object-cover rounded-full h-[300px]"
                             />
@@ -257,7 +259,10 @@ function Account() {
                     >
                       Chỉnh sửa thông tin cá nhân
                     </button>
-                    <button onClick={HanleChangePass} className="mt-8 mb-8 bg-black text-white px-4 py-2 rounded-lg shadow-lg hover:bg-white border border-black hover:text-black transition-colors duration-300 w-[250px]">
+                    <button
+                      onClick={HanleChangePass}
+                      className="mt-8 mb-8 bg-black text-white px-4 py-2 rounded-lg shadow-lg hover:bg-white border border-black hover:text-black transition-colors duration-300 w-[250px]"
+                    >
                       Đổi mật khẩu
                     </button>
                   </div>

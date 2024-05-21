@@ -28,6 +28,7 @@ function SignUp() {
   const [createForm] = Form.useForm();
   const [refresh, setRefresh] = useState(0);
   const router = useRouter();
+  const [currentDate] = useState(() => new Date());
 
   useEffect(() => {
     fetchProvinces();
@@ -109,6 +110,10 @@ function SignUp() {
       toast.error("Đã xảy ra lỗi khi tạo địa chỉ hoàn chỉnh.");
     }
     [refresh];
+  };
+
+  const disabledDate = (current) => {
+    return current && current > currentDate.startOfDay();
   };
 
   return (
@@ -329,6 +334,7 @@ function SignUp() {
             placeholder="Ngày sinh"
             size="large"
             style={{ width: "100%" }}
+            disabledDate={disabledDate}
           />
         </Form.Item>
 
@@ -346,5 +352,9 @@ function SignUp() {
     </div>
   );
 }
+
+Date.prototype.startOfDay = function () {
+  return new Date(this.getFullYear(), this.getMonth(), this.getDate());
+};
 
 export default memo(SignUp);
