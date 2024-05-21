@@ -14,7 +14,7 @@ import "swiper/css/scrollbar";
 import "swiper/css";
 
 function NewProduct({ products, reviews }) {
-  const THIRTY_DAYS_IN_MS = 60 * 24 * 60 * 60 * 1000; // 60 ngày tính bằng mili giây
+  const THIRTY_DAYS_IN_MS = 30 * 24 * 60 * 60 * 1000; // 30 ngày tính bằng mili giây
   const currentDate = new Date();
 
   function filterNewProducts(products) {
@@ -138,6 +138,9 @@ function NewProduct({ products, reviews }) {
                       </span>
                     )}
                     <div className="flex flex-col gap-[6px]">
+                    <span className="!absolute top-0 left-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
+                        NEW
+                      </span>
                       <p className="font-roboto text-sm font-normal flex justify-center xxl:truncate text-center">
                         {item.productName}
                       </p>

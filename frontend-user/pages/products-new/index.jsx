@@ -43,6 +43,8 @@ function productsNew({ products, categories, reviews }) {
   };
 
   const filterProducts = () => {
+    const THIRTY_DAYS_IN_MS = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+    const currentDate = new Date();
     let filteredProducts = products;
 
     if (selectedCategory) {
@@ -53,9 +55,7 @@ function productsNew({ products, categories, reviews }) {
 
     if (selectedMaterial) {
       filteredProducts = filteredProducts.filter((product) =>
-        product.productName
-          .toLowerCase()
-          .includes(selectedMaterial.toLowerCase())
+        product.productName.toLowerCase().includes(selectedMaterial.toLowerCase())
       );
     }
 
@@ -70,6 +70,13 @@ function productsNew({ products, categories, reviews }) {
         checkDiscountedPriceRange(product, selectedPrice)
       );
     }
+
+    // Filter products created within the last 30 days
+    filteredProducts = filteredProducts.filter((product) => {
+      const createdAtTimestamp = new Date(product.createdAt).getTime();
+      const timeDifference = currentDate.getTime() - createdAtTimestamp;
+      return timeDifference <= THIRTY_DAYS_IN_MS;
+    });
 
     return filteredProducts;
   };
@@ -308,6 +315,9 @@ function productsNew({ products, categories, reviews }) {
                   )}
                 </div>
                 <div className="flex flex-col gap-[6px]">
+                  <span className="!absolute top-0 left-0 bg-primry font-poppins text-sm font-normal py-[4px] sm:px-[25px] px-[10px] text-white">
+                    NEW
+                  </span>
                   <p className="font-roboto text-sm font-normal flex justify-center xxl:truncate text-center">
                     {item.productName}
                   </p>
@@ -338,7 +348,7 @@ function productsNew({ products, categories, reviews }) {
                       allowHalf
                       disabled
                       defaultValue={calculateAverageRating(item.id, reviews)}
-                      style={{ fontSize: "18px" }} 
+                      style={{ fontSize: "18px" }}
                     />
                   </div>
                   <Divider>

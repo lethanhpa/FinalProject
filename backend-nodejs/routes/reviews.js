@@ -45,38 +45,6 @@ router.get('/:productId', function (req, res, next) {
   }
 });
 
-
-
-//GET id
-// router.get('/:id', async function (req, res, next) {
-//   // Validate
-//   const validationSchema = yup.object().shape({
-//     params: yup.object({
-//       id: yup.string().test('Validate ObjectID', '${path} is not valid ObjectID', (value) => {
-//         return ObjectId.isValid(value);
-//       }),
-//     }),
-//   });
-
-//   validationSchema
-//     .validate({ params: req.params }, { abortEarly: false })
-//     .then(async () => {
-//       const id = req.params.id;
-
-//       let found = await Review.findById(id)
-//         .populate('customer')
-//         .populate('product');
-//       if (found) {
-//         return res.send({ ok: true, result: found });
-//       }
-
-//       return res.send({ ok: false, message: 'Object not found' });
-//     })
-//     .catch((err) => {
-//       return res.status(400).json({ type: err.name, errors: err.errors, message: err.message, provider: 'yup' });
-//     });
-// });
-
 //POST
 router.post('/', async function (req, res, next) {
   // Validate

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, message } from "antd";
 import { useRouter } from "next/router";
 import HomePage from "@/pages/home";
+import Link from "next/link";
 
 function Header(props) {
   const { setIsLogin } = props;
@@ -28,15 +29,18 @@ function Header(props) {
 
   return (
     <div>
-      <div className="flex items-center justify-between h-[125px]  shadow-md">
-        <div className="flex">
-          <img
-            src="/img/5.png"
-            alt="user"
-            title="jewellery-logo"
-            className="w-3/4 ml-16"
-          />
-        </div>
+      <div className="flex items-center justify-between h-[100px]  shadow-md">
+      <Link href="/" className="flex justify-end">
+        <img
+          src="/img/logo.png"
+          alt="user"
+          title="wiicamp-logo"
+          className="md:w-[5rem] md:h-[4rem] w-[2.5rem] h-[2.5rem]"
+        />
+        <span className="items-center flex text-primry text-xl font-normal leading-7 font-roboto">
+          JEWELLERY
+        </span>
+      </Link>
         {isLoggedIn && (
           <Button
             type="button"

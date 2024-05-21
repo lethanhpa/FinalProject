@@ -146,9 +146,10 @@ function ManageCategories() {
                 return <span>{index + 1}</span>;
               }}
             />
-            <Column title="Tên danh mục" dataIndex="name" key="name" />
+            <Column title="Tên danh mục" dataIndex="name" key="name" className="w-[200px] text-center"/>
             <Column
               title="Hành động"
+              className="w-[300px] text-center"
               key="action"
               render={(record) => (
                 <Space size="middle">

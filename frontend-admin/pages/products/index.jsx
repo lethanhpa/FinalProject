@@ -473,6 +473,7 @@ function ManageProducts() {
                     return <span>{getSell(sellId)}</span>;
                   }
                 }}
+                  
               />
               <Column
                 title="Danh mục"

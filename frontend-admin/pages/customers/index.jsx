@@ -51,22 +51,27 @@ function ManageCustomers() {
   return (
     <div>
       <h1 className="text-2xl text-center my-3">Danh Sách Khách Hàng</h1>
-      <Table dataSource={data} rowKey="_id" scroll={{ x: true }}>
+      <Table dataSource={data} rowKey="_id" scroll={{ x: true  }}>
         <Column
           title="STT"
           render={(_text, _record, index) => {
             return <span>{index + 1}</span>;
           }}
         />
-        <Column title="Họ" dataIndex="lastName" key="lastName" />
-        <Column title="Tên" dataIndex="firstName" key="firstName" />
-        <Column title="Email" dataIndex="email" key="email" />
+        <Column
+          title="Họ và tên"
+          key="fullName"
+          render={(text, record) => `${record.firstName} ${record.lastName}`}
+          className="w-[180px]"
+        />
+        <Column title="Email" dataIndex="email" key="email" className="w-[130px]"/>
         <Column
           title="Số điện thoại"
           dataIndex="phoneNumber"
           key="phoneNumber"
+          className="w-[130px]"
         />
-        <Column title="Địa chỉ" dataIndex="address" key="address" />
+        <Column title="Địa chỉ" dataIndex="address" key="address" className="w-[300px]"/>
         <Column
           title="Ngày sinh"
           dataIndex="birthday"

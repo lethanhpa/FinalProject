@@ -35,6 +35,7 @@ function ManageEmployees() {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
+  const [currentDate] = useState(() => new Date());
 
   useEffect(() => {
     fetchProvinces();
@@ -172,6 +173,10 @@ function ManageEmployees() {
     return role !== "Admin";
   };
 
+  const disabledDate = (current) => {
+    return current && current > currentDate.startOfDay();
+  };
+
   return (
     <div>
       {showTable === false ? (
@@ -237,6 +242,7 @@ function ManageEmployees() {
                 placeholder="yyyy-mm-dd"
                 size="large"
                 style={{ width: "100%" }}
+                disabledDate={disabledDate}
               />
             </Form.Item>
             <Form.Item
@@ -449,15 +455,20 @@ function ManageEmployees() {
                 return <span>{index + 1}</span>;
               }}
             />
-            <Column title="Họ" dataIndex="firstName" key="firstName" />
-            <Column title="Tên" dataIndex="lastName" key="lastName" />
-            <Column title="Email" dataIndex="email" key="email" />
+            <Column
+              title="Họ và tên"
+              key="fullName"
+              render={(text, record) => `${record.firstName} ${record.lastName}`}
+              className="w-[120px]"
+            />
+            <Column title="Email" dataIndex="email" key="email" className="w-[120px]"/>
             <Column
               title="Số điện thoại"
               dataIndex="phoneNumber"
               key="phoneNumber"
+              className="w-[120px]"
             />
-            <Column title="Địa chỉ" dataIndex="address" key="address" />
+            <Column title="Địa chỉ" dataIndex="address" key="address" className="w-[300px]"/>
             <Column
               title="Ngày sinh"
               dataIndex="birthday"
@@ -560,7 +571,7 @@ function ManageEmployees() {
                 <Input />
               </Form.Item>
               <Form.Item label="Ngày sinh" name="birthday">
-                <Input className="pointer-events-none" bordered={false}/>
+                <Input className="pointer-events-none" bordered={false} />
               </Form.Item>
               <Form.Item label="Giới tính" name="gender">
                 <Select className="text-start">
@@ -573,17 +584,17 @@ function ManageEmployees() {
                 <Input className="pointer-events-none" bordered={false} />
               </Form.Item>
               <Form.Item label="Số điện thoại" name="phoneNumber">
-                <Input  />
+                <Input />
               </Form.Item>
               <Form.Item label="Địa chỉ" name="address">
-                <Input className="pointer-events-none" bordered={false}/>
+                <Input className="pointer-events-none" bordered={false} />
               </Form.Item>
               <Form.Item label="Chức vụ" name="role" >
                 {/* <Select className="text-start">
                   <Select.Option value="Admin">Admin</Select.Option>
                   <Select.Option value="Nhân viên">Nhân viên</Select.Option>
                 </Select> */}
-                <Input className="pointer-events-none" bordered={false}/>
+                <Input className="pointer-events-none" bordered={false} />
               </Form.Item>
             </Form>
           </Modal>
@@ -592,5 +603,9 @@ function ManageEmployees() {
     </div>
   );
 }
+
+Date.prototype.startOfDay = function () {
+  return new Date(this.getFullYear(), this.getMonth(), this.getDate());
+};
 
 export default memo(ManageEmployees);

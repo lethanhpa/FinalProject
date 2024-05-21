@@ -33,7 +33,7 @@ function ManageOrder() {
 
   useEffect(() => {
     axiosClient
-      .get(apiName)
+      .get("/orders")
       .then((response) => {
         const { data } = response;
         setData(data);

@@ -55,7 +55,7 @@ function PurchaseHistory() {
     if (orders.length > 0) {
       const updatedReviewedProducts = orders.reduce((acc, order) => {
         order.orderDetails.forEach((detail) => {
-          if (reviewedProducts[detail.productId._id]) {
+          if (reviewedProducts[detail.productId?._id]) {
             acc[detail.productId._id] = true;
           }
         });
@@ -181,7 +181,7 @@ function PurchaseHistory() {
   };
 
   const getOrderAction = (status, productId, order) => {
-    const isReviewed = reviewedProducts[productId._id];
+    const isReviewed = reviewedProducts[productId?._id];
 
     if (status === "COMPLETE") {
       if (!isReviewed) {
@@ -244,7 +244,7 @@ function PurchaseHistory() {
 
   const getStatusText = (status) => {
     if (status === "COMPLETE") {
-      return "Đã mua";
+      return "Giao hàng thành công";
     } else if (status === "WAITING") {
       return "Đang đợi duyệt";
     } else if (status === "APPROVED") {
@@ -254,12 +254,13 @@ function PurchaseHistory() {
     }
   };
 
-  const getPayment = (paymentType) => {
-    if (paymentType === "CASH") {
+  const getPayment = (paymentType, status) => {
+    if (paymentType === "CASH" && status !== "COMPLETE") {
       return "Thanh toán sau khi nhận hàng";
-    } else {
-      return "VNPAY";
+    } else if ((paymentType === "CASH" && status === "COMPLETE") || paymentType === "VNPAY"){
+      return "Đã Thanh Toán";
     }
+    
   };
 
   const text = "Bạn chắc chắn muốn xóa đánh giá ?";
@@ -291,8 +292,8 @@ function PurchaseHistory() {
                       <p>{order.shippingAddress}</p>
                     </div>
                     <div className="flex gap-4 ml-2">
-                      <p className="w-[180px]">Phương thức thanh toán :</p>
-                      {getPayment(order.paymentType)}
+                      <p className="w-[180px]">Tình trạng thanh toán :</p>
+                      {getPayment(order.paymentType, order.status)}
                     </div>
                     <div className="flex gap-4 ml-2">
                       <p className="w-[180px]">Ngày đặt đơn :</p>
