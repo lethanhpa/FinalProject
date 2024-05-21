@@ -60,6 +60,24 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+router.post('/send-email', (req, res) => {
+  const { name, phone, email, message } = req.body;
+
+  const mailOptions = {
+    from: email,
+    to: 'nguyenthanhtung03082001@gmail.com',
+    subject: 'Liên hệ',
+    text: `Họ và Tên: ${name}\nSố điện thoại: ${phone}\nEmail: ${email}\nLời nhắn: ${message}`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return res.status(500).send(error.toString());
+    }
+    res.status(200).send('Email sent: ' + info.response);
+  });
+});
+
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
