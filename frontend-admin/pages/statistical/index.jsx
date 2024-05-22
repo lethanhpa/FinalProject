@@ -10,6 +10,7 @@ function Statistical() {
 
   return (
     <div>
+      <title>Thống kê</title>
       <div className="container my-5 overflow-x-auto">
         <div className="flex justify-between">
           <div className="w-full">

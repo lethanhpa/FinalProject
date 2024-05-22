@@ -51,6 +51,7 @@ function ManageReview() {
 
   return (
     <div>
+      <title>Quản lý đánh giá, bình luận</title>
       <h1 className="text-2xl text-center my-3">Danh Sách Đánh Giá</h1>
       <Table dataSource={data} rowKey="_id" scroll={{ x: true }}>
         <Column

@@ -75,6 +75,7 @@ function ManageStock() {
 
   return (
     <div>
+      <title>Quản lý size</title>
       {showTable === false ? (
         <>
           <div style={{ textAlign: "left" }}>

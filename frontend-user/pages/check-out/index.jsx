@@ -231,6 +231,7 @@ function Checkout() {
 
   return (
     <div className="container ssm:flex block my-10">
+      <title>Thanh toán</title>
       <Form form={form}>
         <div className="flex-1 ">
           <p className="pb-5">Bạn muốn nhận đơn hàng bằng cách nào?</p>

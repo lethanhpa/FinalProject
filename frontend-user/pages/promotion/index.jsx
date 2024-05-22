@@ -134,6 +134,7 @@ function Promotion({ products, categories, reviews }) {
 
   return (
     <div className="container mt-5">
+      <title>Khuyến mãi</title>
       <div className="mb-5 mx-2.5">
         <div className="flex items-center justify-between mb-1 space-x-4">
           <div className="w-1/4 md:flex border">

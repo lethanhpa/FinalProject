@@ -267,6 +267,7 @@ function PurchaseHistory() {
 
   return (
     <div className="py-14  md:px-6 xl:px-20 xl:container ">
+      <title>Lịch sử mua hàng</title>
       <div className="flex justify-start item-start flex-col ">
         <h1 className="text-xl leading-[28px] font-bold text-center font-roboto text-primry">
           LỊCH SỬ MUA HÀNG

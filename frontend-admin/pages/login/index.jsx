@@ -58,6 +58,7 @@ const Login = (props) => {
 
   return (
     <>
+    <title>Đăng nhập</title>
       <div className="py-14 flex items-center justify-center">
         <Form
           onSubmit={handleSubmit}

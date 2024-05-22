@@ -3,6 +3,7 @@ import React, { memo } from "react";
 
 function Brand() {
     return (<div className="container mt-[30px] mb-[50px]">
+        <title>Thương hiệu</title>
         <h2 className="uppercase font-roboto text-xl font-bold flex justify-center mb-[10px]">Về chúng tôi</h2>
         <h3 className="uppercase font-roboto font-medium text-lg">1. Thông tin về Trang sức & đá quý Jewel</h3>
         <div className="flex flex-col gap-[6px]">

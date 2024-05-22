@@ -10,6 +10,7 @@ function Thanks() {
 
   return (
     <div>
+      <title>Đặt hàng thành công</title>
       {orderDetails.length > 0 && (
         <div className="border border-transparent my-20 mx-60 rounded-2xl shadow-2xl">
           <div>

@@ -7,6 +7,7 @@ import { BackTop } from "antd";
 function Home({ products, reviews }) {
   return (
     <main className="container">
+      <title>Trang chủ</title>
       <HomePage
         products={products}
         reviews={reviews}

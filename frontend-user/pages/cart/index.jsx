@@ -73,6 +73,7 @@ function Carts() {
 
   return (
     <div>
+      <title>Giỏ hàng</title>
       <img src="https://file.hstatic.net/1000381168/file/baner-thanh-toan_78c520df795d4667b36605c554655bb1_master.png" />
       <div className="container mt-10">
         {getCartItems(customerId).length > 0 &&

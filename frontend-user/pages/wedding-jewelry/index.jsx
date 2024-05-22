@@ -118,6 +118,7 @@ function WeddingJewelry({ products, reviews }) {
 
   return (
     <>
+    <title>Trang sức cưới</title>
       <div className="container mt-5 font-roboto">
         <div className="flex justify-center w-full">
           <img
@@ -437,7 +438,7 @@ function WeddingJewelry({ products, reviews }) {
             ))}
         </div>
         <span className="flex justify-center font-elle mt-7 mb-3">
-          Hiển thị
+          Hiển thị{" "}
           {Math.min(
             filteredProducts.filter(
               (item) => item.categoryId === "65f12a3743051681d5a2c8bd"

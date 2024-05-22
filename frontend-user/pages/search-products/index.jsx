@@ -23,6 +23,7 @@ function SearchProduct({ products, reviews }) {
 
   return (
     <div className="container">
+      <title>Tìm kiếm</title>
       <div className="grid lg:grid-cols-4 gap-10 md:grid-cols-3 sm:grid-cols-2 mx-2.5">
         {products &&
           products.map((item) => {

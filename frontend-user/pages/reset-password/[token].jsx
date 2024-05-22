@@ -24,6 +24,7 @@ function ResetPasswordPage() {
 
   return (
     <div className="py-9 flex items-center justify-center">
+      <title>Quên mật khẩu</title>
       <Form className="p-4 sm:p-8 shadow-2xl w-full sm:w-7/12">
         <h2 className="mt-2 font-bold text-3xl text-center">
           Đặt lại mật khẩu
