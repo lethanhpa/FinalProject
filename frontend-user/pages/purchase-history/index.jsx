@@ -245,7 +245,10 @@ function PurchaseHistory() {
   const getStatusText = (status) => {
     if (status === "COMPLETE") {
       return "Giao hàng thành công";
-    } else if (status === "WAITING") {
+    } else if(status === "DELIVER") {
+      return "Đang giao hàng"
+    }
+    else if (status === "WAITING") {
       return "Đang đợi duyệt";
     } else if (status === "APPROVED") {
       return "Đơn đã được duyệt";

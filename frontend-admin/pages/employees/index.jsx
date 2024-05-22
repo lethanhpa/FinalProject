@@ -570,7 +570,7 @@ function ManageEmployees() {
               <Form.Item label="Tên" name="lastName">
                 <Input />
               </Form.Item>
-              <Form.Item label="Ngày sinh" name="birthday">
+              <Form.Item label="Ngày sinh" name="birthday" format="dd/mm/yyyy" >
                 <Input className="pointer-events-none" bordered={false} />
               </Form.Item>
               <Form.Item label="Giới tính" name="gender">

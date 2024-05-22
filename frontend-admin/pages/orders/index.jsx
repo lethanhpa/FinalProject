@@ -203,6 +203,9 @@ function ManageOrder() {
               case "COMPLETE":
                 statusText = "Đã mua";
                 break;
+              case "DELIVER":
+                statusText = "Đang vận chuyển";
+                break;
               case "CANCELED":
                 statusText = "Đã hủy";
                 break;
@@ -219,6 +222,10 @@ function ManageOrder() {
             return <span>{statusText}</span>;
           }}
           filters={[
+            {
+              text: "Đang vận chuyển",
+              value: "DELIVER",
+            },
             {
               text: "Đã mua",
               value: "COMPLETE",
@@ -345,6 +352,7 @@ function ManageOrder() {
             <Select style={{ width: "80%" }}>
               <Select.Option value="WAITING">Đang đợi duyệt</Select.Option>
               <Select.Option value="COMPLETE">Đã mua</Select.Option>
+              <Select.Option value="DELIVER">Đang vận chuyển</Select.Option>
               <Select.Option value="CANCELED">Đã hủy</Select.Option>
               <Select.Option value="APPROVED">Đã duyệt</Select.Option>
             </Select>

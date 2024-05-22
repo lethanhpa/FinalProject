@@ -39,6 +39,7 @@ function Account() {
   const [districts, setDistricts] = useState([]);
   const [refresh, setRefresh] = useState(0);
   const [wards, setWards] = useState([]);
+  const [currentDate] = useState(() => new Date());
 
   useEffect(() => {
     fetchProvinces();
@@ -148,6 +149,10 @@ function Account() {
 
   const HanleChangePass = () => {
     router.push("/change-password");
+  };
+
+  const disabledDate = (current) => {
+    return current && current > currentDate.startOfDay();
   };
 
   return (
@@ -446,6 +451,7 @@ function Account() {
                       placeholder="Ngày sinh"
                       size="large"
                       style={{ width: "100%" }}
+                      disabledDate={disabledDate}
                     />
                   </Form.Item>
                 </Form>
@@ -463,5 +469,9 @@ function Account() {
     </>
   );
 }
+
+Date.prototype.startOfDay = function () {
+  return new Date(this.getFullYear(), this.getMonth(), this.getDate());
+};
 
 export default memo(Account);
