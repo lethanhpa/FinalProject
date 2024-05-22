@@ -103,6 +103,7 @@ function ManageOrder() {
 
   return (
     <div>
+      <title>Quản lý đơn hàng</title>
       <h1 className="text-2xl text-center my-3">Danh Sách Đơn Hàng</h1>
       <Table
         dataSource={data}

@@ -118,6 +118,7 @@ function SignUp() {
 
   return (
     <div className="py-9 flex items-center justify-center">
+      <title>Đăng ký</title>
       <Form
         form={createForm}
         name="create-form"

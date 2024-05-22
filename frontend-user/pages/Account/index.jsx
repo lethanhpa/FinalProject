@@ -157,6 +157,7 @@ function Account() {
 
   return (
     <>
+    <title>Thông tin cá nhân</title>
       {isLogin ? (
         <div>
           {customers && (

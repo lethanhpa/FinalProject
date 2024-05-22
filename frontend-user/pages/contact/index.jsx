@@ -69,6 +69,7 @@ function Contact() {
 
   return (
     <div className="container">
+      <title>Liên hệ</title>
       <div className="mt-[20px]">
         <Swiper
           modules={[Autoplay, Navigation, Pagination]}

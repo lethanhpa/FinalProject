@@ -147,6 +147,7 @@ function Products({ products, categories, reviews }) {
 
   return (
     <div className="container mt-5">
+    <title>Sản phẩm</title>
       <div className="flex justify-center">
         <img className="mb-5" src="./img/banner-product.png" alt="products" />
       </div>

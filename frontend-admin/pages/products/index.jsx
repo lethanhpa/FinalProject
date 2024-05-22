@@ -204,6 +204,7 @@ function ManageProducts() {
 
   return (
     <div>
+      <title>Quản lý sản phẩm</title>
       {showTable === false ? (
         <>
           <div style={{ textAlign: "left" }}>

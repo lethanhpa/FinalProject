@@ -179,6 +179,7 @@ function ManageEmployees() {
 
   return (
     <div>
+      <title>Quản lý nhân viên</title>
       {showTable === false ? (
         <>
           <div style={{ textAlign: "left" }}>

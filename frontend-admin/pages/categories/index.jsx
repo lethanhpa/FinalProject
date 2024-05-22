@@ -74,6 +74,7 @@ function ManageCategories() {
 
   return (
     <div>
+      <title>Quản lý danh mục</title>
       {showTable === false ? (
         <>
           <div style={{ textAlign: "left" }}>
